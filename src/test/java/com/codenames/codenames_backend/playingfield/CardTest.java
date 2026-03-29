@@ -1,15 +1,16 @@
 package com.codenames.codenames_backend.playingfield;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class CardTest {
 
   @Test
   void testConstructorHappyPath() {
     Card card = new Card("Test", Color.RED);
-
     assertEquals("Test", card.getWord());
     assertEquals(Color.RED, card.getColor());
     assertFalse(card.isGuessed());

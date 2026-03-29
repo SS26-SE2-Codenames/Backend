@@ -3,10 +3,11 @@ package com.codenames.codenames_backend.playingfield;
 import java.util.List;
 
 public class Board {
-  private final CardGenerator cardGenerator = new CardGenerator();
   private final List<Card> cardList;
+  private CardGenerator cardGenerator;
 
-  public Board(int totalWords, int red, int blue, int white, int black) {
+  public Board(
+      CardGenerator cardGenerator, int totalWords, int red, int blue, int white, int black) {
     this.cardList = cardGenerator.generateCards(totalWords, red, blue, white, black);
   }
 

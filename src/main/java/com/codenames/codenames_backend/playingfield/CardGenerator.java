@@ -1,12 +1,11 @@
 package com.codenames.codenames_backend.playingfield;
 
-import org.springframework.core.io.ClassPathResource;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
+import org.springframework.core.io.ClassPathResource;
 
 public class CardGenerator {
   public List<String> pickWords(int totalWords) {

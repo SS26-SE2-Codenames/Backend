@@ -4,9 +4,9 @@ import java.util.List;
 
 public class GameManager {
   private final int totalCardAmount = 25;
-  private Board board;
+  private final Board board;
 
-  public GameManager(Color startingTeam) {
+  public GameManager(Color startingTeam, CardGenerator cardGenerator) {
     int redAmount;
     int blueAmount;
     int whiteAmount = 7;
@@ -18,7 +18,8 @@ public class GameManager {
       redAmount = 8;
       blueAmount = 9;
     }
-    this.board = new Board(totalCardAmount, redAmount, blueAmount, whiteAmount, blackAmount);
+    this.board =
+        new Board(cardGenerator, totalCardAmount, redAmount, blueAmount, whiteAmount, blackAmount);
   }
 
   public List<Card> getCardList() {
