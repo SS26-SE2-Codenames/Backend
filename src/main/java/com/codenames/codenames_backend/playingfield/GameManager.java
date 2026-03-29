@@ -3,14 +3,22 @@ package com.codenames.codenames_backend.playingfield;
 import java.util.List;
 
 public class GameManager {
-  private final int totalCardAmount = 25;
+
+  private static final int TOTAL_CARDS = 25;
+  private static final int WHITE_CARDS = 7;
+  private static final int BLACK_CARDS = 1;
+
   private final Board board;
 
   public GameManager(Color startingTeam, CardGenerator cardGenerator) {
+    if (startingTeam == null) {
+      throw new IllegalArgumentException("startingTeam cannot be null");
+    }
+    if (startingTeam != Color.RED && startingTeam != Color.BLUE) {
+      throw new IllegalArgumentException("startingTeam MUST be Color.RED or Color.BLUE");
+    }
     int redAmount;
     int blueAmount;
-    int whiteAmount = 7;
-    int blackAmount = 1;
     if (startingTeam == Color.RED) {
       redAmount = 9;
       blueAmount = 8;
@@ -19,7 +27,7 @@ public class GameManager {
       blueAmount = 9;
     }
     this.board =
-        new Board(cardGenerator, totalCardAmount, redAmount, blueAmount, whiteAmount, blackAmount);
+        new Board(cardGenerator, TOTAL_CARDS, redAmount, blueAmount, WHITE_CARDS, BLACK_CARDS);
   }
 
   public List<Card> getCardList() {
