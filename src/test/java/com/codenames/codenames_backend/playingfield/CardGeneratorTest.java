@@ -8,50 +8,42 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CardGeneratorTest {
-    private CardGenerator cardGenerator;
+  private CardGenerator cardGenerator;
 
-    @BeforeEach
-    public void setup() {
-        cardGenerator = new CardGenerator();
-    }
-    @Test
-    void testGenerateCardsCorrectDistribution() {
-        int red = 9;
-        int blue = 8;
-        int white = 7;
-        int black = 1;
-        int total = red + blue + white + black;
+  @BeforeEach
+  public void setup() {
+    cardGenerator = new CardGenerator();
+  }
 
-        List<Card> cards = cardGenerator.generateCards(total, red, blue, white, black);
+  @Test
+  void testGenerateCardsCorrectDistribution() {
+    int red = 9;
+    int blue = 8;
+    int white = 7;
+    int black = 1;
+    int total = red + blue + white + black;
 
-        assertEquals(total, cards.size());
+    List<Card> cards = cardGenerator.generateCards(total, red, blue, white, black);
 
-        long redAmount = cards.stream()
-                .filter(card -> card.getColor() == Color.RED)
-                .count();
-        long blueAmount = cards.stream()
-                .filter(card -> card.getColor() == Color.BLUE)
-                .count();
-        long whiteAmount = cards.stream()
-                .filter(card -> card.getColor() == Color.WHITE)
-                .count();
-        long blackAmount = cards.stream()
-                .filter(card -> card.getColor() == Color.BLACK)
-                .count();
+    assertEquals(total, cards.size());
 
-        assertEquals(red, redAmount);
-        assertEquals(blue, blueAmount);
-        assertEquals(white, whiteAmount);
-        assertEquals(black, blackAmount);
-    }
+    long redAmount = cards.stream().filter(card -> card.getColor() == Color.RED).count();
+    long blueAmount = cards.stream().filter(card -> card.getColor() == Color.BLUE).count();
+    long whiteAmount = cards.stream().filter(card -> card.getColor() == Color.WHITE).count();
+    long blackAmount = cards.stream().filter(card -> card.getColor() == Color.BLACK).count();
 
-    @Test
-    void pickWordsCorrectAmount(){
-        int amount = 25;
+    assertEquals(red, redAmount);
+    assertEquals(blue, blueAmount);
+    assertEquals(white, whiteAmount);
+    assertEquals(black, blackAmount);
+  }
 
-        List<String> words = cardGenerator.pickWords(amount);
+  @Test
+  void testPickWordsCorrectAmount() {
+    int amount = 25;
 
-        assertEquals(amount, words.size());
-    }
+    List<String> words = cardGenerator.pickWords(amount);
 
+    assertEquals(amount, words.size());
+  }
 }
