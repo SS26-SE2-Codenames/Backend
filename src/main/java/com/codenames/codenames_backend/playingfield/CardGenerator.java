@@ -42,8 +42,6 @@ public class CardGenerator {
    * @return a randomized list of card objects
    */
   public List<Card> generateCards(int totalWords, int red, int blue, int white, int black) {
-    List<Card> cardList = new ArrayList<>();
-    List<String> wordList = pickWords(totalWords);
     List<Color> colorList = new ArrayList<>();
     for (int i = 0; i < red; i++) {
       colorList.add(Color.RED);
@@ -57,6 +55,8 @@ public class CardGenerator {
     for (int i = 0; i < black; i++) {
       colorList.add(Color.BLACK);
     }
+    List<Card> cardList = new ArrayList<>();
+    List<String> wordList = pickWords(totalWords);
     for (int i = 0; i < wordList.size(); i++) {
       Card card = new Card(wordList.get(i), colorList.get(i));
       cardList.add(card);
