@@ -63,7 +63,7 @@ public class BoardTest {
   }
 
   @Test
-  void testCheckColorOutofBounds() {
+  void testCheckColorOutOfBounds() {
     assertThrows(IllegalArgumentException.class, () -> board.checkColor(5));
   }
 }

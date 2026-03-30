@@ -22,7 +22,7 @@ public class Board {
   }
 
   /**
-   * Returns the list of cards
+   * Returns the list of cards.
    *
    * @return the list of cards
    */
