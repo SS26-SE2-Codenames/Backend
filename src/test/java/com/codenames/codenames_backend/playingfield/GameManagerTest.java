@@ -13,6 +13,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/** Unit test for GameManager. */
 public class GameManagerTest {
   private CardGenerator mockCardGenerator;
 
@@ -67,6 +68,6 @@ public class GameManagerTest {
     when(mockCardGenerator.generateCards(anyInt(), anyInt(), anyInt(), anyInt(), anyInt()))
         .thenReturn(cardList);
     GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
-    assertEquals("RED", gameManager.checkColor(0));
+    assertEquals(Color.RED, gameManager.checkColor(0));
   }
 }

@@ -13,6 +13,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/** Unit test for Board. */
 public class BoardTest {
   private CardGenerator mockCardGenerator;
   private Board board;
@@ -21,13 +22,17 @@ public class BoardTest {
   @BeforeEach
   void setUp() {
     mockCardGenerator = mock(CardGenerator.class);
+
     Card card1 = new Card("Test1", Color.RED);
     Card card2 = new Card("Test2", Color.BLUE);
     Card card3 = new Card("Test3", Color.WHITE);
     Card card4 = new Card("Test4", Color.BLACK);
+
     dummyCardList = Arrays.asList(card1, card2, card3, card4);
+
     when(mockCardGenerator.generateCards(anyInt(), anyInt(), anyInt(), anyInt(), anyInt()))
         .thenReturn(dummyCardList);
+
     board = new Board(mockCardGenerator, 4, 1, 1, 1, 1);
   }
 
@@ -46,10 +51,10 @@ public class BoardTest {
 
   @Test
   void testCheckColor() {
-    assertEquals("RED", board.checkColor(0));
-    assertEquals("BLUE", board.checkColor(1));
-    assertEquals("WHITE", board.checkColor(2));
-    assertEquals("BLACK", board.checkColor(3));
+    assertEquals(Color.RED, board.checkColor(0));
+    assertEquals(Color.BLUE, board.checkColor(1));
+    assertEquals(Color.WHITE, board.checkColor(2));
+    assertEquals(Color.BLACK, board.checkColor(3));
   }
 
   @Test

@@ -6,6 +6,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/** Unit test for CardGenerator. */
 public class CardGeneratorTest {
   private CardGenerator cardGenerator;
 
