@@ -4,7 +4,7 @@ package com.codenames.codenames_backend.playingfield;
 public class Card {
   private final String word;
   private final Color color;
-  private final boolean isGuessed;
+  private boolean isGuessed;
 
   /**
    * Constructs a new card with the word and color assigned.
@@ -50,5 +50,10 @@ public class Card {
    */
   public boolean isGuessed() {
     return isGuessed;
+  }
+
+  /** Sets isGuessed to true. */
+  public void reveal() {
+    this.isGuessed = true;
   }
 }

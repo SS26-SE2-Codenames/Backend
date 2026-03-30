@@ -3,6 +3,7 @@ package com.codenames.codenames_backend.playingfield;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -30,5 +31,12 @@ public class CardTest {
   @Test
   void testConstructorNullColor() {
     assertThrows(IllegalArgumentException.class, () -> new Card("Test", null));
+  }
+
+  @Test
+  void testReveal() {
+    Card card = new Card("Test", Color.RED);
+    card.reveal();
+    assertTrue(card.isGuessed());
   }
 }
