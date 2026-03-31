@@ -57,12 +57,12 @@ public class GameManagerTest {
     assertThrows(IllegalArgumentException.class, () -> new GameManager(null, mockCardGenerator));
   }
 
-  @Test
-  void testConstructorWrongColorStarts() {
-    assertThrows(
-        IllegalArgumentException.class, () -> new GameManager(Color.WHITE, mockCardGenerator));
-    assertThrows(
-        IllegalArgumentException.class, () -> new GameManager(Color.BLACK, mockCardGenerator));
+  @ParameterizedTest
+  @EnumSource(
+      value = Color.class,
+      names = {"WHITE", "BLACK"})
+  void testConstructorWrongColorStarts(Color color) {
+    assertThrows(IllegalArgumentException.class, () -> new GameManager(color, mockCardGenerator));
   }
 
   @Test
