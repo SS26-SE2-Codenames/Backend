@@ -157,17 +157,11 @@ public class GameManagerTest {
   }
 
   @Test
-  void testUpdateScoreWhiteCard() {
-    Card card1 = new Card("Test", Color.WHITE);
-    Card card2 = new Card("Test", Color.BLACK);
-    List<Card> cardList = List.of(card1, card2);
-
-    when(mockCardGenerator.generateCards(anyInt(), anyInt(), anyInt(), anyInt(), anyInt()))
-        .thenReturn(cardList);
+  void testFlipWhiteCard() {
+    mockCardGeneration(List.of(new Card("Test", Color.WHITE)));
     GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
     gameManager.flipCard(0, Color.BLUE);
-    gameManager.flipCard(1, Color.BLUE);
-    assertEquals(Color.RED, gameManager.getWinner());
+    assertNull(gameManager.getWinner());
   }
 
   @Test
