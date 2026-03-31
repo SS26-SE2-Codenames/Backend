@@ -49,12 +49,21 @@ public class GameManager {
         new Board(cardGenerator, TOTAL_CARDS, redCards, blueCards, WHITE_CARDS, BLACK_CARDS);
   }
 
-  /** Returns the current list of cards in a board. */
+  /**
+   * Returns the current list of cards in a board.
+   *
+   * @return the list of cards
+   */
   public List<Card> getCardList() {
     return this.board.getCardList();
   }
 
-  /** Returns the color of a card. */
+  /**
+   * Returns the color of a card.
+   *
+   * @param position the index of the card on the board
+   * @return the color of the requested card
+   */
   public Color checkColor(int position) {
     return this.board.checkColor(position);
   }
@@ -107,6 +116,8 @@ public class GameManager {
    * Changes the guessed state of a card and updates the score if necessary.
    *
    * @param position the position of the card that is selected by the player
+   * @param currentTurn the team whose turn it currently is
+   * @throws IllegalStateException if game is over or if card is already flipped
    */
   public void flipCard(int position, Color currentTurn) {
     if (getWinner() != null) {
