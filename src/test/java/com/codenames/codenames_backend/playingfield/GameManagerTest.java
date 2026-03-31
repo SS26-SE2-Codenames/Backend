@@ -27,8 +27,13 @@ public class GameManagerTest {
   @BeforeEach
   void setUp() {
     mockCardGenerator = mock(CardGenerator.class);
+    mockCardGeneration(new ArrayList<>());
+  }
+
+  // Helper Method to create board list
+  private void mockCardGeneration(List<Card> cardList) {
     when(mockCardGenerator.generateCards(anyInt(), anyInt(), anyInt(), anyInt(), anyInt()))
-        .thenReturn(new ArrayList<>());
+        .thenReturn(cardList);
   }
 
   @Test
