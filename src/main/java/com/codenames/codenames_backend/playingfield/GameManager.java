@@ -123,8 +123,8 @@ public class GameManager {
       throw new IllegalStateException("Card is already flipped");
     }
 
-    setGuessed(position);
-    Color currentColor = checkColor(position);
+    this.board.setGuessed(position);
+    Color currentColor = this.board.checkColor(position);
     updateScore(currentColor, currentTurn);
   }
 }
