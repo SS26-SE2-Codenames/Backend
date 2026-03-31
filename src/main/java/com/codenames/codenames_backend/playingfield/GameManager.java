@@ -13,8 +13,14 @@ public class GameManager {
   private static final int TOTAL_CARDS = 25;
   private static final int WHITE_CARDS = 7;
   private static final int BLACK_CARDS = 1;
+  private final int redCards;
+  private final int blueCards;
 
   private final Board board;
+  private final Color startingTeam;
+  // Testing purposes only, waititng for turn system implementation:
+  private int currentRedFound = 0;
+  private int currentBlueFound = 0;
 
   /**
    * Constructor for a new GameManager and initializes the playing board.
@@ -30,17 +36,17 @@ public class GameManager {
     if (startingTeam != Color.RED && startingTeam != Color.BLUE) {
       throw new IllegalArgumentException("startingTeam MUST be Color.RED or Color.BLUE");
     }
-    int redAmount;
-    int blueAmount;
+
     if (startingTeam == Color.RED) {
-      redAmount = 9;
-      blueAmount = 8;
+      this.redCards = 9;
+      this.blueCards = 8;
     } else {
-      redAmount = 8;
-      blueAmount = 9;
+      this.redCards = 8;
+      this.blueCards = 9;
     }
+    this.startingTeam = startingTeam;
     this.board =
-        new Board(cardGenerator, TOTAL_CARDS, redAmount, blueAmount, WHITE_CARDS, BLACK_CARDS);
+        new Board(cardGenerator, TOTAL_CARDS, redCards, blueCards, WHITE_CARDS, BLACK_CARDS);
   }
 
   /** Returns the current list of cards in a board. */
