@@ -15,7 +15,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/** Tests for ClueValidationService */
+/** Tests for ClueValidationService. */
 public class ClueValidationServiceTest {
   private static final int TOTAL_CARDS = 25;
   private static final int STARTING_TEAM_CARDS = 9;
