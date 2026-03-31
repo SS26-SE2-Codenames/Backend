@@ -67,6 +67,18 @@ public class ClueValidationServiceTest {
   }
 
   @Test
+  public void testValidateClue_wordInBoardWithSpace() {
+    boolean value = clueValidationService.validateWord(board, "Test ");
+    assertFalse(value);
+  }
+
+  @Test
+  public void testValidateClue_wordNotInBoardWithSpace() {
+    boolean value = clueValidationService.validateWord(board, "Test1 ");
+    assertTrue(value);
+  }
+
+  @Test
   public void testValidateClue_wordIsnull() {
     assertThrows(
         IllegalArgumentException.class, () -> clueValidationService.validateWord(board, null));
