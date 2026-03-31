@@ -118,8 +118,11 @@ public class GameManager {
    *
    * @param position the position of the card that is selected by the player
    */
-  public void flipCard(int position) {
-    if (getGuessed(position)) {
+  public void flipCard(int position, Color currentTurn) {
+    if (getWinner() != null) {
+      throw new IllegalStateException("Winner is already set");
+    }
+    if (this.board.getIsGuessed(position)) {
       throw new IllegalStateException("Card is already flipped");
     }
 
