@@ -94,4 +94,22 @@ public class GameManager {
         break;
     }
   }
+
+  /**
+   * Checks if win condition has been met or not.
+   *
+   * @return the winning color is returned or null if no team has won
+   */
+  public Color getWinner() {
+    if (this.winner != null) {
+      return this.winner;
+    }
+    if (currentRedFound >= redCards) {
+      return Color.RED;
+    }
+    if (currentBlueFound >= blueCards) {
+      return Color.BLUE;
+    }
+    return null;
+  }
 }
