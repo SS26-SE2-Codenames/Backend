@@ -14,6 +14,8 @@ import java.util.List;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 /** Unit test for GameManager. */
 public class GameManagerTest {
@@ -67,22 +69,14 @@ public class GameManagerTest {
 
   @Test
   void testGetCardList() {
-    Card card1 = new Card("Test", Color.RED);
-    List<Card> cardList = List.of(card1);
-
-    when(mockCardGenerator.generateCards(anyInt(), anyInt(), anyInt(), anyInt(), anyInt()))
-        .thenReturn(cardList);
+    mockCardGeneration(List.of(new Card("Test", Color.RED)));
     GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
     assertEquals(1, gameManager.getCardList().size());
   }
 
   @Test
   void testCheckColor() {
-    Card card1 = new Card("Test", Color.RED);
-    List<Card> cardList = List.of(card1);
-
-    when(mockCardGenerator.generateCards(anyInt(), anyInt(), anyInt(), anyInt(), anyInt()))
-        .thenReturn(cardList);
+    mockCardGeneration(List.of(new Card("Test", Color.RED)));
     GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
     assertEquals(Color.RED, gameManager.checkColor(0));
   }
@@ -100,8 +94,7 @@ public class GameManagerTest {
     for (int i = 0; i < 25; i++) {
       cardList.add(new Card("Test" + i, cardColor));
     }
-    when(mockCardGenerator.generateCards(anyInt(), anyInt(), anyInt(), anyInt(), anyInt()))
-        .thenReturn(cardList);
+    mockCardGeneration(cardList);
 
     GameManager gameManager = new GameManager(startingTeam, mockCardGenerator);
     return gameManager;
@@ -149,11 +142,7 @@ public class GameManagerTest {
 
   @Test
   void testGetWinner_redFoundBlackCardFound() {
-    Card card1 = new Card("Test", Color.BLACK);
-    List<Card> cardList = List.of(card1);
-
-    when(mockCardGenerator.generateCards(anyInt(), anyInt(), anyInt(), anyInt(), anyInt()))
-        .thenReturn(cardList);
+    mockCardGeneration(List.of(new Card("Test", Color.BLACK)));
     GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
     gameManager.flipCard(0, Color.RED);
     assertEquals(Color.BLUE, gameManager.getWinner());
@@ -161,11 +150,7 @@ public class GameManagerTest {
 
   @Test
   void testGetWinner_blueFoundBlackCardFound() {
-    Card card1 = new Card("Test", Color.BLACK);
-    List<Card> cardList = List.of(card1);
-
-    when(mockCardGenerator.generateCards(anyInt(), anyInt(), anyInt(), anyInt(), anyInt()))
-        .thenReturn(cardList);
+    mockCardGeneration(List.of(new Card("Test", Color.BLACK)));
     GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
     gameManager.flipCard(0, Color.BLUE);
     assertEquals(Color.RED, gameManager.getWinner());
@@ -187,10 +172,7 @@ public class GameManagerTest {
 
   @Test
   void testFlipCard_cardAlreadyFlipped() {
-    Card card1 = new Card("Test", Color.RED);
-    List<Card> cardList = List.of(card1);
-    when(mockCardGenerator.generateCards(anyInt(), anyInt(), anyInt(), anyInt(), anyInt()))
-        .thenReturn(cardList);
+    mockCardGeneration(List.of(new Card("Test", Color.WHITE)));
     GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
     gameManager.flipCard(0, Color.RED);
     assertThrows(IllegalStateException.class, () -> gameManager.flipCard(0, Color.RED));
@@ -198,11 +180,7 @@ public class GameManagerTest {
 
   @Test
   void testFlipCard_winnerAlreadyDetermined() {
-    Card card1 = new Card("Test", Color.BLACK);
-    List<Card> cardList = List.of(card1);
-
-    when(mockCardGenerator.generateCards(anyInt(), anyInt(), anyInt(), anyInt(), anyInt()))
-        .thenReturn(cardList);
+    mockCardGeneration(List.of(new Card("Test", Color.BLACK)));
     GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
     gameManager.flipCard(0, Color.BLUE);
     assertThrows(IllegalStateException.class, () -> gameManager.flipCard(0, Color.RED));
