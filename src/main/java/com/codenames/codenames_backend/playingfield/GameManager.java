@@ -112,4 +112,19 @@ public class GameManager {
     }
     return null;
   }
+
+  /**
+   * Changes the guessed state of a card and updates the score if necessary.
+   *
+   * @param position the position of the card that is selected by the player
+   */
+  public void flipCard(int position) {
+    if (getGuessed(position)) {
+      throw new IllegalStateException("Card is already flipped");
+    }
+
+    setGuessed(position);
+    Color currentColor = checkColor(position);
+    updateScore(currentColor, currentTurn);
+  }
 }
