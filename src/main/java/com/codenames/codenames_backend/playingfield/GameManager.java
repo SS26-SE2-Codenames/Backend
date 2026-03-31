@@ -18,8 +18,6 @@ public class GameManager {
 
   private final Board board;
   private final Color startingTeam;
-  // Testing purposes only, waititng for turn system implementation:
-  Color currentTurn = Color.RED;
   private int currentRedFound = 0;
   private int currentBlueFound = 0;
   private Color winner;
@@ -61,21 +59,13 @@ public class GameManager {
     return this.board.checkColor(position);
   }
 
-  public void setGuessed(int position) {
-    this.board.getCardList().get(position).setIsGuessedTrue();
-  }
-
-  public boolean getGuessed(int position) {
-    return this.board.getCardList().get(position).getIsGuessed();
-  }
-
   /**
    * Updates the score based on the color passed. If black card is found, opposing team wins.
    *
    * @param cardColor the color of the card
    * @param currentTurn the current team's turn
    */
-  public void updateScore(Color cardColor, Color currentTurn) {
+  private void updateScore(Color cardColor, Color currentTurn) {
     switch (cardColor) {
       case RED:
         currentRedFound++;
