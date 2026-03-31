@@ -8,7 +8,7 @@ import java.util.List;
 public class ClueValidationService {
 
   /**
-   * Checks if the word passed by spymaster is a word already on the board.
+   * Validates clues from spymaster.
    *
    * @param board the board of the game session
    * @param word the clue from the spymaster
@@ -18,12 +18,13 @@ public class ClueValidationService {
     if (word == null || word.isEmpty()) {
       throw new IllegalArgumentException("Word is null or empty");
     }
-    if (word.contains(" ")) {
+    String cleanWord = word.trim();
+    if (cleanWord.contains(" ")) {
       return false;
     }
     List<Card> cardList = board.getCardList();
     for (Card card : cardList) {
-      if (card.getWord().equalsIgnoreCase(word)) {
+      if (card.getWord().equalsIgnoreCase(cleanWord)) {
         return false;
       }
     }
