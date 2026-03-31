@@ -31,6 +31,20 @@ public class Board {
   }
 
   /**
+   * Returns the card object at the position passed.
+   *
+   * @param position the position of the requested card
+   * @return the card requested
+   * @throws IllegalArgumentException if the position is out of bounds
+   */
+  private Card getCard(int position) {
+    if (position < 0 || position >= this.cardList.size()) {
+      throw new IllegalArgumentException("Invalid position");
+    }
+    return this.cardList.get(position);
+  }
+
+  /**
    * Returns the color of the card at the specified position.
    *
    * @param position the index of the card
@@ -38,9 +52,27 @@ public class Board {
    * @throws IllegalArgumentException if the position is out of bounds
    */
   public Color checkColor(int position) {
-    if (position < 0 || position > cardList.size() - 1) {
-      throw new IllegalArgumentException("Invalid position");
-    }
-    return cardList.get(position).getColor();
+    return getCard(position).getColor();
+  }
+
+  /**
+   * Returns the current guessed state of a card.
+   *
+   * @param position the position of the card in the game board
+   * @return the state of the card
+   * @throws IllegalArgumentException if the position is out of bounds
+   */
+  public boolean getIsGuessed(int position) {
+    return getCard(position).getIsGuessed();
+  }
+
+  /**
+   * Sets the guessed state of a card to true.
+   *
+   * @param position the position of the card in the game board
+   * @throws IllegalArgumentException if the position is out of bounds
+   */
+  public void setGuessed(int position) {
+    getCard(position).setIsGuessedTrue();
   }
 }
