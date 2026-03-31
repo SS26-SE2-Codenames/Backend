@@ -1,6 +1,7 @@
 package com.codenames.codenames_backend.playingfield;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
@@ -10,6 +11,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -69,5 +71,89 @@ public class GameManagerTest {
         .thenReturn(cardList);
     GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
     assertEquals(Color.RED, gameManager.checkColor(0));
+  }
+
+  @Test
+  void testGetWinner_Null() {
+    GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
+    assertNull(gameManager.getWinner());
+  }
+
+  // Helper method for testing permutation of getWinner()
+  private @NonNull GameManager helperMethodGenerateFullCardList(
+      Color cardColor, Color startingTeam) {
+    List<Card> cardList = new ArrayList<>();
+    for (int i = 0; i < 25; i++) {
+      cardList.add(new Card("Test" + i, cardColor));
+    }
+    when(mockCardGenerator.generateCards(anyInt(), anyInt(), anyInt(), anyInt(), anyInt()))
+        .thenReturn(cardList);
+
+    GameManager gameManager = new GameManager(startingTeam, mockCardGenerator);
+    return gameManager;
+  }
+
+  @Test
+  void testGetWinner_RedStartsRedWins() {
+    GameManager gameManager = helperMethodGenerateFullCardList(Color.RED, Color.RED);
+
+    for (int i = 0; i < 9; i++) {
+      gameManager.flipCard(i, Color.RED);
+    }
+    assertEquals(Color.RED, gameManager.getWinner());
+  }
+
+  @Test
+  void testGetWinner_RedStartsBlueWins() {
+    GameManager gameManager = helperMethodGenerateFullCardList(Color.BLUE, Color.RED);
+
+    for (int i = 0; i < 8; i++) {
+      gameManager.flipCard(i, Color.BLUE);
+    }
+    assertEquals(Color.BLUE, gameManager.getWinner());
+  }
+
+  @Test
+  void testGetWinner_BlueStartsRedWins() {
+    GameManager gameManager = helperMethodGenerateFullCardList(Color.RED, Color.BLUE);
+
+    for (int i = 0; i < 8; i++) {
+      gameManager.flipCard(i, Color.RED);
+    }
+    assertEquals(Color.RED, gameManager.getWinner());
+  }
+
+  @Test
+  void testGetWinner_BlueStartsBlueWins() {
+    GameManager gameManager = helperMethodGenerateFullCardList(Color.BLUE, Color.BLUE);
+
+    for (int i = 0; i < 9; i++) {
+      gameManager.flipCard(i, Color.BLUE);
+    }
+    assertEquals(Color.BLUE, gameManager.getWinner());
+  }
+
+  @Test
+  void testGetWinner_RedFoundBlackCardFound() {
+    Card card1 = new Card("Test", Color.BLACK);
+    List<Card> cardList = List.of(card1);
+
+    when(mockCardGenerator.generateCards(anyInt(), anyInt(), anyInt(), anyInt(), anyInt()))
+        .thenReturn(cardList);
+    GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
+    gameManager.flipCard(0, Color.RED);
+    assertEquals(Color.BLUE, gameManager.getWinner());
+  }
+
+  @Test
+  void testGetWinner_BlueFoundBlackCardFound() {
+    Card card1 = new Card("Test", Color.BLACK);
+    List<Card> cardList = List.of(card1);
+
+    when(mockCardGenerator.generateCards(anyInt(), anyInt(), anyInt(), anyInt(), anyInt()))
+        .thenReturn(cardList);
+    GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
+    gameManager.flipCard(0, Color.BLUE);
+    assertEquals(Color.RED, gameManager.getWinner());
   }
 }
