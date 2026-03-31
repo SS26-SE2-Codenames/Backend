@@ -74,7 +74,7 @@ public class GameManagerTest {
   }
 
   @Test
-  void testGetWinner_Null() {
+  void testGetWinner_null() {
     GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
     assertNull(gameManager.getWinner());
   }
@@ -94,7 +94,7 @@ public class GameManagerTest {
   }
 
   @Test
-  void testGetWinner_RedStartsRedWins() {
+  void testGetWinner_redStartsRedWins() {
     GameManager gameManager = helperMethodGenerateFullCardList(Color.RED, Color.RED);
 
     for (int i = 0; i < 9; i++) {
@@ -104,7 +104,7 @@ public class GameManagerTest {
   }
 
   @Test
-  void testGetWinner_RedStartsBlueWins() {
+  void testGetWinner_redStartsBlueWins() {
     GameManager gameManager = helperMethodGenerateFullCardList(Color.BLUE, Color.RED);
 
     for (int i = 0; i < 8; i++) {
@@ -114,7 +114,7 @@ public class GameManagerTest {
   }
 
   @Test
-  void testGetWinner_BlueStartsRedWins() {
+  void testGetWinner_blueStartsRedWins() {
     GameManager gameManager = helperMethodGenerateFullCardList(Color.RED, Color.BLUE);
 
     for (int i = 0; i < 8; i++) {
@@ -124,7 +124,7 @@ public class GameManagerTest {
   }
 
   @Test
-  void testGetWinner_BlueStartsBlueWins() {
+  void testGetWinner_blueStartsBlueWins() {
     GameManager gameManager = helperMethodGenerateFullCardList(Color.BLUE, Color.BLUE);
 
     for (int i = 0; i < 9; i++) {
@@ -134,7 +134,7 @@ public class GameManagerTest {
   }
 
   @Test
-  void testGetWinner_RedFoundBlackCardFound() {
+  void testGetWinner_redFoundBlackCardFound() {
     Card card1 = new Card("Test", Color.BLACK);
     List<Card> cardList = List.of(card1);
 
@@ -146,7 +146,7 @@ public class GameManagerTest {
   }
 
   @Test
-  void testGetWinner_BlueFoundBlackCardFound() {
+  void testGetWinner_blueFoundBlackCardFound() {
     Card card1 = new Card("Test", Color.BLACK);
     List<Card> cardList = List.of(card1);
 
