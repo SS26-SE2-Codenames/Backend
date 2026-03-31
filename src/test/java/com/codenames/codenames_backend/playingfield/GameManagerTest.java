@@ -17,6 +17,11 @@ import org.junit.jupiter.api.Test;
 
 /** Unit test for GameManager. */
 public class GameManagerTest {
+  private static final int TOTAL_CARDS = 25;
+  private static final int STARTING_TEAM_CARDS = 9;
+  private static final int SECOND_TEAM_CARDS = 8;
+  private static final int WHITE_CARDS = 7;
+  private static final int BLACK_CARDS = 1;
   private CardGenerator mockCardGenerator;
 
   @BeforeEach
@@ -28,14 +33,18 @@ public class GameManagerTest {
 
   @Test
   void testConstructorRedStarts() {
-    GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
-    verify(mockCardGenerator, times(1)).generateCards(25, 9, 8, 7, 1);
+    new GameManager(Color.RED, mockCardGenerator);
+    verify(mockCardGenerator, times(1))
+        .generateCards(
+            TOTAL_CARDS, STARTING_TEAM_CARDS, SECOND_TEAM_CARDS, WHITE_CARDS, BLACK_CARDS);
   }
 
   @Test
   void testConstructorBlueStarts() {
-    GameManager gameManager = new GameManager(Color.BLUE, mockCardGenerator);
-    verify(mockCardGenerator, times(1)).generateCards(25, 8, 9, 7, 1);
+    new GameManager(Color.BLUE, mockCardGenerator);
+    verify(mockCardGenerator, times(1))
+        .generateCards(
+            TOTAL_CARDS, SECOND_TEAM_CARDS, STARTING_TEAM_CARDS, WHITE_CARDS, BLACK_CARDS);
   }
 
   @Test
