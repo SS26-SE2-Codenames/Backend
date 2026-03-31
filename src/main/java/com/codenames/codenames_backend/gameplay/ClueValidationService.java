@@ -15,12 +15,15 @@ public class ClueValidationService {
    * @return the validation if the clue is valid or not
    */
   public boolean validateWord(Board board, String word) {
+    if (word == null || word.isEmpty()) {
+      throw new IllegalArgumentException("Word is null or empty");
+    }
     if (word.contains(" ")) {
       return false;
     }
     List<Card> cardList = board.getCardList();
     for (Card card : cardList) {
-      if (card.getWord().toLowerCase().equals(word.toLowerCase())) {
+      if (card.getWord().equalsIgnoreCase(word)) {
         return false;
       }
     }
