@@ -16,7 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /** Unit test for Board. */
-public class BoardTest {
+class BoardTest {
   private CardGenerator mockCardGenerator;
   private Board board;
   private List<Card> dummyCardList;

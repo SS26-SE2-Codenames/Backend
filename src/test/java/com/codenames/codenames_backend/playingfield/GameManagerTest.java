@@ -18,7 +18,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 /** Unit test for GameManager. */
-public class GameManagerTest {
+class GameManagerTest {
   private static final int TOTAL_CARDS = 25;
   private static final int STARTING_TEAM_CARDS = 9;
   private static final int SECOND_TEAM_CARDS = 8;

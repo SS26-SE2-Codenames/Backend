@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 /** Unit tests for Card. */
-public class CardTest {
+class CardTest {
 
   @Test
   void testConstructorHappyPath() {
