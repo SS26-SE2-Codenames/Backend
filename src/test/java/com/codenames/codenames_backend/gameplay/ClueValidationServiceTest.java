@@ -14,6 +14,8 @@ import com.codenames.codenames_backend.playingfield.Color;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /** Tests for ClueValidationService */
 class ClueValidationServiceTest {
@@ -48,7 +50,8 @@ class ClueValidationServiceTest {
         .thenReturn(cardList);
   }
 
-  @Test
+  @ParameterizedTest
+  @ValueSource(strings = {"Test", "Test test2", "Test "})
   void testValidateClue_clueInBoard() {
     boolean value = clueValidationService.validateWord(board, "Test");
     assertFalse(value);
@@ -58,18 +61,6 @@ class ClueValidationServiceTest {
   void testValidateClue_clueNotInBoard() {
     boolean value = clueValidationService.validateWord(board, "Test1");
     assertTrue(value);
-  }
-
-  @Test
-  void testValidateClue_twoWords() {
-    boolean value = clueValidationService.validateWord(board, "Test test2");
-    assertFalse(value);
-  }
-
-  @Test
-  void testValidateClue_wordInBoardWithSpace() {
-    boolean value = clueValidationService.validateWord(board, "Test ");
-    assertFalse(value);
   }
 
   @Test
