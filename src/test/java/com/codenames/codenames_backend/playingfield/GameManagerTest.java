@@ -96,8 +96,7 @@ public class GameManagerTest {
     }
     mockCardGeneration(cardList);
 
-    GameManager gameManager = new GameManager(startingTeam, mockCardGenerator);
-    return gameManager;
+    return new GameManager(startingTeam, mockCardGenerator);
   }
 
   @Test
