@@ -48,12 +48,12 @@ public class Card {
    *
    * @return the guess state of a card.
    */
-  public boolean isGuessed() {
+  public boolean getIsGuessed() {
     return isGuessed;
   }
 
   /** Sets isGuessed to true. */
-  public void reveal() {
+  public void setIsGuessedTrue() {
     this.isGuessed = true;
   }
 }

@@ -15,7 +15,7 @@ public class CardTest {
     Card card = new Card("Test", Color.RED);
     assertEquals("Test", card.getWord());
     assertEquals(Color.RED, card.getColor());
-    assertFalse(card.isGuessed());
+    assertFalse(card.getIsGuessed());
   }
 
   @Test
@@ -34,9 +34,9 @@ public class CardTest {
   }
 
   @Test
-  void testReveal() {
+  void testSetIsGuessedTrue() {
     Card card = new Card("Test", Color.RED);
-    card.reveal();
-    assertTrue(card.isGuessed());
+    card.setIsGuessedTrue();
+    assertTrue(card.getIsGuessed());
   }
 }
