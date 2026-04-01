@@ -52,8 +52,8 @@ class ClueValidationServiceTest {
 
   @ParameterizedTest
   @ValueSource(strings = {"Test", "Test test2", "Test "})
-  void testValidateClue_clueInBoard() {
-    boolean value = clueValidationService.validateWord(board, "Test");
+  void testValidateClue_clueInBoard(String input) {
+    boolean value = clueValidationService.validateWord(board, input);
     assertFalse(value);
   }
 
