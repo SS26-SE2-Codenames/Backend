@@ -27,8 +27,29 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
             String code = json.get("code").asText();
 
             Player player = new Player(name, session);
-            lobbyService.addPlayer(code,player);
 
+            lobbyService.addPlayer(code,player);
+            broadcastPlayerList(code);
+
+        }
+    }
+    private void broadcastPlayerList(String code) throws Exception {
+
+        var players = lobbyService.getPlayers(code);
+
+        var names = players.stream()
+                .map(Player::getUsername)
+                .toList();
+
+        String response = mapper.writeValueAsString(
+                java.util.Map.of(
+                        "type", "PLAYER_LIST",
+                        "players", names
+                )
+        );
+
+        for (Player p : players) {
+            p.getSession().sendMessage(new TextMessage(response));
         }
     }
 }
