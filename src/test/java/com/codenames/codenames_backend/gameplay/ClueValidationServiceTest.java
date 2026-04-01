@@ -16,7 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /** Tests for ClueValidationService */
-public class ClueValidationServiceTest {
+class ClueValidationServiceTest {
   private static final int TOTAL_CARDS = 25;
   private static final int STARTING_TEAM_CARDS = 9;
   private static final int SECOND_TEAM_CARDS = 8;
@@ -49,43 +49,43 @@ public class ClueValidationServiceTest {
   }
 
   @Test
-  public void testValidateClue_clueInBoard() {
+  void testValidateClue_clueInBoard() {
     boolean value = clueValidationService.validateWord(board, "Test");
     assertFalse(value);
   }
 
   @Test
-  public void testValidateClue_clueNotInBoard() {
+  void testValidateClue_clueNotInBoard() {
     boolean value = clueValidationService.validateWord(board, "Test1");
     assertTrue(value);
   }
 
   @Test
-  public void testValidateClue_twoWords() {
+  void testValidateClue_twoWords() {
     boolean value = clueValidationService.validateWord(board, "Test test2");
     assertFalse(value);
   }
 
   @Test
-  public void testValidateClue_wordInBoardWithSpace() {
+  void testValidateClue_wordInBoardWithSpace() {
     boolean value = clueValidationService.validateWord(board, "Test ");
     assertFalse(value);
   }
 
   @Test
-  public void testValidateClue_wordNotInBoardWithSpace() {
+  void testValidateClue_wordNotInBoardWithSpace() {
     boolean value = clueValidationService.validateWord(board, "Test1 ");
     assertTrue(value);
   }
 
   @Test
-  public void testValidateClue_wordIsnull() {
+  void testValidateClue_wordIsnull() {
     assertThrows(
         IllegalArgumentException.class, () -> clueValidationService.validateWord(board, null));
   }
 
   @Test
-  public void testValidateClue_wordIsEmpty() {
+  void testValidateClue_wordIsEmpty() {
     assertThrows(
         IllegalArgumentException.class, () -> clueValidationService.validateWord(board, ""));
   }
