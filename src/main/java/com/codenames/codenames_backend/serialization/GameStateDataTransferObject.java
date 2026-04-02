@@ -1,6 +1,5 @@
 package com.codenames.codenames_backend.serialization;
 
-import com.codenames.codenames_backend.playingfield.Card;
 import java.util.List;
 
 /**
@@ -15,6 +14,6 @@ import java.util.List;
 public record GameStateDataTransferObject(
     int currentRedFound,
     int currentBlueFound,
-    List<Card> cardList,
+    List<CardDataTransferObject> cardList,
     String winner,
     String currentTurn) {}
