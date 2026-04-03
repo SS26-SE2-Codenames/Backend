@@ -9,6 +9,11 @@ import org.springframework.stereotype.Component;
 public class SerializationJson {
   private final ObjectMapper mapper;
 
+  /**
+   * Constructor for serialization (mapper passed as argument to enable mocking in tests).
+   *
+   * @param mapper the ObjectMapper object that is used to serialize into JSON
+   */
   public SerializationJson(ObjectMapper mapper) {
     this.mapper = mapper;
   }
