@@ -21,7 +21,7 @@ class DataTransferObjectServiceTest {
   GameStateDataTransferObject gameStateDto;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     cardHidden = new Card("Test1", Color.RED);
     cardGuessed = new Card("Test1", Color.RED);
     cardGuessed.setIsGuessedTrue();
