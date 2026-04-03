@@ -7,20 +7,16 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 
 @Configuration
 @EnableWebSocket
-
 public class GameWebSocketConfig implements WebSocketConfigurer {
-    
-    private final GameWebSocketHandler gameWebSocketHandler;
 
-    public GameWebSocketConfig(GameWebSocketHandler gameWebSocketHandler) {
-        this.gameWebSocketHandler = gameWebSocketHandler;
-    }
-    
-    @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(gameWebSocketHandler, "/ws/game")
-                .setAllowedOrigins("*");
-        
-        
-    }
+  private final GameWebSocketHandler gameWebSocketHandler;
+
+  public GameWebSocketConfig(GameWebSocketHandler gameWebSocketHandler) {
+    this.gameWebSocketHandler = gameWebSocketHandler;
+  }
+
+  @Override
+  public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+    registry.addHandler(gameWebSocketHandler, "/ws/game").setAllowedOrigins("*");
+  }
 }

@@ -10,46 +10,40 @@ import tools.jackson.databind.ObjectMapper;
 @Component
 public class GameWebSocketHandler extends TextWebSocketHandler {
 
-    private final LobbyService lobbyService;
-    private final ObjectMapper mapper = new ObjectMapper();
+  private final LobbyService lobbyService;
+  private final ObjectMapper mapper = new ObjectMapper();
 
-    public GameWebSocketHandler(LobbyService lobbyService) {
-        this.lobbyService = lobbyService;
+  public GameWebSocketHandler(LobbyService lobbyService) {
+    this.lobbyService = lobbyService;
+  }
+
+  @Override
+  protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+    JsonNode json = mapper.readTree(message.getPayload());
+    String type = json.get("type").asText();
+
+    if (type.equals("JOIN")) {
+      String name = json.get("name").asText();
+      String code = json.get("code").asText();
+
+      Player player = new Player(name, session);
+
+      lobbyService.addPlayer(code, player);
+      broadcastPlayerList(code);
     }
+  }
 
-    @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        JsonNode json = mapper.readTree(message.getPayload());
-        String type = json.get("type").asText();
+  private void broadcastPlayerList(String code) throws Exception {
 
-        if(type.equals("JOIN")) {
-            String name = json.get("name").asText();
-            String code = json.get("code").asText();
+    var players = lobbyService.getPlayers(code);
 
-            Player player = new Player(name, session);
+    var names = players.stream().map(Player::getUsername).toList();
 
-            lobbyService.addPlayer(code,player);
-            broadcastPlayerList(code);
+    String response =
+        mapper.writeValueAsString(java.util.Map.of("type", "PLAYER_LIST", "players", names));
 
-        }
+    for (Player p : players) {
+      p.getSession().sendMessage(new TextMessage(response));
     }
-    private void broadcastPlayerList(String code) throws Exception {
-
-        var players = lobbyService.getPlayers(code);
-
-        var names = players.stream()
-                .map(Player::getUsername)
-                .toList();
-
-        String response = mapper.writeValueAsString(
-                java.util.Map.of(
-                        "type", "PLAYER_LIST",
-                        "players", names
-                )
-        );
-
-        for (Player p : players) {
-            p.getSession().sendMessage(new TextMessage(response));
-        }
-    }
+  }
 }
