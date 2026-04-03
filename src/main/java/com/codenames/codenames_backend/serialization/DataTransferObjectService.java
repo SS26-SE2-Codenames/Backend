@@ -49,11 +49,11 @@ public class DataTransferObjectService {
       winner = gameManager.getWinner().toString();
     }
     return new GameStateDataTransferObject(
+        winner,
+        currentTurn,
         gameManager.getCurrentRedFound(),
         gameManager.getCurrentBlueFound(),
-        cardDataTransferObject,
-        winner,
-        currentTurn);
+        cardDataTransferObject);
   }
 
   /** Roles of the game, needed for the DTO. */
