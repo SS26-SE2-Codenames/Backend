@@ -9,6 +9,11 @@ import tools.jackson.databind.ObjectMapper;
 
 @Component
 public class GameWebSocketHandler extends TextWebSocketHandler {
+  private static final String TYPE = "type";
+  private static final String TYPE_JOIN = "JOIN";
+  private static final String FIELD_NAME = "name";
+  private static final String FIELD_CODE = "code";
+  private static final String RESPONSE_TYPE = "PLAYER_LIST";
 
   private final LobbyService lobbyService;
   private final ObjectMapper mapper = new ObjectMapper();
@@ -20,17 +25,21 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
   @Override
   protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
     JsonNode json = mapper.readTree(message.getPayload());
-    String type = json.get("type").asText();
+    String type = json.get(TYPE).asText();
 
-    if (type.equals("JOIN")) {
-      String name = json.get("name").asText();
-      String code = json.get("code").asText();
-
-      Player player = new Player(name, session);
-
-      lobbyService.addPlayer(code, player);
-      broadcastPlayerList(code);
+    if (type.equals(TYPE_JOIN)) {
+      handleJoin(json, session);
     }
+  }
+
+  private void handleJoin(JsonNode json, WebSocketSession session) throws Exception {
+    String name = json.get(FIELD_NAME).asText();
+    String code = json.get(FIELD_CODE).asText();
+
+    Player player = new Player(name, session);
+    lobbyService.addPlayer(code, player);
+
+    broadcastPlayerList(code);
   }
 
   private void broadcastPlayerList(String code) throws Exception {
@@ -40,7 +49,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
     var names = players.stream().map(Player::getUsername).toList();
 
     String response =
-        mapper.writeValueAsString(java.util.Map.of("type", "PLAYER_LIST", "players", names));
+        mapper.writeValueAsString(java.util.Map.of(TYPE, RESPONSE_TYPE, "players", names));
 
     for (Player p : players) {
       p.getSession().sendMessage(new TextMessage(response));
