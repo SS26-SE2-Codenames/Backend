@@ -40,6 +40,8 @@ class SerializationJsonTest {
     assertEquals(expectedResult, result);
   }
 
+  // writeValueAsString throws JsonProcessingException,
+  // I either need try catch block or have my method throw the exception.
   @Test
   void testSerialize_exception() throws JsonProcessingException {
     ObjectMapper mockMapper = mock(ObjectMapper.class);
