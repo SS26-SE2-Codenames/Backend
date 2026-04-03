@@ -8,14 +8,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 /** Unit tests for Card. */
-public class CardTest {
+class CardTest {
 
   @Test
   void testConstructorHappyPath() {
     Card card = new Card("Test", Color.RED);
     assertEquals("Test", card.getWord());
     assertEquals(Color.RED, card.getColor());
-    assertFalse(card.isGuessed());
+    assertFalse(card.getIsGuessed());
   }
 
   @Test
@@ -34,9 +34,9 @@ public class CardTest {
   }
 
   @Test
-  void testReveal() {
+  void testSetIsGuessedTrue() {
     Card card = new Card("Test", Color.RED);
-    card.reveal();
-    assertTrue(card.isGuessed());
+    card.setIsGuessedTrue();
+    assertTrue(card.getIsGuessed());
   }
 }

@@ -1,7 +1,9 @@
 package com.codenames.codenames_backend.playingfield;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -14,7 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /** Unit test for Board. */
-public class BoardTest {
+class BoardTest {
   private CardGenerator mockCardGenerator;
   private Board board;
   private List<Card> dummyCardList;
@@ -65,5 +67,16 @@ public class BoardTest {
   @Test
   void testCheckColorOutOfBounds() {
     assertThrows(IllegalArgumentException.class, () -> board.checkColor(5));
+  }
+
+  @Test
+  void testIsGuessed() {
+    assertFalse(board.getIsGuessed(0));
+  }
+
+  @Test
+  void testSetIsGuessed() {
+    board.setGuessed(0);
+    assertTrue(board.getIsGuessed(0));
   }
 }
