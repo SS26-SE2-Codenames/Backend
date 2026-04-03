@@ -25,6 +25,6 @@ public class LobbyService {
   public void removePlayer(WebSocketSession session) {
     lobbies
         .values()
-        .forEach(players -> players.removeIf(p -> p.getSession().equals(session.getId())));
+        .forEach(players -> players.removeIf(p -> p.getSession().getId().equals(session.getId())));
   }
 }
