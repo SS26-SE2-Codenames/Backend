@@ -19,7 +19,7 @@ public class LobbyService {
   }
 
   public List<Player> getPlayers(String code) {
-    return lobbies.getOrDefault(code, new ArrayList<>());
+    return List.copyOf(lobbies.getOrDefault(code, new ArrayList<>()));
   }
 
   public void removePlayer(WebSocketSession session) {
