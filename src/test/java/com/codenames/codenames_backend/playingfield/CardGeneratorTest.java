@@ -7,11 +7,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /** Unit test for CardGenerator. */
-public class CardGeneratorTest {
+class CardGeneratorTest {
   private CardGenerator cardGenerator;
 
   @BeforeEach
-  public void setup() {
+  void setup() {
     cardGenerator = new CardGenerator();
   }
 

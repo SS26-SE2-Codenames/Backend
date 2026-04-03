@@ -26,7 +26,7 @@ public class CardGenerator {
       }
       Collections.shuffle(words);
     } catch (IOException e) {
-      throw new RuntimeException("Error reading file", e);
+      throw new IllegalStateException("Error reading file", e);
     }
     return words.subList(0, totalWords);
   }
