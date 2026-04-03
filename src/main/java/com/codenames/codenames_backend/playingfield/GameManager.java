@@ -129,4 +129,12 @@ public class GameManager {
     Color currentColor = this.board.checkColor(position);
     updateScore(currentColor, currentTurn);
   }
+
+  public int getCurrentRedFound() {
+    return currentRedFound;
+  }
+
+  public int getCurrentBlueFound() {
+    return currentBlueFound;
+  }
 }
