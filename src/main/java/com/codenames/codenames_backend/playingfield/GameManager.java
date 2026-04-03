@@ -17,7 +17,6 @@ public class GameManager {
   private final int blueCards;
 
   private final Board board;
-  private final Color startingTeam;
   private int currentRedFound = 0;
   private int currentBlueFound = 0;
   private Color winner;
@@ -44,7 +43,6 @@ public class GameManager {
       this.redCards = 8;
       this.blueCards = 9;
     }
-    this.startingTeam = startingTeam;
     this.board =
         new Board(cardGenerator, TOTAL_CARDS, redCards, blueCards, WHITE_CARDS, BLACK_CARDS);
   }
