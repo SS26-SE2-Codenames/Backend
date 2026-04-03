@@ -4,13 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SerializationJSON {
+public class SerializationJson {
   private final ObjectMapper mapper = new ObjectMapper();
 
   public String serialize(GameStateDataTransferObject gameStateDataTransferObject) {
     try {
-      String jsonNode = mapper.writeValueAsString(gameStateDataTransferObject);
-      return jsonNode;
+      return mapper.writeValueAsString(gameStateDataTransferObject);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
