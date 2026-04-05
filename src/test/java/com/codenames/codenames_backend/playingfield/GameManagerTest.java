@@ -9,6 +9,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.codenames.codenames_backend.gameplay.Clue;
 import java.util.ArrayList;
 import java.util.List;
 import org.jspecify.annotations.NonNull;
@@ -85,6 +86,10 @@ class GameManagerTest {
   void testGetWinner_null() {
     GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
     assertNull(gameManager.getWinner());
+  }
+
+  private void helperMethodSubmitClue(GameManager gameManager, int guessAmount){
+    gameManager.submitClue(new Clue("Test", guessAmount));
   }
 
   // Helper method for testing permutation of getWinner()
