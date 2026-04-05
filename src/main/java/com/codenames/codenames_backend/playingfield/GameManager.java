@@ -1,5 +1,6 @@
 package com.codenames.codenames_backend.playingfield;
 
+import com.codenames.codenames_backend.gameplay.Clue;
 import java.util.List;
 
 /**
@@ -20,6 +21,9 @@ public class GameManager {
   private int currentRedFound = 0;
   private int currentBlueFound = 0;
   private Color winner;
+
+  private Clue currentClue;
+  private int remainingGuesses;
 
   /**
    * Constructor for a new GameManager and initializes the playing board.
@@ -124,7 +128,10 @@ public class GameManager {
     if (this.board.getIsGuessed(position)) {
       throw new IllegalStateException("Card is already flipped");
     }
-
+    if(this.remainingGuesses <= 0){
+      throw new IllegalStateException("No more guesses.");
+    }
+    this.remainingGuesses--;
     this.board.setGuessed(position);
     Color currentColor = this.board.checkColor(position);
     updateScore(currentColor, currentTurn);
@@ -136,5 +143,10 @@ public class GameManager {
 
   public int getCurrentBlueFound() {
     return currentBlueFound;
+  }
+
+  public void submitClue(Clue clue){
+    this.currentClue = clue;
+    this.remainingGuesses = clue.getGuessAmount();
   }
 }
