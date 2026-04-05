@@ -100,8 +100,9 @@ class GameManagerTest {
       cardList.add(new Card("Test" + i, cardColor));
     }
     mockCardGeneration(cardList);
-
-    return new GameManager(startingTeam, mockCardGenerator);
+    GameManager gameManager = new GameManager(startingTeam, mockCardGenerator);
+    helperMethodSubmitClue(gameManager, 9);
+    return gameManager;
   }
 
   @Test
@@ -148,6 +149,7 @@ class GameManagerTest {
   void testGetWinner_redFoundBlackCardFound() {
     mockCardGeneration(List.of(new Card("Test", Color.BLACK)));
     GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
+    helperMethodSubmitClue(gameManager, 1);
     gameManager.flipCard(0, Color.RED);
     assertEquals(Color.BLUE, gameManager.getWinner());
   }
@@ -156,6 +158,7 @@ class GameManagerTest {
   void testGetWinner_blueFoundBlackCardFound() {
     mockCardGeneration(List.of(new Card("Test", Color.BLACK)));
     GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
+    helperMethodSubmitClue(gameManager, 1);
     gameManager.flipCard(0, Color.BLUE);
     assertEquals(Color.RED, gameManager.getWinner());
   }
@@ -164,6 +167,7 @@ class GameManagerTest {
   void testFlipWhiteCard() {
     mockCardGeneration(List.of(new Card("Test", Color.WHITE)));
     GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
+    helperMethodSubmitClue(gameManager, 1);
     gameManager.flipCard(0, Color.BLUE);
     assertNull(gameManager.getWinner());
   }
@@ -172,6 +176,7 @@ class GameManagerTest {
   void testFlipCard_cardAlreadyFlipped() {
     mockCardGeneration(List.of(new Card("Test", Color.WHITE)));
     GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
+    helperMethodSubmitClue(gameManager, 1);
     gameManager.flipCard(0, Color.RED);
     assertThrows(IllegalStateException.class, () -> gameManager.flipCard(0, Color.RED));
   }
