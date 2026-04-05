@@ -128,7 +128,8 @@ public class GameManager {
     if (this.board.getIsGuessed(position)) {
       throw new IllegalStateException("Card is already flipped");
     }
-    if(this.remainingGuesses <= 0){
+    if (this.remainingGuesses <= 0) {
+      clearClue();
       throw new IllegalStateException("No more guesses.");
     }
     this.remainingGuesses--;
@@ -145,8 +146,13 @@ public class GameManager {
     return currentBlueFound;
   }
 
-  public void submitClue(Clue clue){
+  public void submitClue(Clue clue) {
     this.currentClue = clue;
     this.remainingGuesses = clue.getGuessAmount();
+  }
+
+  public void clearClue() {
+    this.currentClue = null;
+    this.remainingGuesses = 0;
   }
 }
