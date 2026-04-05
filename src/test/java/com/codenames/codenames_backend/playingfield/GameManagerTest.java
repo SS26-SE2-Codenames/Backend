@@ -185,7 +185,24 @@ class GameManagerTest {
   void testFlipCard_winnerAlreadyDetermined() {
     mockCardGeneration(List.of(new Card("Test", Color.BLACK)));
     GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
+    helperMethodSubmitClue(gameManager, 1);
     gameManager.flipCard(0, Color.BLUE);
     assertThrows(IllegalStateException.class, () -> gameManager.flipCard(0, Color.RED));
+  }
+
+  @Test
+  void testSubmitClue(){
+    Clue clue = new Clue("Test", 2);
+    assertEquals("Test", clue.getWord());
+    assertEquals(3, clue.getGuessAmount());
+  }
+
+  @Test
+  void testOutOfGuesses(){
+    mockCardGeneration(List.of(new Card("Test", Color.RED), new Card("Test2", Color.RED)));
+    GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
+    helperMethodSubmitClue(gameManager, 0);
+    gameManager.flipCard(0, Color.RED);
+    assertThrows(IllegalStateException.class, () -> gameManager.flipCard(1, Color.RED));
   }
 }
