@@ -191,6 +191,22 @@ class GameManagerTest {
   }
 
   @Test
+  void testGetCurrentRedFoundCards() {
+    mockCardGeneration(List.of(new Card("Test", Color.BLACK)));
+    GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
+    int result = gameManager.getCurrentRedFound();
+    assertEquals(0, result);
+  }
+
+  @Test
+  void testGetCurrentBlueFoundCards() {
+    mockCardGeneration(List.of(new Card("Test", Color.BLACK)));
+    GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
+    int result = gameManager.getCurrentBlueFound();
+    assertEquals(0, result);
+  }
+
+  @Test
   void testSubmitClue(){
     Clue clue = new Clue("Test", 2);
     assertEquals("Test", clue.getWord());
