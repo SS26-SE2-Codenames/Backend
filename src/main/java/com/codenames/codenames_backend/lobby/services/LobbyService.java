@@ -7,7 +7,8 @@ import java.util.HashMap;
 
 @Service
 public class LobbyService {
-    private static final HashMap<String, Lobby> lobbyList = new HashMap<>();
+
+    private final HashMap<String, Lobby> lobbyList = new HashMap<>();
     private final LobbyCodeGenerator generator;
 
     public LobbyService(LobbyCodeGenerator generator) {
@@ -16,7 +17,7 @@ public class LobbyService {
 
     public String createLobby(String username) {
         String lobbyCode = generateLobbyCode();
-        if (lobbyCode.isBlank()) return null;
+        if (lobbyCode == null || lobbyCode.isBlank()) return null;
         Lobby lobby = new Lobby(lobbyCode, username);
         lobbyList.put(lobbyCode, lobby);
         return lobbyCode;

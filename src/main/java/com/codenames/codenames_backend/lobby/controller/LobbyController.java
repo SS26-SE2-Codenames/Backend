@@ -3,12 +3,12 @@ package com.codenames.codenames_backend.lobby.controller;
 import com.codenames.codenames_backend.lobby.dto.LobbyResponse;
 import com.codenames.codenames_backend.lobby.services.LobbyService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("/lobby")
 public class LobbyController {
 
@@ -22,7 +22,7 @@ public class LobbyController {
     public ResponseEntity<LobbyResponse> createLobby(@RequestParam String username) {
         String lobbyCode = service.createLobby(username);
         if (lobbyCode.isBlank()) {
-            return ResponseEntity.internalServerError().body(new LobbyResponse("Error while creating lobby.", null));
+            return ResponseEntity.internalServerError().body(new LobbyResponse("Error while creating lobby.", ""));
         } else {
             return ResponseEntity.ok(new LobbyResponse("Successfully created Lobby.", lobbyCode));
         }
