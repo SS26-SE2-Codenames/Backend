@@ -155,4 +155,12 @@ public class GameManager {
     this.currentClue = null;
     this.remainingGuesses = 0;
   }
+
+  public String getCurrentClueWord() {
+    return currentClue.getWord();
+  }
+
+  public int getRemainingGuesses() {
+    return remainingGuesses;
+  }
 }
