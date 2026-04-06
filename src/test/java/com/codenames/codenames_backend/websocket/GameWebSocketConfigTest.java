@@ -1,7 +1,6 @@
 package com.codenames.codenames_backend.websocket;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistration;
 

@@ -2,7 +2,6 @@ package com.codenames.codenames_backend.websocket;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -42,5 +41,22 @@ class GameWebSocketHandlerTest {
 
     // verify message sent
     verify(session, atLeastOnce()).sendMessage(any(TextMessage.class));
+  }
+
+  @Test
+  void shouldIgnoreNonJoinMessages() throws Exception {
+    WebSocketSession session = mock(WebSocketSession.class);
+
+    String payload =
+        """
+      {
+        "type": "LEAVE"
+      }
+      """;
+
+    handler.handleTextMessage(session, new TextMessage(payload));
+
+    // verify that nothing was sent
+    verify(session, never()).sendMessage(any());
   }
 }
