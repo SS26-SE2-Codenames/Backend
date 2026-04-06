@@ -28,14 +28,14 @@ class SerializationJsonTest {
     serializer = new SerializationJson(mapper);
 
     dummyList = List.of(new CardDataTransferObject("TEST", "HIDDEN", false));
-    dummyGameState = new GameStateDataTransferObject("RED", "RED", 0, 0, dummyList);
+    dummyGameState = new GameStateDataTransferObject("RED", "RED", 0, 0, "Test", 1, dummyList);
   }
 
   @Test
   void testSerialize_pass() {
     String expectedResult =
-        "{\"winner\":\"RED\",\"currentTurn\":\"RED\",\"currentRedFound\":0,\"currentBlueFound\":0,"
-            + "\"cardList\":[{\"word\":\"TEST\",\"color\":\"HIDDEN\",\"isGuessed\":false}]}";
+        "{\"winner\":\"RED\",\"currentTurn\":\"RED\",\"currentRedFound\":0,\"currentBlueFound\":0"
+            + ",\"currentClue\":\"Test\",\"remainingGuesses\":1,\"cardList\":[{\"word\":\"TEST\",\"color\":\"HIDDEN\",\"isGuessed\":false}]}";
     String result = serializer.serialize(dummyGameState);
     assertEquals(expectedResult, result);
   }
