@@ -221,4 +221,20 @@ class GameManagerTest {
     gameManager.flipCard(0, Color.RED);
     assertThrows(IllegalStateException.class, () -> gameManager.flipCard(1, Color.RED));
   }
+
+  @Test
+  void testGetCurrentClueWord(){
+    mockCardGeneration(List.of(new Card("Test", Color.RED), new Card("Test2", Color.RED)));
+    GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
+    gameManager.submitClue((new Clue("Test", 1)));
+    assertEquals("Test", gameManager.getCurrentClueWord());
+  }
+
+  @Test
+  void testGetRemainingGuesses(){
+    mockCardGeneration(List.of(new Card("Test", Color.RED), new Card("Test2", Color.RED)));
+    GameManager gameManager = new GameManager(Color.RED, mockCardGenerator);
+    gameManager.submitClue((new Clue("Test", 1)));
+    assertEquals(2, gameManager.getRemainingGuesses());
+  }
 }
