@@ -53,6 +53,8 @@ public class DataTransferObjectService {
         currentTurn,
         gameManager.getCurrentRedFound(),
         gameManager.getCurrentBlueFound(),
+        gameManager.getCurrentClueWord(),
+        gameManager.getRemainingGuesses(),
         cardDataTransferObject);
   }
 
