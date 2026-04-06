@@ -7,6 +7,10 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
+/**
+ * WebSocket handler responsible for processing incoming messages and managing player interactions
+ * in lobbies.
+ */
 @Component
 public class GameWebSocketHandler extends TextWebSocketHandler {
   private static final String TYPE = "type";
@@ -18,10 +22,22 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
   private final LobbyService lobbyService;
   private final ObjectMapper mapper = new ObjectMapper();
 
+  /**
+   * Creates a new WebSocket handler.
+   *
+   * @param lobbyService the lobby service used for managing players
+   */
   public GameWebSocketHandler(LobbyService lobbyService) {
     this.lobbyService = lobbyService;
   }
 
+  /**
+   * Handles incoming WebSocket text messages.
+   *
+   * @param session the WebSocket session of the client
+   * @param message the incoming message
+   * @throws Exception if message parsing or response sending fails
+   */
   @Override
   protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
     JsonNode json = mapper.readTree(message.getPayload());
@@ -32,6 +48,13 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
     }
   }
 
+  /**
+   * Handles a player joining a lobby.
+   *
+   * @param json the parsed JSON message
+   * @param session the WebSocket session of the player
+   * @throws Exception if broadcasting fails
+   */
   private void handleJoin(JsonNode json, WebSocketSession session) throws Exception {
     String name = json.get(FIELD_NAME).asText();
     String code = json.get(FIELD_CODE).asText();
@@ -42,6 +65,12 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
     broadcastPlayerList(code);
   }
 
+  /**
+   * Sends the updated player list to all players in a lobby.
+   *
+   * @param code the lobby code
+   * @throws Exception if sending messages fails
+   */
   private void broadcastPlayerList(String code) throws Exception {
 
     var players = lobbyService.getPlayers(code);
