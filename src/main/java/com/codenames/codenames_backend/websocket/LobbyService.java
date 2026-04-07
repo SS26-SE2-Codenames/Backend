@@ -3,16 +3,14 @@ package com.codenames.codenames_backend.websocket;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /** Service responsible for managing game lobbies and their players. */
 @Service
 public class LobbyService {
 
-  private final Map<String, List<Player>> lobbies = new HashMap<>();
+  private final Map<String, List<Player>> lobbies = new ConcurrentHashMap<>();
 
   /**
    * Adds a player to a lobby.
@@ -21,7 +19,7 @@ public class LobbyService {
    * @param player the player to add
    */
   public void addPlayer(String code, Player player) {
-    lobbies.putIfAbsent(code, new ArrayList<>());
+    lobbies.putIfAbsent(code, Collections.synchronizedList(new ArrayList<>()));
     lobbies.get(code).add(player);
   }
 
