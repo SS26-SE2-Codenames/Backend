@@ -43,8 +43,9 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
    * @throws IOException if message parsing or response sending fails
    */
   @Override
-  protected void handleTextMessage(@Nonnull WebSocketSession session,@Nonnull TextMessage message)
+  protected void handleTextMessage(@Nonnull WebSocketSession session, @Nonnull TextMessage message)
       throws IOException {
+
     JsonNode json = mapper.readTree(message.getPayload());
 
     JsonNode typeNode = json.get(TYPE);
@@ -74,8 +75,8 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
     if (nameNode == null || codeNode == null) {
       return;
     }
-    String name = json.get(FIELD_NAME).asText();
-    String code = json.get(FIELD_CODE).asText();
+    String name = nameNode.asText();
+    String code = nameNode.asText();
 
     Player player = new Player(name, session);
     lobbyService.addPlayer(code, player);
