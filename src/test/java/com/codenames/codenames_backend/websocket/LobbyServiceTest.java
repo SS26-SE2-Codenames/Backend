@@ -48,11 +48,7 @@ class LobbyServiceTest {
 
     List<Player> players = lobbyService.getPlayers("ABC");
 
-    assertThrows(
-        UnsupportedOperationException.class,
-        () -> {
-          players.add(player);
-        });
+    assertThrows(UnsupportedOperationException.class, () -> players.add(player));
   }
 
   @Test
