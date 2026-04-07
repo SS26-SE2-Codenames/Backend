@@ -23,6 +23,7 @@ public class GameManager {
   private int currentBlueFound = 0;
   private Color winner;
 
+  private ClueValidationService clueValidationService;
   private Clue currentClue;
   private int remainingGuesses;
 
@@ -33,14 +34,14 @@ public class GameManager {
    * @param cardGenerator the utility used to generate the cards for the game
    * @throws IllegalArgumentException if team is null, white or black
    */
-  public GameManager(Color startingTeam, CardGenerator cardGenerator) {
+  public GameManager(Color startingTeam, CardGenerator cardGenerator, ClueValidationService clueValidationService) {
     if (startingTeam == null) {
       throw new IllegalArgumentException("startingTeam cannot be null");
     }
     if (startingTeam != Color.RED && startingTeam != Color.BLUE) {
       throw new IllegalArgumentException("startingTeam MUST be Color.RED or Color.BLUE");
     }
-
+    this.clueValidationService = clueValidationService;
     if (startingTeam == Color.RED) {
       this.redCards = 9;
       this.blueCards = 8;
@@ -163,7 +164,6 @@ public class GameManager {
    * @param clue the clue object containing word and guess amount
    */
   public void submitClue(Clue clue) {
-    ClueValidationService clueValidationService = new ClueValidationService();
     if (!clueValidationService.validateWord(this.board, clue.getWord())) {
       this.currentClue = clue;
       this.remainingGuesses = clue.getGuessAmount();
