@@ -108,10 +108,10 @@ class GameManagerTest {
       cardList.add(new Card("Test" + i, cardColor));
     }
     mockCardGeneration(cardList);
-    GameManager gameManager =
+    GameManager fullListGameManager =
         new GameManager(startingTeam, mockCardGenerator, mockClueValidationService);
-    helperMethodSubmitClue(gameManager, 9);
-    return gameManager;
+    helperMethodSubmitClue(fullListGameManager, 9);
+    return fullListGameManager;
   }
 
   @Test
