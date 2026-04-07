@@ -17,7 +17,7 @@ class GameWebSocketConfigTest {
     WebSocketHandlerRegistration registration = mock(WebSocketHandlerRegistration.class);
 
     when(registry.addHandler(handler, "/ws/game")).thenReturn(registration);
-    when(registration.setAllowedOrigins("*")).thenReturn(registration);
+    when(registration.setAllowedOrigins("http://localhost:8080")).thenReturn(registration);
 
     config.registerWebSocketHandlers(registry);
 
