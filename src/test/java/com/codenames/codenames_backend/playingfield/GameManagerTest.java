@@ -199,23 +199,22 @@ class GameManagerTest {
 
   @Test
   void testGetCurrentRedFoundCards() {
-    mockCardGeneration(List.of(new Card("Test", Color.BLACK)));
     int result = gameManager.getCurrentRedFound();
     assertEquals(0, result);
   }
 
   @Test
   void testGetCurrentBlueFoundCards() {
-    mockCardGeneration(List.of(new Card("Test", Color.BLACK)));
     int result = gameManager.getCurrentBlueFound();
     assertEquals(0, result);
   }
 
   @Test
   void testSubmitClue() {
-    Clue clue = new Clue("Test", 2);
-    assertEquals("Test", clue.word());
-    assertEquals(3, clue.guessAmount());
+    Clue validClue = new Clue("Test", 2);
+    gameManager.submitClue(validClue);
+    assertEquals(validClue, gameManager.getCurrentClue());
+    assertEquals(3, gameManager.getRemainingGuesses());
   }
 
   @Test

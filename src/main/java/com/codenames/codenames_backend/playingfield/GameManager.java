@@ -199,4 +199,13 @@ public class GameManager {
   public int getRemainingGuesses() {
     return remainingGuesses;
   }
+
+  /**
+   * Returns the current clue object.
+   *
+   * @return the current clue object
+   */
+  public Clue getCurrentClue(){
+    return currentClue;
+  }
 }
