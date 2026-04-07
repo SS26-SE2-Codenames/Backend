@@ -7,6 +7,8 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
+
 /**
  * WebSocket handler responsible for processing incoming messages and managing player interactions
  * in lobbies.
@@ -39,7 +41,8 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
    * @throws Exception if message parsing or response sending fails
    */
   @Override
-  protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+  protected void handleTextMessage(WebSocketSession session, TextMessage message)
+      throws IOException {
     JsonNode json = mapper.readTree(message.getPayload());
 
     JsonNode typeNode = json.get(TYPE);
@@ -61,7 +64,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
    * @param session the WebSocket session of the player
    * @throws Exception if broadcasting fails
    */
-  private void handleJoin(JsonNode json, WebSocketSession session) throws Exception {
+  private void handleJoin(JsonNode json, WebSocketSession session) throws IOException {
 
     JsonNode nameNode = json.get(FIELD_NAME);
     JsonNode codeNode = json.get(FIELD_CODE);
@@ -84,7 +87,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
    * @param code the lobby code
    * @throws Exception if sending messages fails
    */
-  private void broadcastPlayerList(String code) throws Exception {
+  private void broadcastPlayerList(String code) throws IOException {
 
     var players = lobbyService.getPlayers(code);
 
