@@ -41,7 +41,13 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
   @Override
   protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
     JsonNode json = mapper.readTree(message.getPayload());
-    String type = json.get(TYPE).asText();
+
+    JsonNode typeNode = json.get(TYPE);
+    if (typeNode == null) {
+      return;
+    }
+
+    String type = typeNode.asText();
 
     if (type.equals(TYPE_JOIN)) {
       handleJoin(json, session);
@@ -56,6 +62,13 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
    * @throws Exception if broadcasting fails
    */
   private void handleJoin(JsonNode json, WebSocketSession session) throws Exception {
+
+    JsonNode nameNode = json.get(FIELD_NAME);
+    JsonNode codeNode = json.get(FIELD_CODE);
+
+    if (nameNode == null || codeNode == null) {
+      return;
+    }
     String name = json.get(FIELD_NAME).asText();
     String code = json.get(FIELD_CODE).asText();
 
