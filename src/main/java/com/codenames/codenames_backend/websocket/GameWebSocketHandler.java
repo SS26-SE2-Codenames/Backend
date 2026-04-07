@@ -20,6 +20,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
   private static final String FIELD_NAME = "name";
   private static final String FIELD_CODE = "code";
   private static final String RESPONSE_TYPE = "PLAYER_LIST";
+  private static final String FIELD_PLAYERS = "players";
 
   private final LobbyService lobbyService;
   private final ObjectMapper mapper = new ObjectMapper();
@@ -94,7 +95,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
     var names = players.stream().map(Player::getUsername).toList();
 
     String response =
-        mapper.writeValueAsString(java.util.Map.of(TYPE, RESPONSE_TYPE, "players", names));
+        mapper.writeValueAsString(java.util.Map.of(TYPE, RESPONSE_TYPE, FIELD_PLAYERS, names));
 
     for (Player p : players) {
       p.getSession().sendMessage(new TextMessage(response));
