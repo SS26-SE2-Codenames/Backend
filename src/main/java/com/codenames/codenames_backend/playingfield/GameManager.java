@@ -205,7 +205,7 @@ public class GameManager {
    *
    * @return the current clue object
    */
-  public Clue getCurrentClue(){
+  public Clue getCurrentClue() {
     return currentClue;
   }
 }
