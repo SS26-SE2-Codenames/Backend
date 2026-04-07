@@ -241,4 +241,10 @@ class GameManagerTest {
     gameManager.submitClue((new Clue("Test", 1)));
     assertEquals(2, gameManager.getRemainingGuesses());
   }
+
+  @Test
+  void testSubmitClue_invalidClue() {
+    when(mockClueValidationService.validateWord(any(), anyString())).thenReturn(false);
+    assertThrows(IllegalArgumentException.class, () -> gameManager.submitClue((new Clue("Test", 0))));
+  }
 }
