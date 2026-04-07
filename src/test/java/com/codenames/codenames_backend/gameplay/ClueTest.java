@@ -12,14 +12,14 @@ class ClueTest {
   @Test
   void testConstructorValid_word(){
     clue = new Clue("Test", 0);
-    assertEquals("Test", clue.getWord());
+    assertEquals("Test", clue.word());
   }
 
   @Test
   void testConstructorValid_guessAmount(){
     clue = new Clue("Test", 0);
     // Expecting 1 since operators get N + 1 guesses.
-    assertEquals(1, clue.getGuessAmount());
+    assertEquals(1, clue.guessAmount());
   }
 
   @Test

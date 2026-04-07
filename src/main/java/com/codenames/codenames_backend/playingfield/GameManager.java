@@ -168,9 +168,9 @@ public class GameManager {
    * @throws IllegalArgumentException if clue is: null, empty, spaces, or word is on the board
    */
   public void submitClue(Clue clue) {
-    if (clueValidationService.validateWord(this.board, clue.getWord())) {
+    if (clueValidationService.validateWord(this.board, clue.word())) {
       this.currentClue = clue;
-      this.remainingGuesses = clue.getGuessAmount();
+      this.remainingGuesses = clue.guessAmount();
     } else {
       throw new IllegalArgumentException("Clue is invalid, cannot be a word that is on the board!");
     }
@@ -188,7 +188,7 @@ public class GameManager {
    * @return the current clue word
    */
   public String getCurrentClueWord() {
-    return currentClue.getWord();
+    return currentClue.word();
   }
 
   /**

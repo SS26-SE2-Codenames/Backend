@@ -217,8 +217,8 @@ class GameManagerTest {
   @Test
   void testSubmitClue() {
     Clue clue = new Clue("Test", 2);
-    assertEquals("Test", clue.getWord());
-    assertEquals(3, clue.getGuessAmount());
+    assertEquals("Test", clue.word());
+    assertEquals(3, clue.guessAmount());
   }
 
   @Test
