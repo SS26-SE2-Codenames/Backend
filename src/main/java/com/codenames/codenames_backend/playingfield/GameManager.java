@@ -138,28 +138,56 @@ public class GameManager {
     updateScore(currentColor, currentTurn);
   }
 
+  /**
+   * Returns the number of red cards found so far.
+   *
+   * @return the number of red cards found
+   */
   public int getCurrentRedFound() {
     return currentRedFound;
   }
 
+  /**
+   * Returns the number of blue cards found so far.
+   *
+   * @return the number of blue cards found
+   */
   public int getCurrentBlueFound() {
     return currentBlueFound;
   }
 
+  /**
+   * Submits a clue and updates remaining guesses.
+   *
+   * @param clue the clue object containing word and guess amount
+   */
   public void submitClue(Clue clue) {
     this.currentClue = clue;
     this.remainingGuesses = clue.getGuessAmount();
   }
 
+  /**
+   * Clears the current clue and resets guesses to 0.
+   */
   public void clearClue() {
     this.currentClue = null;
     this.remainingGuesses = 0;
   }
 
+  /**
+   * Returns the current clue word.
+   *
+   * @return the current clue word
+   */
   public String getCurrentClueWord() {
     return currentClue.getWord();
   }
 
+  /**
+   * Returns the number of remaining guesses.
+   *
+   * @return the number of remaining guesses.
+   */
   public int getRemainingGuesses() {
     return remainingGuesses;
   }
