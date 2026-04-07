@@ -1,6 +1,7 @@
 package com.codenames.codenames_backend.playingfield;
 
 import com.codenames.codenames_backend.gameplay.Clue;
+import com.codenames.codenames_backend.gameplay.ClueValidationService;
 import java.util.List;
 
 /**
@@ -162,8 +163,15 @@ public class GameManager {
    * @param clue the clue object containing word and guess amount
    */
   public void submitClue(Clue clue) {
-    this.currentClue = clue;
-    this.remainingGuesses = clue.getGuessAmount();
+    ClueValidationService clueValidationService = new ClueValidationService();
+    if (!clueValidationService.validateWord(this.board, clue.getWord())){
+      this.currentClue = clue;
+      this.remainingGuesses = clue.getGuessAmount();
+    }
+    else {
+      throw new IllegalArgumentException("Clue is invalid, cannot be a word that is on the board!");
+    }
+
   }
 
   /**
