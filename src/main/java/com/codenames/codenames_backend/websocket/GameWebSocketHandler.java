@@ -6,6 +6,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -42,7 +43,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
    * @throws IOException if message parsing or response sending fails
    */
   @Override
-  protected void handleTextMessage(WebSocketSession session, TextMessage message)
+  protected void handleTextMessage(@Nonnull WebSocketSession session,@Nonnull TextMessage message)
       throws IOException {
     JsonNode json = mapper.readTree(message.getPayload());
 
