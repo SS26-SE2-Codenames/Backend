@@ -121,7 +121,7 @@ public class GameManager {
    *
    * @param position the position of the card that is selected by the player
    * @param currentTurn the team whose turn it currently is
-   * @throws IllegalStateException if game is over or if card is already flipped
+   * @throws IllegalStateException if game over, card already flipped, no more guesses
    */
   public void flipCard(int position, Color currentTurn) {
     if (getWinner() != null) {
@@ -162,9 +162,10 @@ public class GameManager {
    * Submits a clue and updates remaining guesses.
    *
    * @param clue the clue object containing word and guess amount
+   * @throws IllegalArgumentException if clue is: null, empty, spaces, or word is on the board
    */
   public void submitClue(Clue clue) {
-    if (!clueValidationService.validateWord(this.board, clue.getWord())) {
+    if (clueValidationService.validateWord(this.board, clue.getWord())) {
       this.currentClue = clue;
       this.remainingGuesses = clue.getGuessAmount();
     } else {

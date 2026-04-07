@@ -12,16 +12,19 @@ public class ClueValidationService {
    *
    * @param board the board of the game session
    * @param word the clue from the spymaster
-   * @return the validation if the clue is valid or not
+   * @return the validation if the clue is valid (true) or not (false
+   * @throws IllegalArgumentException if the clue is null or empty, or contains spaces
    */
   public boolean validateWord(Board board, String word) {
     if (word == null || word.isEmpty()) {
       throw new IllegalArgumentException("Word is null or empty");
     }
+
     String cleanWord = word.trim();
     if (cleanWord.contains(" ")) {
       return false;
     }
+
     List<Card> cardList = board.getCardList();
     for (Card card : cardList) {
       if (card.getWord().equalsIgnoreCase(cleanWord)) {
