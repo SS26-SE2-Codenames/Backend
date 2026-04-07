@@ -1,8 +1,6 @@
 package com.codenames.codenames_backend.gameplay;
 
-/**
- * Clue class that holds the clue word and guess amount + 1.
- */
+/** Clue class that holds the clue word and guess amount + 1. */
 public class Clue {
   private String word;
   private int guessAmount;

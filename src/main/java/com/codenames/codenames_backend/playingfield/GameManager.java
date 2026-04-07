@@ -164,19 +164,15 @@ public class GameManager {
    */
   public void submitClue(Clue clue) {
     ClueValidationService clueValidationService = new ClueValidationService();
-    if (!clueValidationService.validateWord(this.board, clue.getWord())){
+    if (!clueValidationService.validateWord(this.board, clue.getWord())) {
       this.currentClue = clue;
       this.remainingGuesses = clue.getGuessAmount();
-    }
-    else {
+    } else {
       throw new IllegalArgumentException("Clue is invalid, cannot be a word that is on the board!");
     }
-
   }
 
-  /**
-   * Clears the current clue and resets guesses to 0.
-   */
+  /** Clears the current clue and resets guesses to 0. */
   public void clearClue() {
     this.currentClue = null;
     this.remainingGuesses = 0;
