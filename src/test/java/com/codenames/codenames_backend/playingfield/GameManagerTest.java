@@ -41,7 +41,6 @@ class GameManagerTest {
     mockCardGeneration(List.of(new Card("Test", Color.RED)));
     gameManager = new GameManager(Color.RED, mockCardGenerator, mockClueValidationService);
     when(mockClueValidationService.validateWord(any(), anyString())).thenReturn(true);
-
   }
 
   // Helper Method to create board list
@@ -230,19 +229,20 @@ class GameManagerTest {
 
   @Test
   void testGetCurrentClueWord() {
-    gameManager.submitClue((new Clue("Test", 1)));
+    helperMethodSubmitClue(gameManager, 1);
     assertEquals("Test", gameManager.getCurrentClueWord());
   }
 
   @Test
   void testGetRemainingGuesses() {
-    gameManager.submitClue((new Clue("Test", 1)));
+    helperMethodSubmitClue(gameManager, 1);
     assertEquals(2, gameManager.getRemainingGuesses());
   }
 
   @Test
   void testSubmitClue_invalidClue() {
     when(mockClueValidationService.validateWord(any(), anyString())).thenReturn(false);
-    assertThrows(IllegalArgumentException.class, () -> gameManager.submitClue((new Clue("Test", 0))));
+    assertThrows(
+        IllegalArgumentException.class, () -> gameManager.submitClue((new Clue("Test", 0))));
   }
 }
