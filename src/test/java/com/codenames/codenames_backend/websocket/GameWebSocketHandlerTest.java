@@ -6,6 +6,8 @@ import org.mockito.Mockito;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -21,7 +23,7 @@ class GameWebSocketHandlerTest {
   }
 
   @Test
-  void shouldHandleJoinAndBroadcastPlayerList() throws Exception {
+  void shouldHandleJoinAndBroadcastPlayerList() throws IOException {
     WebSocketSession session = mock(WebSocketSession.class);
     when(session.getId()).thenReturn("1");
 
@@ -44,7 +46,7 @@ class GameWebSocketHandlerTest {
   }
 
   @Test
-  void shouldIgnoreNonJoinMessages() throws Exception {
+  void shouldIgnoreNonJoinMessages() throws IOException {
     WebSocketSession session = mock(WebSocketSession.class);
 
     String payload =
