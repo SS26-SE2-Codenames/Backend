@@ -55,7 +55,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
 
     String type = typeNode.asText();
 
-    if (type.equals(TYPE_JOIN)) {
+    if (TYPE_JOIN.equals(type)) {
       handleJoin(json, session);
     }
   }
