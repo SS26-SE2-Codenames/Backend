@@ -24,6 +24,6 @@ class GameWebSocketConfigTest {
     config.registerWebSocketHandlers(registry);
 
     verify(registry).addHandler(handler, "/ws/game");
-    verify(registration).setAllowedOrigins("*");
+    verify(registration).setAllowedOrigins("http://localhost:8080");
   }
 }
