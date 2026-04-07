@@ -42,7 +42,7 @@ class GameWebSocketHandlerTest {
     assertEquals(1, lobbyService.getPlayers("ABC").size());
 
     // verify message sent
-    verify(session, atLeastOnce()).sendMessage(any(TextMessage.class));
+    verify(session).sendMessage(any(TextMessage.class));
   }
 
   @Test
