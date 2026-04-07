@@ -61,4 +61,13 @@ class GameWebSocketHandlerTest {
     // verify that nothing was sent
     verify(session, never()).sendMessage(any());
   }
+
+  @Test
+  void shouldIgnoreInvalidJson() throws IOException {
+    WebSocketSession session = mock(WebSocketSession.class);
+
+    handler.handleTextMessage(session, new TextMessage("{}"));
+
+    verify(session, never()).sendMessage(any());
+  }
 }
