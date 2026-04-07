@@ -89,8 +89,6 @@ class GameManagerTest {
 
   @Test
   void testCheckColor() {
-    GameManager gameManager =
-        new GameManager(Color.RED, mockCardGenerator, mockClueValidationService);
     assertEquals(Color.RED, gameManager.checkColor(0));
   }
 
