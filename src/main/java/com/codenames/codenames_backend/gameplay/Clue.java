@@ -22,10 +22,20 @@ public class Clue {
     this.guessAmount = guessAmount + 1;
   }
 
+  /**
+   * Returns the clue word.
+   *
+   * @return the clue word
+   */
   public String getWord() {
     return word;
   }
 
+  /**
+   * Return the guess amount + 1.
+   *
+   * @return the guess amount + 1
+   */
   public int getGuessAmount() {
     return guessAmount;
   }

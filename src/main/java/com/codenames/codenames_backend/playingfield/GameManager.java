@@ -34,7 +34,10 @@ public class GameManager {
    * @param cardGenerator the utility used to generate the cards for the game
    * @throws IllegalArgumentException if team is null, white or black
    */
-  public GameManager(Color startingTeam, CardGenerator cardGenerator, ClueValidationService clueValidationService) {
+  public GameManager(
+      Color startingTeam,
+      CardGenerator cardGenerator,
+      ClueValidationService clueValidationService) {
     if (startingTeam == null) {
       throw new IllegalArgumentException("startingTeam cannot be null");
     }
