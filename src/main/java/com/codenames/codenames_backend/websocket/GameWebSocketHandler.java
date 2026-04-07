@@ -76,7 +76,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
       return;
     }
     String name = nameNode.asText();
-    String code = nameNode.asText();
+    String code = codeNode.asText();
 
     Player player = new Player(name, session);
     lobbyService.addPlayer(code, player);

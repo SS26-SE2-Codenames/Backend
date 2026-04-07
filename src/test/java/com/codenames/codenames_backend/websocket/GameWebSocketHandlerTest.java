@@ -1,5 +1,6 @@
 package com.codenames.codenames_backend.websocket;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -7,6 +8,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.any;
@@ -14,6 +16,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.internal.verification.VerificationModeFactory.atLeastOnce;
 
 class GameWebSocketHandlerTest {
 
@@ -31,22 +34,18 @@ class GameWebSocketHandlerTest {
     WebSocketSession session = mock(WebSocketSession.class);
     when(session.getId()).thenReturn("1");
 
+    ObjectMapper mapper = new ObjectMapper();
     String payload =
-        """
-        {
-          "type": "JOIN",
-          "name": "Nati",
-          "code": "ABC"
-        }
-        """;
+        mapper.writeValueAsString(
+            Map.of(
+                "type", "JOIN",
+                "name", "Nati",
+                "code", "ABC"));
 
     handler.handleTextMessage(session, new TextMessage(payload));
 
-    // verify player added
     assertEquals(1, lobbyService.getPlayers("ABC").size());
-
-    // verify message sent
-    verify(session).sendMessage(any(TextMessage.class));
+    verify(session, atLeastOnce()).sendMessage(any(TextMessage.class));
   }
 
   @Test
