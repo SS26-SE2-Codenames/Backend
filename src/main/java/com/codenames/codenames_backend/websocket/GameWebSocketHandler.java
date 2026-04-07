@@ -39,7 +39,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
    *
    * @param session the WebSocket session of the client
    * @param message the incoming message
-   * @throws Exception if message parsing or response sending fails
+   * @throws IOException if message parsing or response sending fails
    */
   @Override
   protected void handleTextMessage(WebSocketSession session, TextMessage message)
@@ -63,7 +63,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
    *
    * @param json the parsed JSON message
    * @param session the WebSocket session of the player
-   * @throws Exception if broadcasting fails
+   * @throws IOException if broadcasting fails
    */
   private void handleJoin(JsonNode json, WebSocketSession session) throws IOException {
 
@@ -86,7 +86,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
    * Sends the updated player list to all players in a lobby.
    *
    * @param code the lobby code
-   * @throws Exception if sending messages fails
+   * @throws IOException if sending messages fails
    */
   private void broadcastPlayerList(String code) throws IOException {
 
