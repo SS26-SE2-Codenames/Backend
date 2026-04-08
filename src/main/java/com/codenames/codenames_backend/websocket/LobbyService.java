@@ -43,4 +43,16 @@ public class LobbyService {
         .values()
         .forEach(players -> players.removeIf(p -> p.getSession().getId().equals(session.getId())));
   }
+
+  public void attachSession(String username, String code, WebSocketSession session) {
+    List<Player> players = lobbies.get(code);
+
+    if (players == null) return;
+
+    for (Player p : players) {
+      if (p.getUsername().equals(username)) {
+        p.setSession(session);
+      }
+    }
+  }
 }
