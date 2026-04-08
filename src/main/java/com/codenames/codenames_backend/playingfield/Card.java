@@ -14,6 +14,7 @@ public class Card {
    *
    * @param word the word displayed on the card
    * @param color the color of the card
+   * @throws IllegalArgumentException if word is null or empty, or if color is null
    */
   public Card(String word, Color color) {
     if (word == null || word.isEmpty()) {

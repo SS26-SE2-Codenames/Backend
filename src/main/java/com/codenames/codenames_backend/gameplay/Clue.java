@@ -8,6 +8,7 @@ public record Clue(String word, int guessAmount) {
    *
    * @param word the word used for clue
    * @param guessAmount the amount of guesses + 1
+   * @throws IllegalArgumentException if word is null or empty, or if guessAmount is negative
    */
   public Clue(String word, int guessAmount) {
     if (word == null || word.isEmpty()) {
