@@ -5,8 +5,7 @@ import lombok.Getter;
 
 /** Represents the physical playing field of the game. */
 public class Board {
-  @Getter
-  private final List<Card> cardList;
+  @Getter private final List<Card> cardList;
 
   /**
    * Constructs a new board with a generated list of cards.
