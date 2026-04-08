@@ -1,9 +1,11 @@
 package com.codenames.codenames_backend.playingfield;
 
 import java.util.List;
+import lombok.Getter;
 
 /** Represents the physical playing field of the game. */
 public class Board {
+  @Getter
   private final List<Card> cardList;
 
   /**
@@ -19,15 +21,6 @@ public class Board {
   public Board(
       CardGenerator cardGenerator, int totalWords, int red, int blue, int white, int black) {
     this.cardList = cardGenerator.generateCards(totalWords, red, blue, white, black);
-  }
-
-  /**
-   * Returns the list of cards.
-   *
-   * @return the list of cards
-   */
-  public List<Card> getCardList() {
-    return cardList;
   }
 
   /**
