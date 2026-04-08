@@ -63,7 +63,7 @@ public class Board {
    * @throws IllegalArgumentException if the position is out of bounds
    */
   public boolean getIsGuessed(int position) {
-    return getCard(position).getIsGuessed();
+    return getCard(position).isGuessed();
   }
 
   /**

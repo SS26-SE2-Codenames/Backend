@@ -1,6 +1,9 @@
 package com.codenames.codenames_backend.playingfield;
 
+import lombok.Getter;
+
 /** Represents a single card on a board. */
+@Getter
 public class Card {
   private final String word;
   private final Color color;
@@ -23,33 +26,6 @@ public class Card {
     this.word = word;
     this.color = color;
     this.isGuessed = false;
-  }
-
-  /**
-   * Returns the word on the card.
-   *
-   * @return the word of the card
-   */
-  public String getWord() {
-    return word;
-  }
-
-  /**
-   * Returns the color of the card.
-   *
-   * @return the color of the card
-   */
-  public Color getColor() {
-    return color;
-  }
-
-  /**
-   * Checks if the card is already guessed.
-   *
-   * @return the guess state of a card.
-   */
-  public boolean getIsGuessed() {
-    return isGuessed;
   }
 
   /** Sets isGuessed to true. */
