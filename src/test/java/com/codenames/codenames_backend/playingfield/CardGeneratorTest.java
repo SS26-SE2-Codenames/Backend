@@ -1,6 +1,7 @@
 package com.codenames.codenames_backend.playingfield;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,5 +46,24 @@ class CardGeneratorTest {
     List<String> words = cardGenerator.pickWords(amount);
 
     assertEquals(amount, words.size());
+  }
+
+  @Test
+  void testPickWords_invalidTotalWords() {
+    int totalWords = 0;
+    assertThrows(IllegalArgumentException.class, () -> cardGenerator.pickWords(totalWords));
+  }
+
+  @Test
+  void testGenerateCards_invalidTotalWords() {
+    int totalWords = 25;
+    int red = 9;
+    int blue = 8;
+    int white = 7;
+    int black = 2; // This makes the sum of colors 26, which is not equal to totalWords
+
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> cardGenerator.generateCards(totalWords, red, blue, white, black));
   }
 }
