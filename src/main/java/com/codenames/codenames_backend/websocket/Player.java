@@ -4,7 +4,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 /** Represents a player connected via WebSocket. */
 public class Player {
-  private String username;
+  private final String username;
   private WebSocketSession session;
 
   /**
@@ -37,7 +37,7 @@ public class Player {
   }
 
   /**
-   * Sets the active {WebSocketSession} for this instance.
+   * Sets the active {@link WebSocketSession} for this instance.
    *
    * @param session the WebSocket session to assign
    */
