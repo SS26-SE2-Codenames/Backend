@@ -4,8 +4,8 @@ import org.springframework.web.socket.WebSocketSession;
 
 /** Represents a player connected via WebSocket. */
 public class Player {
-  private final String username;
-  private final WebSocketSession session;
+  private String username;
+  private WebSocketSession session;
 
   /**
    * Creates a new player.
@@ -34,5 +34,14 @@ public class Player {
    */
   public WebSocketSession getSession() {
     return session;
+  }
+
+  /**
+   * Sets the active {WebSocketSession} for this instance.
+   *
+   * @param session the WebSocket session to assign
+   */
+  public void setSession(WebSocketSession session) {
+    this.session = session;
   }
 }
