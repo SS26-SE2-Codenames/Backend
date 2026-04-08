@@ -24,7 +24,7 @@ public class GameManager {
   @Getter private int currentBlueFound = 0;
   private Color winner;
 
-  private ClueValidationService clueValidationService;
+  private final ClueValidationService clueValidationService;
   @Getter private Clue currentClue;
   @Getter private int remainingGuesses;
 
