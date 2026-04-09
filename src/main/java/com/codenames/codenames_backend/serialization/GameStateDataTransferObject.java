@@ -9,6 +9,8 @@ import java.util.List;
  * @param currentTurn the current team who is allowed to make a move
  * @param currentRedFound the amount of red cards revealed
  * @param currentBlueFound the amount of red cards revealed
+ * @param currentClue the word of the clue
+ * @param remainingGuesses the amount of guesses
  * @param cardList the cards on the board
  */
 public record GameStateDataTransferObject(
@@ -16,4 +18,6 @@ public record GameStateDataTransferObject(
     String currentTurn,
     int currentRedFound,
     int currentBlueFound,
+    String currentClue,
+    int remainingGuesses,
     List<CardDataTransferObject> cardList) {}
