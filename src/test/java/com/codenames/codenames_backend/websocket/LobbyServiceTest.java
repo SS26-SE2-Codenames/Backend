@@ -90,7 +90,9 @@ class LobbyServiceTest {
 
     lobbyService.attachSession("Nati", "UNKNOWN", session);
 
-    // nothing to assert, just ensure no exception is thrown
+    List<Player> players = lobbyService.getPlayers("UNKNOWN");
+
+    assertTrue(players.isEmpty());
   }
 
   @Test
