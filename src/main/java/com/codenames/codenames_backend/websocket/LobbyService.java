@@ -44,6 +44,13 @@ public class LobbyService {
         .forEach(players -> players.removeIf(p -> p.getSession().getId().equals(session.getId())));
   }
 
+  /**
+   * Attaches a WebSocket session to a player in a lobby.
+   *
+   * @param username the username of the player
+   * @param code the lobby code
+   * @param session the WebSocket session to attach
+   */
   public void attachSession(String username, String code, WebSocketSession session) {
     List<Player> players = lobbies.get(code);
 
