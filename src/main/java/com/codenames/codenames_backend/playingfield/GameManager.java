@@ -1,5 +1,7 @@
 package com.codenames.codenames_backend.playingfield;
 
+import com.codenames.codenames_backend.gameplay.Clue;
+import com.codenames.codenames_backend.gameplay.ClueValidationService;
 import java.util.List;
 
 /**
@@ -21,6 +23,10 @@ public class GameManager {
   private int currentBlueFound = 0;
   private Color winner;
 
+  private ClueValidationService clueValidationService;
+  private Clue currentClue;
+  private int remainingGuesses;
+
   /**
    * Constructor for a new GameManager and initializes the playing board.
    *
@@ -28,14 +34,17 @@ public class GameManager {
    * @param cardGenerator the utility used to generate the cards for the game
    * @throws IllegalArgumentException if team is null, white or black
    */
-  public GameManager(Color startingTeam, CardGenerator cardGenerator) {
+  public GameManager(
+      Color startingTeam,
+      CardGenerator cardGenerator,
+      ClueValidationService clueValidationService) {
     if (startingTeam == null) {
       throw new IllegalArgumentException("startingTeam cannot be null");
     }
     if (startingTeam != Color.RED && startingTeam != Color.BLUE) {
       throw new IllegalArgumentException("startingTeam MUST be Color.RED or Color.BLUE");
     }
-
+    this.clueValidationService = clueValidationService;
     if (startingTeam == Color.RED) {
       this.redCards = 9;
       this.blueCards = 8;
@@ -115,7 +124,7 @@ public class GameManager {
    *
    * @param position the position of the card that is selected by the player
    * @param currentTurn the team whose turn it currently is
-   * @throws IllegalStateException if game is over or if card is already flipped
+   * @throws IllegalStateException if game over, card already flipped, no more guesses
    */
   public void flipCard(int position, Color currentTurn) {
     if (getWinner() != null) {
@@ -124,17 +133,79 @@ public class GameManager {
     if (this.board.getIsGuessed(position)) {
       throw new IllegalStateException("Card is already flipped");
     }
-
+    if (this.remainingGuesses <= 0) {
+      clearClue();
+      throw new IllegalStateException("No more guesses.");
+    }
+    this.remainingGuesses--;
     this.board.setGuessed(position);
     Color currentColor = this.board.checkColor(position);
     updateScore(currentColor, currentTurn);
   }
 
+  /**
+   * Returns the number of red cards found so far.
+   *
+   * @return the number of red cards found
+   */
   public int getCurrentRedFound() {
     return currentRedFound;
   }
 
+  /**
+   * Returns the number of blue cards found so far.
+   *
+   * @return the number of blue cards found
+   */
   public int getCurrentBlueFound() {
     return currentBlueFound;
+  }
+
+  /**
+   * Submits a clue and updates remaining guesses.
+   *
+   * @param clue the clue object containing word and guess amount
+   * @throws IllegalArgumentException if clue is: null, empty, spaces, or word is on the board
+   */
+  public void submitClue(Clue clue) {
+    if (clueValidationService.validateWord(this.board, clue.word())) {
+      this.currentClue = clue;
+      this.remainingGuesses = clue.guessAmount();
+    } else {
+      throw new IllegalArgumentException("Clue is invalid, cannot be a word that is on the board!");
+    }
+  }
+
+  /** Clears the current clue and resets guesses to 0. */
+  public void clearClue() {
+    this.currentClue = null;
+    this.remainingGuesses = 0;
+  }
+
+  /**
+   * Returns the current clue word.
+   *
+   * @return the current clue word
+   */
+  public String getCurrentClueWord() {
+    return currentClue.word();
+  }
+
+  /**
+   * Returns the number of remaining guesses.
+   *
+   * @return the number of remaining guesses.
+   */
+  public int getRemainingGuesses() {
+    return remainingGuesses;
+  }
+
+  /**
+   * Returns the current clue object.
+   *
+   * @return the current clue object
+   */
+  public Clue getCurrentClue() {
+    return currentClue;
   }
 }
