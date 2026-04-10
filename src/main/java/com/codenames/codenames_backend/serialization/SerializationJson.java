@@ -23,6 +23,7 @@ public class SerializationJson {
    *
    * @param gameStateDataTransferObject the DTO of the game state
    * @return the string JSON containing: winner, points, list of cards and their information
+   * @throws IllegalStateException if serialization fails
    */
   public String serialize(GameStateDataTransferObject gameStateDataTransferObject) {
     try {

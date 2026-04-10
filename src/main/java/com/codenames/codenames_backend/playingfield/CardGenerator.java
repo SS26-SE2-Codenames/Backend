@@ -15,8 +15,13 @@ public class CardGenerator {
    *
    * @param totalWords the amount of words to pick
    * @return a random list of words
+   * @throws IllegalArgumentException if totalWords is less than or equal 0
+   * @throws IllegalStateException if there is an error reading the file
    */
   public List<String> pickWords(int totalWords) {
+    if (totalWords <= 0) {
+      throw new IllegalArgumentException("totalWords must be greater than 0");
+    }
     ClassPathResource resource = new ClassPathResource("CodenamesWordlist.txt");
     List<String> words = new ArrayList<>();
 
@@ -40,21 +45,20 @@ public class CardGenerator {
    * @param white the amount of white cards
    * @param black the amount of black cards
    * @return a randomized list of card objects
+   * @throws IllegalArgumentException if totalWords is less than or equal 0 or if totalWords does
+   *     not match the sum of the colors
+   * @throws IllegalStateException if there is an error reading the file
    */
   public List<Card> generateCards(int totalWords, int red, int blue, int white, int black) {
+    if (totalWords != red + blue + white + black) {
+      throw new IllegalArgumentException("totalWords must match sum of colors");
+    }
     List<Color> colorList = new ArrayList<>();
-    for (int i = 0; i < red; i++) {
-      colorList.add(Color.RED);
-    }
-    for (int i = 0; i < blue; i++) {
-      colorList.add(Color.BLUE);
-    }
-    for (int i = 0; i < white; i++) {
-      colorList.add(Color.WHITE);
-    }
-    for (int i = 0; i < black; i++) {
-      colorList.add(Color.BLACK);
-    }
+    addColorToList(colorList, red, Color.RED);
+    addColorToList(colorList, blue, Color.BLUE);
+    addColorToList(colorList, white, Color.WHITE);
+    addColorToList(colorList, black, Color.BLACK);
+
     List<Card> cardList = new ArrayList<>();
     List<String> wordList = pickWords(totalWords);
     for (int i = 0; i < wordList.size(); i++) {
@@ -63,5 +67,11 @@ public class CardGenerator {
     }
     Collections.shuffle(cardList);
     return cardList;
+  }
+
+  private void addColorToList(List<Color> colorList, int count, Color color) {
+    for (int i = 0; i < count; i++) {
+      colorList.add(color);
+    }
   }
 }

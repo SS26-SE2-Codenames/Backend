@@ -18,12 +18,12 @@ public class DataTransferObjectService {
   private CardDataTransferObject createCardDataTransferObject(Card card, Role role) {
     String displayColor;
 
-    if (role == Role.SPYMASTER || card.getIsGuessed()) {
+    if (role == Role.SPYMASTER || card.isGuessed()) {
       displayColor = card.getColor().toString();
     } else {
       displayColor = "HIDDEN";
     }
-    return new CardDataTransferObject(card.getWord(), displayColor, card.getIsGuessed());
+    return new CardDataTransferObject(card.getWord(), displayColor, card.isGuessed());
   }
 
   /**
