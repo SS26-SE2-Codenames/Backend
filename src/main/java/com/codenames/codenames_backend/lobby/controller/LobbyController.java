@@ -35,7 +35,7 @@ public class LobbyController {
     public ResponseEntity<LobbyResponse> joinLobby(@RequestParam String username, @RequestParam String lobbyCode) {
         boolean joined = service.joinLobby(username, lobbyCode);
         if (joined) {
-            logger.info("User {} joined Lobby {}", username, lobbyCode);
+            logger.info("User joined Lobby {}", lobbyCode);
             return ResponseEntity.ok(new LobbyResponse("Joined Lobby successfully.", lobbyCode));
         } else {
             return ResponseEntity.badRequest().body(new LobbyResponse("Could not find lobby.", lobbyCode));
@@ -46,7 +46,7 @@ public class LobbyController {
     public ResponseEntity<LobbyResponse> leaveLobby(@RequestParam String username, @RequestParam String lobbyCode) {
         boolean left = service.leaveLobby(username, lobbyCode);
         if (left) {
-            logger.info("User {} left Lobby {}", username, lobbyCode);
+            logger.info("User left Lobby {}", lobbyCode);
             return ResponseEntity.ok(new LobbyResponse("Left lobby successfully.", lobbyCode));
         } else {
             return ResponseEntity.badRequest().body(new LobbyResponse("Could not find lobby.", lobbyCode));
