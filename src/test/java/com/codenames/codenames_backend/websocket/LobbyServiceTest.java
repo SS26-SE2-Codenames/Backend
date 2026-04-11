@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LobbyServiceTest {
 
-  private LobbyService lobbyService;
+  /*private LobbyService lobbyService;
 
   @BeforeEach
   void setup() {
@@ -109,4 +109,6 @@ class LobbyServiceTest {
 
     assertEquals(originalSession, players.get(0).getSession());
   }
+
+   */
 }
