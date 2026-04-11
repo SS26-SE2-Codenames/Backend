@@ -2,8 +2,6 @@ package com.codenames.codenames_backend.lobby.controller;
 
 import com.codenames.codenames_backend.lobby.dto.LobbyResponse;
 import com.codenames.codenames_backend.lobby.services.LobbyService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class LobbyController {
 
     private final LobbyService service;
-    private static final Logger logger = LoggerFactory.getLogger(LobbyController.class);
 
     public LobbyController(LobbyService service) {
         this.service = service;
@@ -35,7 +32,6 @@ public class LobbyController {
     public ResponseEntity<LobbyResponse> joinLobby(@RequestParam String username, @RequestParam String lobbyCode) {
         boolean joined = service.joinLobby(username, lobbyCode);
         if (joined) {
-            logger.info("User joined Lobby {}", lobbyCode);
             return ResponseEntity.ok(new LobbyResponse("Joined Lobby successfully.", lobbyCode));
         } else {
             return ResponseEntity.badRequest().body(new LobbyResponse("Could not find lobby.", lobbyCode));
@@ -46,7 +42,6 @@ public class LobbyController {
     public ResponseEntity<LobbyResponse> leaveLobby(@RequestParam String username, @RequestParam String lobbyCode) {
         boolean left = service.leaveLobby(username, lobbyCode);
         if (left) {
-            logger.info("User left Lobby {}", lobbyCode);
             return ResponseEntity.ok(new LobbyResponse("Left lobby successfully.", lobbyCode));
         } else {
             return ResponseEntity.badRequest().body(new LobbyResponse("Could not find lobby.", lobbyCode));
