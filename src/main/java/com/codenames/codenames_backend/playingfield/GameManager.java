@@ -3,6 +3,7 @@ package com.codenames.codenames_backend.playingfield;
 import com.codenames.codenames_backend.gameplay.Clue;
 import com.codenames.codenames_backend.gameplay.ClueValidationService;
 import java.util.List;
+import lombok.Getter;
 
 /**
  * Manages state and initialization of a game.
@@ -19,13 +20,13 @@ public class GameManager {
   private final int blueCards;
 
   private final Board board;
-  private int currentRedFound = 0;
-  private int currentBlueFound = 0;
+  @Getter private int currentRedFound = 0;
+  @Getter private int currentBlueFound = 0;
   private Color winner;
 
-  private ClueValidationService clueValidationService;
-  private Clue currentClue;
-  private int remainingGuesses;
+  private final ClueValidationService clueValidationService;
+  @Getter private Clue currentClue;
+  @Getter private int remainingGuesses;
 
   /**
    * Constructor for a new GameManager and initializes the playing board.
@@ -144,24 +145,6 @@ public class GameManager {
   }
 
   /**
-   * Returns the number of red cards found so far.
-   *
-   * @return the number of red cards found
-   */
-  public int getCurrentRedFound() {
-    return currentRedFound;
-  }
-
-  /**
-   * Returns the number of blue cards found so far.
-   *
-   * @return the number of blue cards found
-   */
-  public int getCurrentBlueFound() {
-    return currentBlueFound;
-  }
-
-  /**
    * Submits a clue and updates remaining guesses.
    *
    * @param clue the clue object containing word and guess amount
@@ -189,23 +172,5 @@ public class GameManager {
    */
   public String getCurrentClueWord() {
     return currentClue.word();
-  }
-
-  /**
-   * Returns the number of remaining guesses.
-   *
-   * @return the number of remaining guesses.
-   */
-  public int getRemainingGuesses() {
-    return remainingGuesses;
-  }
-
-  /**
-   * Returns the current clue object.
-   *
-   * @return the current clue object
-   */
-  public Clue getCurrentClue() {
-    return currentClue;
   }
 }
