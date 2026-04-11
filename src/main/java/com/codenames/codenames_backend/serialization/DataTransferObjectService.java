@@ -18,12 +18,12 @@ public class DataTransferObjectService {
   private CardDataTransferObject createCardDataTransferObject(Card card, Role role) {
     String displayColor;
 
-    if (role == Role.SPYMASTER || card.getIsGuessed()) {
+    if (role == Role.SPYMASTER || card.isGuessed()) {
       displayColor = card.getColor().toString();
     } else {
       displayColor = "HIDDEN";
     }
-    return new CardDataTransferObject(card.getWord(), displayColor, card.getIsGuessed());
+    return new CardDataTransferObject(card.getWord(), displayColor, card.isGuessed());
   }
 
   /**
@@ -49,11 +49,13 @@ public class DataTransferObjectService {
       winner = gameManager.getWinner().toString();
     }
     return new GameStateDataTransferObject(
+        winner,
+        currentTurn,
         gameManager.getCurrentRedFound(),
         gameManager.getCurrentBlueFound(),
-        cardDataTransferObject,
-        winner,
-        currentTurn);
+        gameManager.getCurrentClueWord(),
+        gameManager.getRemainingGuesses(),
+        cardDataTransferObject);
   }
 
   /** Roles of the game, needed for the DTO. */
