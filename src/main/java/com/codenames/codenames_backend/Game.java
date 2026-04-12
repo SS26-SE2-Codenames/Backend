@@ -80,4 +80,8 @@ public class Game {
     public Team getStartingTeam() {
         return startingTeam;
     }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
 }
