@@ -25,7 +25,6 @@ public class Game {
 
         // RED bekommt die größere Hälfte wenn ungerade
         int redSize = (totalPlayers + 1) / 2;
-        int blueSize = totalPlayers - redSize;
 
         List<Player> redTeam = new ArrayList<>();
         List<Player> blueTeam = new ArrayList<>();

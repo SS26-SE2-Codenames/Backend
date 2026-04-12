@@ -2,14 +2,12 @@ package com.codenames.codenames_backend;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-public class GameTest {
+class GameTest {
 
     @Test
-    public void shouldNotAssignTeamsAndRolesWhenLessThanFourPlayers() {
+    void shouldNotAssignTeamsAndRolesWhenLessThanFourPlayers() {
         Game game = new Game();
 
         game.addPlayer(new Player("A"));
@@ -25,7 +23,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldAssignTeamToEveryPlayerWhenFourPlayersExist() {
+    void shouldAssignTeamToEveryPlayerWhenFourPlayersExist() {
         Game game = new Game();
 
         game.addPlayer(new Player("A"));
@@ -42,7 +40,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldHaveExactlyOneSpymasterPerTeam() {
+    void shouldHaveExactlyOneSpymasterPerTeam() {
         Game game = new Game();
 
         game.addPlayer(new Player("A"));
@@ -70,7 +68,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldAssignAllOtherPlayersAsOperatives() {
+    void shouldAssignAllOtherPlayersAsOperatives() {
         Game game = new Game();
 
         game.addPlayer(new Player("A"));
@@ -93,7 +91,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldAllowUnevenTeams() {
+    void shouldAllowUnevenTeams() {
         Game game = new Game();
 
         game.addPlayer(new Player("A"));
@@ -120,7 +118,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldDecideAValidStartingTeam() {
+    void shouldDecideAValidStartingTeam() {
         Game game = new Game();
 
         game.decideStartingTeam();
@@ -130,7 +128,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldStartApplication() {
+    void shouldStartApplication() {
         assertDoesNotThrow(() -> {
             CodenamesBackendApplication.main(new String[]{});
         });
