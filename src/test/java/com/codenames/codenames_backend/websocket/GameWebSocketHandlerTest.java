@@ -11,66 +11,62 @@ import java.io.IOException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.atLeastOnce;
 
 class GameWebSocketHandlerTest {
 
-  private LobbyService lobbyService;
-  private GameWebSocketHandler handler;
+    private WebsocketLobbyService websocketLobbyService;
+    private GameWebSocketHandler handler;
 
-  @BeforeEach
-  void setup() {
-    lobbyService = Mockito.spy(new LobbyService());
-    handler = new GameWebSocketHandler(lobbyService);
-  }
+    @BeforeEach
+    void setup() {
+        websocketLobbyService = Mockito.spy(new WebsocketLobbyService());
+        handler = new GameWebSocketHandler(websocketLobbyService);
+    }
 
-  @Test
-  void shouldHandleJoinAndBroadcastPlayerList() throws IOException {
-    WebSocketSession session = mock(WebSocketSession.class);
-    when(session.getId()).thenReturn("1");
+    @Test
+    void shouldHandleJoinAndBroadcastPlayerList() throws IOException {
+        WebSocketSession session = mock(WebSocketSession.class);
+        when(session.getId()).thenReturn("1");
 
-    ObjectMapper mapper = new ObjectMapper();
-    String payload =
-        mapper.writeValueAsString(
-            Map.of(
-                "type", "JOIN",
-                "name", "Nati",
-                "code", "ABC"));
+        ObjectMapper mapper = new ObjectMapper();
+        String payload =
+                mapper.writeValueAsString(
+                        Map.of(
+                                "type", "JOIN",
+                                "name", "Nati",
+                                "code", "ABC"));
 
-    handler.handleTextMessage(session, new TextMessage(payload));
+        handler.handleTextMessage(session, new TextMessage(payload));
 
-    assertEquals(1, lobbyService.getPlayers("ABC").size());
-    verify(session, atLeastOnce()).sendMessage(any(TextMessage.class));
-  }
+        assertEquals(1, websocketLobbyService.getPlayers("ABC").size());
+        verify(session, atLeastOnce()).sendMessage(any(TextMessage.class));
+    }
 
-  @Test
-  void shouldIgnoreNonJoinMessages() throws IOException {
-    WebSocketSession session = mock(WebSocketSession.class);
+    @Test
+    void shouldIgnoreNonJoinMessages() throws IOException {
+        WebSocketSession session = mock(WebSocketSession.class);
 
-    String payload =
-        """
-      {
-        "type": "LEAVE"
-      }
-      """;
+        String payload =
+                """
+                        {
+                          "type": "LEAVE"
+                        }
+                        """;
 
-    handler.handleTextMessage(session, new TextMessage(payload));
+        handler.handleTextMessage(session, new TextMessage(payload));
 
-    // verify that nothing was sent
-    verify(session, never()).sendMessage(any());
-  }
+        // verify that nothing was sent
+        verify(session, never()).sendMessage(any());
+    }
 
-  @Test
-  void shouldIgnoreInvalidJson() throws IOException {
-    WebSocketSession session = mock(WebSocketSession.class);
+    @Test
+    void shouldIgnoreInvalidJson() throws IOException {
+        WebSocketSession session = mock(WebSocketSession.class);
 
-    handler.handleTextMessage(session, new TextMessage("{}"));
+        handler.handleTextMessage(session, new TextMessage("{}"));
 
-    verify(session, never()).sendMessage(any());
-  }
+        verify(session, never()).sendMessage(any());
+    }
 }
