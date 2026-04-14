@@ -44,7 +44,7 @@ public class Game {
             return;
         }
 
-        // Rollen vergeben
+        // Rollen vergeben.
         redTeam.get(0).setRole(Role.SPYMASTER);
         for (int i = 1; i < redTeam.size(); i++) {
             redTeam.get(i).setRole(Role.OPERATIVE);
