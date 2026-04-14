@@ -37,7 +37,7 @@ public class WebSocketEventListener {
     sessionRegistry.remove(sessionId);
 
     List<String> players =
-        lobbyService.getPlayers(lobbyCode).stream().map(p -> p.getUsername()).toList();
+        lobbyService.getPlayers(lobbyCode).stream().map(Player::getUsername).toList();
 
     messagingTemplate.convertAndSend("/topic/lobby/" + lobbyCode, players);
   }

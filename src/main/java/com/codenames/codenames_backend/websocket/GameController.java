@@ -37,8 +37,7 @@ public class GameController {
   }
 
   private void sendPlayerUpdate(String code) {
-    List<String> players =
-        lobbyService.getPlayers(code).stream().map(p -> p.getUsername()).toList();
+    List<String> players = lobbyService.getPlayers(code).stream().map(Player::getUsername).toList();
 
     messagingTemplate.convertAndSend("/topic/lobby/" + code, players);
   }
