@@ -19,6 +19,5 @@ public class CodenamesBackendApplication {
 
         game.assignTeamsAndRoles();
         game.decideStartingTeam();
-        game.printPlayers();
     }
 }
