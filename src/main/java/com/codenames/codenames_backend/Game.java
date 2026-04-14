@@ -39,7 +39,7 @@ public class Game {
             blueTeam.add(players.get(i));
         }
 
-        // Sicherheit (falls jemand später Mist baut 😄)
+        // Sicherheit (falls jemand später Mist baut)
         if (redTeam.size() < 2 || blueTeam.size() < 2) {
             return;
         }
