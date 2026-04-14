@@ -3,6 +3,7 @@ package com.codenames.codenames_backend.websocket;
 import com.codenames.codenames_backend.lobby.services.LobbyService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
@@ -13,19 +14,26 @@ public class GameController {
 
   private final LobbyService lobbyService;
   private final SimpMessagingTemplate messagingTemplate;
+  private final SessionRegistry sessionRegistry;
 
-  public GameController(LobbyService lobbyService, SimpMessagingTemplate messagingTemplate) {
+  public GameController(
+      LobbyService lobbyService,
+      SimpMessagingTemplate messagingTemplate,
+      SessionRegistry sessionRegistry) {
     this.lobbyService = lobbyService;
     this.messagingTemplate = messagingTemplate;
+    this.sessionRegistry = sessionRegistry;
   }
 
   @MessageMapping("/join")
-  public void join(JoinMessage message) {
+  public void join(JoinMessage message, SimpMessageHeaderAccessor headerAccessor) {
+
+    String sessionId = headerAccessor.getSessionId();
 
     lobbyService.joinLobby(message.getName(), message.getCode());
 
-    List<String> players =
-        lobbyService.getPlayers(message.getCode()).stream().map(p -> p.getUsername()).toList();
-    messagingTemplate.convertAndSend("/topic/lobby/" + message.getCode(), players);
+    sessionRegistry.register(sessionId, message.getName(), message.getCode());
+
+    sendPlayerUpdate(message.getCode());
   }
 }
