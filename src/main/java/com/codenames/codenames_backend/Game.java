@@ -15,7 +15,6 @@ public class Game {
 
     public void assignTeamsAndRoles() {
         if (players.size() < 4) {
-            System.out.println("Es werden mindestens 4 Spieler benötigt.");
             return;
         }
 
@@ -42,7 +41,6 @@ public class Game {
 
         // Sicherheit (falls jemand später Mist baut 😄)
         if (redTeam.size() < 2 || blueTeam.size() < 2) {
-            System.out.println("Jedes Team braucht mindestens 2 Spieler!");
             return;
         }
 
@@ -60,12 +58,8 @@ public class Game {
 
     public void printPlayers() {
         for (Player player : players) {
-            System.out.println(
-                    player.getName() + " -> Team: " + player.getTeam() + " -> Rolle: " + player.getRole()
-            );
+            // Optional: komplett leer lassen oder später Logger einbauen
         }
-
-        System.out.println("Startendes Team: " + startingTeam);
     }
 
     public void decideStartingTeam() {
