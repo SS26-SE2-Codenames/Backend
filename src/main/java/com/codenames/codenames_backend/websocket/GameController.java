@@ -36,4 +36,11 @@ public class GameController {
 
     sendPlayerUpdate(message.getCode());
   }
+
+  private void sendPlayerUpdate(String code) {
+    List<String> players =
+        lobbyService.getPlayers(code).stream().map(p -> p.getUsername()).toList();
+
+    messagingTemplate.convertAndSend("/topic/lobby/" + code, players);
+  }
 }
