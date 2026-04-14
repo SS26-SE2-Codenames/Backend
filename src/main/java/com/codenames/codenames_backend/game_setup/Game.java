@@ -1,4 +1,4 @@
-package com.codenames.codenames_backend;
+package com.codenames.codenames_backend.game_setup;
 
 import lombok.Getter;
 
