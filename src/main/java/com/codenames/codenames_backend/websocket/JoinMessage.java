@@ -1,22 +1,11 @@
 package com.codenames.codenames_backend.websocket;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class JoinMessage {
-    private String name;
-    private String code;
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+  private String name;
+  private String code;
 }
