@@ -5,6 +5,14 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Registry for tracking WebSocket sessions and their associated users and lobbies.
+ *
+ * <p>Maintains mappings between session IDs, usernames, and lobby codes to enable efficient lookup
+ * during messaging and disconnect events.
+ *
+ * <p>This implementation is thread-safe using {@link ConcurrentHashMap}.
+ */
 @Component
 public class SessionRegistry {
   private final Map<String, String> sessionToLobby = new ConcurrentHashMap<>();
