@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+import com.codenames.codenames_backend.lobby.Role;
+import com.codenames.codenames_backend.lobby.Team;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -83,5 +85,33 @@ class LobbyControllerTest {
                         .param("username", "TestUser")
                         .param("lobbyCode", "ABCDE"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void selectPosition_shouldReturn200_whenSuccess() throws Exception {
+        when(service.selectPosition("TestUser", "ABCDE", Team.RED, Role.SPYMASTER)).thenReturn(true);
+
+        mockMvc.perform(post("/lobby/select-position")
+                        .param("username", "TestUser")
+                        .param("lobbyCode", "ABCDE")
+                        .param("team", "RED")
+                        .param("role", "SPYMASTER"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("Position selected successfully."))
+                .andExpect(jsonPath("$.lobbyCode").value("ABCDE"));
+    }
+
+    @Test
+    void selectPosition_shouldReturn400_whenAssignmentFails() throws Exception {
+        when(service.selectPosition("TestUser", "ABCDE", Team.RED, Role.SPYMASTER)).thenReturn(false);
+
+        mockMvc.perform(post("/lobby/select-position")
+                        .param("username", "TestUser")
+                        .param("lobbyCode", "ABCDE")
+                        .param("team", "RED")
+                        .param("role", "SPYMASTER"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Could not assign selected team/role."))
+                .andExpect(jsonPath("$.lobbyCode").value("ABCDE"));
     }
 }

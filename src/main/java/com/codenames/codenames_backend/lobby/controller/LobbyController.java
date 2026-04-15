@@ -23,7 +23,7 @@ public class LobbyController {
     @PostMapping("/create")
     public ResponseEntity<LobbyResponse> createLobby(@RequestParam String username) {
         String lobbyCode = service.createLobby(username);
-        if (lobbyCode.isBlank()) {
+        if (lobbyCode == null || lobbyCode.isBlank()){
             return ResponseEntity.internalServerError().body(new LobbyResponse("Error while creating lobby.", ""));
         } else {
             return ResponseEntity.ok(new LobbyResponse("Successfully created Lobby.", lobbyCode));
@@ -61,7 +61,7 @@ public class LobbyController {
 
         if (updated) {
             return ResponseEntity.ok(
-                    new LobbyResponse("Position selected successfully.", lobbyCode)
+                    new LobbyResponse("Position selected successfully.", lobbyCode, team, role)
             );
         } else {
             return ResponseEntity.badRequest().body(

@@ -2,6 +2,8 @@ package com.codenames.codenames_backend.lobby.services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import com.codenames.codenames_backend.lobby.Role;
+import com.codenames.codenames_backend.lobby.Team;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -76,5 +78,71 @@ class LobbyServiceTest {
         String code2 = lobbyService.createLobby("Host2");
 
         assertEquals("FGHIJ", code2);
+    }
+
+    @Test
+    void selectPosition_shouldReturnTrue_WhenPlayerChoosesTeamAndRole() {
+        when(generator.generateLobbyCode()).thenReturn("ABCDE");
+        lobbyService.createLobby("Host");
+
+        boolean result = lobbyService.selectPosition("Host", "ABCDE", Team.RED, Role.SPYMASTER);
+
+        assertTrue(result);
+    }
+
+    @Test
+    void selectPosition_shouldReturnFalse_WhenLobbyDoesNotExist() {
+        boolean result = lobbyService.selectPosition("Host", "XXXXX", Team.RED, Role.SPYMASTER);
+
+        assertFalse(result);
+    }
+
+    @Test
+    void selectPosition_shouldReturnFalse_WhenPlayerIsNotInLobby() {
+        when(generator.generateLobbyCode()).thenReturn("ABCDE");
+        lobbyService.createLobby("Host");
+
+        boolean result = lobbyService.selectPosition("Ghost", "ABCDE", Team.RED, Role.SPYMASTER);
+
+        assertFalse(result);
+    }
+
+    @Test
+    void selectPosition_shouldReturnFalse_WhenSecondSpymasterChoosesSameTeam() {
+        when(generator.generateLobbyCode()).thenReturn("ABCDE");
+        lobbyService.createLobby("Host");
+        lobbyService.joinLobby("P1", "ABCDE");
+
+        boolean firstResult = lobbyService.selectPosition("Host", "ABCDE", Team.RED, Role.SPYMASTER);
+        boolean secondResult = lobbyService.selectPosition("P1", "ABCDE", Team.RED, Role.SPYMASTER);
+
+        assertTrue(firstResult);
+        assertFalse(secondResult);
+    }
+
+    @Test
+    void selectPosition_shouldReturnTrue_WhenSpymastersChooseDifferentTeams() {
+        when(generator.generateLobbyCode()).thenReturn("ABCDE");
+        lobbyService.createLobby("Host");
+        lobbyService.joinLobby("P1", "ABCDE");
+
+        boolean firstResult = lobbyService.selectPosition("Host", "ABCDE", Team.RED, Role.SPYMASTER);
+        boolean secondResult = lobbyService.selectPosition("P1", "ABCDE", Team.BLUE, Role.SPYMASTER);
+
+        assertTrue(firstResult);
+        assertTrue(secondResult);
+    }
+
+    @Test
+    void selectPosition_shouldReturnTrue_WhenMultipleOperativesChooseSameTeam() {
+        when(generator.generateLobbyCode()).thenReturn("ABCDE");
+        lobbyService.createLobby("Host");
+        lobbyService.joinLobby("P1", "ABCDE");
+
+        boolean firstResult = lobbyService.selectPosition("Host", "ABCDE", Team.RED, Role.OPERATIVE);
+        boolean secondResult = lobbyService.selectPosition("P1", "ABCDE", Team.RED, Role.OPERATIVE);
+
+        assertTrue(firstResult);
+        assertTrue(secondResult);
     }
 }
