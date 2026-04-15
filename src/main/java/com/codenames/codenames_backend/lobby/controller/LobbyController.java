@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.codenames.codenames_backend.lobby.Role;
+import com.codenames.codenames_backend.lobby.Team;
 
 @RestController
 @RequestMapping("/lobby")
@@ -45,6 +47,26 @@ public class LobbyController {
             return ResponseEntity.ok(new LobbyResponse("Left lobby successfully.", lobbyCode));
         } else {
             return ResponseEntity.badRequest().body(new LobbyResponse("Could not find lobby.", lobbyCode));
+        }
+    }
+
+    @PostMapping("/select-position")
+    public ResponseEntity<LobbyResponse> selectPosition(
+            @RequestParam String username,
+            @RequestParam String lobbyCode,
+            @RequestParam Team team,
+            @RequestParam Role role
+    ) {
+        boolean updated = service.selectPosition(username, lobbyCode, team, role);
+
+        if (updated) {
+            return ResponseEntity.ok(
+                    new LobbyResponse("Position selected successfully.", lobbyCode)
+            );
+        } else {
+            return ResponseEntity.badRequest().body(
+                    new LobbyResponse("Could not assign selected team/role.", lobbyCode)
+            );
         }
     }
 }

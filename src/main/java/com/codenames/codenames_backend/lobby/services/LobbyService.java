@@ -2,6 +2,8 @@ package com.codenames.codenames_backend.lobby.services;
 
 import com.codenames.codenames_backend.lobby.Lobby;
 import org.springframework.stereotype.Service;
+import com.codenames.codenames_backend.lobby.Role;
+import com.codenames.codenames_backend.lobby.Team;
 
 import java.util.HashMap;
 
@@ -48,6 +50,28 @@ public class LobbyService {
             code = generator.generateLobbyCode();
         }
         return code;
+    }
+
+    public boolean selectPosition(String username, String lobbyCode, Team team, Role role) {
+        Lobby lobby = lobbyList.get(lobbyCode);
+
+        if (lobby == null || !lobby.hasPlayer(username)) {
+            return false;
+        }
+
+        if (role == Role.SPYMASTER) {
+            for (String player : lobby.getPlayerList()) {
+                if (!player.equals(username)
+                        && lobby.getPlayerTeam(player) == team
+                        && lobby.getPlayerRole(player) == Role.SPYMASTER) {
+                    return false;
+                }
+            }
+        }
+
+        lobby.setPlayerTeam(username, team);
+        lobby.setPlayerRole(username, role);
+        return true;
     }
 
 }
