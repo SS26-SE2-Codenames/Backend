@@ -1,12 +1,13 @@
 package com.codenames.codenames_backend.websocket;
 
 import com.codenames.codenames_backend.lobby.services.LobbyService;
+
+import java.util.List;
+
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
-
-import java.util.List;
 
 /**
  * Listener for WebSocket lifecycle events.
@@ -45,7 +46,9 @@ public class WebSocketEventListener {
     String username = sessionRegistry.getUser(sessionId);
     String lobbyCode = sessionRegistry.getLobby(sessionId);
 
-    if (username == null || lobbyCode == null) return;
+    if (username == null || lobbyCode == null) {
+      return;
+    }
 
     lobbyService.leaveLobby(username, lobbyCode);
     sessionRegistry.remove(sessionId);

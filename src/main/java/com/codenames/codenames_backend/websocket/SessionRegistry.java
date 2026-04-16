@@ -1,9 +1,9 @@
 package com.codenames.codenames_backend.websocket;
 
-import org.springframework.stereotype.Component;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.stereotype.Component;
 
 /**
  * Registry for tracking WebSocket sessions and their associated users and lobbies.
