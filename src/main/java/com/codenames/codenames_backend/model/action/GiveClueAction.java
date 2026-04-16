@@ -1,4 +1,7 @@
 package com.codenames.codenames_backend.model.action;
 
-public class GiveClueAction {
+public record GiveClueAction(String clueWord, int number) implements GameAction {
+
+    public String getClueWord() {
+    }
 }

@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Service responsible for managing turns and game flow (Backend #11)
+ * Service responsible for managing turns and game flow (Backend '11)
  */
+
 @Service
 public class TurnService {
+
     /**
      * Processes a player's action and returns the updated game state.
      */
@@ -35,12 +37,14 @@ public class TurnService {
         }
         // Player passes the turn
         else if (action instanceof PassAction) {
-            return handlePass(state);
+            return handlePass(state, redSpymaster, blueSpymaster);
         }
+
         throw new IllegalGameActionException("Unknown Action type.");
     }
 
-    private GameState handlePass(GameState state) {
+    private GameState handlePass(GameState state, Player redSpymaster, Player blueSpymaster) {
+        state.switchTeam(redSpymaster, blueSpymaster);
         return state;
     }
 
@@ -65,7 +69,7 @@ public class TurnService {
 
     private GameState handleGuessCard(GameState state, Player player, GuessCardAction action,
                                       Player redSpymaster, Player blueSpymaster) {
-        Card guessedCard = getGuessedCard(state, player, action);
+        Card guessedCard = getCard(state, player, action);
 
         // === IMPORTANT LOGIC: What kind of card was guessed? ===
         if (guessedCard.getType() == null) {
@@ -94,7 +98,7 @@ public class TurnService {
         return state;
     }
 
-    private static Card getGuessedCard(GameState state, Player player, GuessCardAction action) {
+    private static Card getCard(GameState state, Player player, GuessCardAction action) {
         if (state.getCurrentPhase() != GamePhase.OPERATIVES_GUESSING) {
             throw new IllegalGameActionException("It is not the guessing phase. ");
         }
