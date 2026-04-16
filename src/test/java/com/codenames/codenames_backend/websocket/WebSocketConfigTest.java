@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
+/** Unit tests for {@link WebSocketConfig}. */
 public class WebSocketConfigTest {
   @Test
   void shouldConfigureMessageBroker() {

@@ -10,17 +10,21 @@ import org.junit.jupiter.api.Test;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
+/**
+ * Unit tests for {@link GameController}.
+ *
+ * <p>Uses mocks to verify interactions with dependencies.
+ */
 public class GameControllerTest {
 
   private LobbyService lobbyService;
-  private SimpMessagingTemplate messagingTemplate;
   private SessionRegistry sessionRegistry;
   private GameController controller;
 
   @BeforeEach
   void setup() {
     lobbyService = mock(LobbyService.class);
-    messagingTemplate = mock(SimpMessagingTemplate.class);
+    SimpMessagingTemplate messagingTemplate = mock(SimpMessagingTemplate.class);
     sessionRegistry = new SessionRegistry();
 
     controller = new GameController(lobbyService, messagingTemplate, sessionRegistry);

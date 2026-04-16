@@ -19,6 +19,13 @@ public class WebSocketEventListener {
   private final LobbyService lobbyService;
   private final SimpMessagingTemplate messagingTemplate;
 
+  /**
+   * Creates a new {@code GameController}.
+   *
+   * @param lobbyService the lobby service handling lobby logic
+   * @param messagingTemplate the messaging template used for broadcasting updates
+   * @param sessionRegistry the registry tracking WebSocket sessions
+   */
   public WebSocketEventListener(
       SessionRegistry sessionRegistry,
       LobbyService lobbyService,

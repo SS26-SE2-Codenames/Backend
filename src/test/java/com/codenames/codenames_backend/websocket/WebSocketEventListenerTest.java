@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+/** Unit tests for {@link WebSocketEventListener}. */
 public class WebSocketEventListenerTest {
   private SessionRegistry registry;
   private LobbyService lobbyService;
