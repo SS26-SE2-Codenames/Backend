@@ -87,4 +87,12 @@ class LobbyServiceTest {
 
         assertEquals("FGHIJ", code2);
     }
+
+    @Test
+    void getPlayers_shouldReturnEmptyList_whenLobbyDoesNotExist() {
+        List<Player> players = lobbyService.getPlayers("UNKNOWN");
+
+        assertNotNull(players);
+        assertTrue(players.isEmpty());
+    }
 }
