@@ -29,8 +29,8 @@ class LobbyServiceTest {
 
         assertTrue(result);
 
-        List<Player> players = lobbyService.getPlayers("ABCDE");assertTrue(players.stream()
-                .anyMatch(p -> p.getUsername().equals("TestUser")));
+        List<Player> players = lobbyService.getPlayers("ABCDE");
+        assertTrue(players.stream().anyMatch(p -> p.getUsername().equals("TestUser")));
     }
 
     @Test
