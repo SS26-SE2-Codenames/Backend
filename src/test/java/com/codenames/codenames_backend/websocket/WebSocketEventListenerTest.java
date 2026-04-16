@@ -1,17 +1,16 @@
 package com.codenames.codenames_backend.websocket;
 
-import com.codenames.codenames_backend.lobby.services.LobbyService;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.socket.messaging.SessionDisconnectEvent;
-
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
+
+import com.codenames.codenames_backend.lobby.services.LobbyService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 public class WebSocketEventListenerTest {
   private SessionRegistry registry;

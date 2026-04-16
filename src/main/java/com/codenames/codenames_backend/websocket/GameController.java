@@ -1,9 +1,7 @@
 package com.codenames.codenames_backend.websocket;
 
 import com.codenames.codenames_backend.lobby.services.LobbyService;
-
 import java.util.List;
-
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
