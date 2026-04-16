@@ -15,7 +15,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
  *
  * <p>Uses mocks to verify interactions with dependencies.
  */
-public class GameControllerTest {
+class GameControllerTest {
 
   private LobbyService lobbyService;
   private SessionRegistry sessionRegistry;
