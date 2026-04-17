@@ -13,13 +13,13 @@ public class ChatController {
   /**
    * Rebroadcast a chat message from an individual to all members sharing the specified room.
    *
-   * @param roomId the unique alphanumeric ID for current game lobby
+   * @param code the unique alphanumeric ID for current game lobby
    * @param chatDto the message payload containing sender details and content
    * @return the processed message to be forwarded to topic broker
    */
-  @MessageMapping("/chat/{roomId}/sendMessage")
-  @SendTo("/topic/room/{roomId}")
-  public ChatDto sendMessage(@DestinationVariable String roomId, @Payload ChatDto chatDto) {
+  @MessageMapping("/chat/{code}/sendMessage")
+  @SendTo("/topic/chat/{code}")
+  public ChatDto sendMessage(@DestinationVariable String code, @Payload ChatDto chatDto) {
     return chatDto;
   }
 }
