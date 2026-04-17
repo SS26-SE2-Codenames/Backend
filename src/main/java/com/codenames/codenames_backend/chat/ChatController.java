@@ -1,6 +1,5 @@
 package com.codenames.codenames_backend.chat;
 
-import com.codenames.codenames_backend.lobby.services.LobbyService;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -12,10 +11,10 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 public class ChatController {
-  
+
   private final SimpMessagingTemplate messagingTemplate;
 
-  public ChatController(LobbyService lobbyService, SimpMessagingTemplate messagingTemplate) {
+  public ChatController(SimpMessagingTemplate messagingTemplate) {
     this.messagingTemplate = messagingTemplate;
   }
 
