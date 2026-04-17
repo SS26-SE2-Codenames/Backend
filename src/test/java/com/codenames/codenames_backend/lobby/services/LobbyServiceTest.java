@@ -1,7 +1,10 @@
 package com.codenames.codenames_backend.lobby.services;
 
+import com.codenames.codenames_backend.websocket.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -25,6 +28,9 @@ class LobbyServiceTest {
         boolean result = lobbyService.joinLobby("TestUser", "ABCDE");
 
         assertTrue(result);
+
+        List<Player> players = lobbyService.getPlayers("ABCDE");
+        assertTrue(players.stream().anyMatch(p -> p.getUsername().equals("TestUser")));
     }
 
     @Test
@@ -57,6 +63,10 @@ class LobbyServiceTest {
         boolean result = lobbyService.leaveLobby("Host", "ABCDE");
 
         assertTrue(result);
+
+        List<Player> players = lobbyService.getPlayers("ABCDE");
+
+        assertFalse(players.stream().anyMatch(p -> p.getUsername().equals("Host")));
     }
 
     @Test
@@ -76,5 +86,13 @@ class LobbyServiceTest {
         String code2 = lobbyService.createLobby("Host2");
 
         assertEquals("FGHIJ", code2);
+    }
+
+    @Test
+    void getPlayers_shouldReturnEmptyList_whenLobbyDoesNotExist() {
+        List<Player> players = lobbyService.getPlayers("UNKNOWN");
+
+        assertNotNull(players);
+        assertTrue(players.isEmpty());
     }
 }

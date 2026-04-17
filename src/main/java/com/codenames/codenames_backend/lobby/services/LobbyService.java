@@ -1,9 +1,11 @@
 package com.codenames.codenames_backend.lobby.services;
 
 import com.codenames.codenames_backend.lobby.Lobby;
+import com.codenames.codenames_backend.websocket.Player;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class LobbyService {
@@ -50,4 +52,8 @@ public class LobbyService {
         return code;
     }
 
+    public List<Player> getPlayers(String lobbyCode) {
+        Lobby lobby = lobbyList.get(lobbyCode);
+        return lobby != null ? lobby.getPlayerList() : List.of();
+    }
 }

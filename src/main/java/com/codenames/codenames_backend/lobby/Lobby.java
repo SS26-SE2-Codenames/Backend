@@ -1,5 +1,6 @@
 package com.codenames.codenames_backend.lobby;
 
+import com.codenames.codenames_backend.websocket.Player;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.List;
 public class Lobby {
     private static final int MAX_PLAYERS = 4;
     private final String lobbyCode;
-    private final List<String> playerList;
+    private final List<Player> playerList;
 
     public Lobby(String lobbyCode, String username) {
         this.lobbyCode = lobbyCode;
@@ -18,10 +19,12 @@ public class Lobby {
     }
 
     public void addPlayer(String username) {
-        if (playerList.size() < MAX_PLAYERS) this.playerList.add(username);
+        if (playerList.size() < MAX_PLAYERS) {
+            playerList.add(new Player(username));
+        }
     }
 
     public void removePlayer(String username) {
-        this.playerList.remove(username);
+        playerList.removeIf(p -> p.getUsername().equals(username));
     }
 }
