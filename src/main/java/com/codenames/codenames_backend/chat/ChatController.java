@@ -12,12 +12,10 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 public class ChatController {
-
-  private final LobbyService lobbyService;
+  
   private final SimpMessagingTemplate messagingTemplate;
 
   public ChatController(LobbyService lobbyService, SimpMessagingTemplate messagingTemplate) {
-    this.lobbyService = lobbyService;
     this.messagingTemplate = messagingTemplate;
   }
 
