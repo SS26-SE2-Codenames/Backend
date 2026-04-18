@@ -1,10 +1,15 @@
 package com.codenames.codenames_backend.websocket;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.codenames.codenames_backend.lobby.services.LobbyService;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -20,18 +25,19 @@ class GameControllerTest {
   private LobbyService lobbyService;
   private SessionRegistry sessionRegistry;
   private GameController controller;
+  private SimpMessagingTemplate messagingTemplate;
 
   @BeforeEach
   void setup() {
     lobbyService = mock(LobbyService.class);
-    SimpMessagingTemplate messagingTemplate = mock(SimpMessagingTemplate.class);
+    messagingTemplate = mock(SimpMessagingTemplate.class);
     sessionRegistry = new SessionRegistry();
 
     controller = new GameController(lobbyService, messagingTemplate, sessionRegistry);
   }
 
   @Test
-  void shouldHandleJoinAndRegisterSession() {
+  void shouldRegisterJoinAndRegisterSession() {
 
     JoinMessage msg = new JoinMessage();
     msg.setName("Max");
@@ -40,11 +46,15 @@ class GameControllerTest {
     SimpMessageHeaderAccessor accessor = SimpMessageHeaderAccessor.create();
     accessor.setSessionId("123");
 
+    when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max")));
+
     controller.join(msg, accessor);
 
-    verify(lobbyService).joinLobby("Max", "ABCDE");
+    verify(lobbyService, never()).joinLobby(any(), any());
 
     assertEquals("Max", sessionRegistry.getUser("123"));
     assertEquals("ABCDE", sessionRegistry.getLobby("123"));
+
+    verify(messagingTemplate).convertAndSend(eq("/topic/lobby/ABCDE"), any(Object.class));
   }
 }
