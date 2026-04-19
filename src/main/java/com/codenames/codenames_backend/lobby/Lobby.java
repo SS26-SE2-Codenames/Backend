@@ -18,13 +18,16 @@ public class Lobby {
         this.addPlayer(username);
     }
 
-    public void addPlayer(String username) {
+    public boolean addPlayer(String username) {
         boolean alreadyExists = playerList.stream()
                 .anyMatch(p -> p.getUsername().equals(username));
 
-        if (!alreadyExists && playerList.size() < MAX_PLAYERS) {
-            playerList.add(new Player(username));
+        if (alreadyExists || playerList.size() >=MAX_PLAYERS) {
+            return false;
         }
+
+        playerList.add(new Player(username));
+        return true;
     }
 
     public void removePlayer(String username) {

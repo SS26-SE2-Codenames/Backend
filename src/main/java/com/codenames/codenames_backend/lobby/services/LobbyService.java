@@ -30,11 +30,9 @@ public class LobbyService {
     public boolean joinLobby(String username, String lobbyCode) {
         Lobby lobby = lobbyList.get(lobbyCode);
         if (lobby != null) {
-            lobby.addPlayer(username);
-            return true;
-        } else {
-            return false;
+            return lobby.addPlayer(username);
         }
+            return false;
     }
 
     public boolean leaveLobby(String username, String lobbyCode) {
