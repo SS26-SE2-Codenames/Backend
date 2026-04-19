@@ -51,6 +51,8 @@ public class GameController {
 
     String sessionId = headerAccessor.getSessionId();
 
+    lobbyService.joinLobby(message.getName(), message.getCode());
+
     sessionRegistry.register(sessionId, message.getName(), message.getCode());
 
     sendPlayerUpdate(message.getCode());
