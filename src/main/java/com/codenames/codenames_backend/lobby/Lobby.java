@@ -19,7 +19,10 @@ public class Lobby {
     }
 
     public void addPlayer(String username) {
-        if (playerList.size() < MAX_PLAYERS) {
+        boolean alreadyExists = playerList.stream()
+                .anyMatch(p -> p.getUsername().equals(username));
+
+        if (!alreadyExists && playerList.size() < MAX_PLAYERS) {
             playerList.add(new Player(username));
         }
     }
