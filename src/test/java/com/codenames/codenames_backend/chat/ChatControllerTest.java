@@ -38,7 +38,7 @@ class ChatControllerTest {
     globalDestination += lobbyId;
     chatController.sendGlobalMessage(lobbyId, chatDto);
 
-    verify(messagingTemplate, times(1)).convertAndSend(eq(globalDestination), eq(chatDto));
+    verify(messagingTemplate, times(1)).convertAndSend(globalDestination, chatDto);
   }
 
   @Test
