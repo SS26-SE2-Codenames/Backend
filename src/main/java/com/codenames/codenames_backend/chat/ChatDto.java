@@ -20,7 +20,7 @@ public record ChatDto(String senderUsername, String content, MessageType type) {
     if (senderUsername == null || senderUsername.isEmpty()) {
       throw new IllegalArgumentException("Sender username cannot be null or empty");
     }
-    if (type == MessageType.CHAT && (content == null || content.isEmpty())) {
+    if (content == null || content.isEmpty()) {
       throw new IllegalArgumentException("Content cannot be null or empty");
     }
     if (type == null) {
