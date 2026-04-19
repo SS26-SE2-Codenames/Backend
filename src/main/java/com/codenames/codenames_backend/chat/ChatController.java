@@ -34,7 +34,7 @@ public class ChatController {
     try {
       ChatDto validatedMessage = chatService.processLobbyMessage(lobbyId, chatDto);
       messagingTemplate.convertAndSend("/topic/chat/" + lobbyId, validatedMessage);
-    } catch (IllegalStateException e) {
+    } catch (IllegalArgumentException e) {
       System.err.println("Invalid message: " + e.getMessage());
     }
   }
@@ -54,7 +54,7 @@ public class ChatController {
     try {
       ChatDto validatedMessage = chatService.processTeamMessage(lobbyId, team, chatDto);
       messagingTemplate.convertAndSend("/topic/chat/" + lobbyId + "/" + team, validatedMessage);
-    } catch (IllegalStateException e) {
+    } catch (IllegalArgumentException e) {
       System.err.println("Invalid message: " + e.getMessage());
     }
   }
