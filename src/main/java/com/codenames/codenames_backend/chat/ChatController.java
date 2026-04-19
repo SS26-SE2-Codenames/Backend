@@ -30,14 +30,13 @@ public class ChatController {
    * @param chatDto the message of the client in chatDto format
    */
   @MessageMapping("/chat/{lobbyId}")
-  public void sendGlobalMessage(@DestinationVariable String lobbyId, @Payload ChatDto chatDto) {
-    try{
+  public void sendLobbyMessage(@DestinationVariable String lobbyId, @Payload ChatDto chatDto) {
+    try {
       ChatDto validatedMessage = chatService.parsingAndStoringMessage(lobbyId, chatDto);
       messagingTemplate.convertAndSend("/topic/chat/" + lobbyId, validatedMessage);
-    } catch(IllegalStateException e){
+    } catch (IllegalStateException e) {
       System.err.println("Invalid message: " + e.getMessage());
     }
-
   }
 
   /**
@@ -52,7 +51,11 @@ public class ChatController {
       @DestinationVariable String lobbyId,
       @DestinationVariable String team,
       @Payload ChatDto chatDto) {
-    ChatDto validatedMessage = chatService.parsingAndStoringMessage(lobbyId, chatDto);
-    messagingTemplate.convertAndSend("/topic/chat/" + lobbyId + "/" + team, validatedMessage);
+    try {
+      ChatDto validatedMessage = chatService.processTeamMessage(lobbyId, team, chatDto);
+      messagingTemplate.convertAndSend("/topic/chat/" + lobbyId + "/" + team, validatedMessage);
+    } catch (IllegalStateException e) {
+      System.err.println("Invalid message: " + e.getMessage());
+    }
   }
 }
