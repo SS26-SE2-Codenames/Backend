@@ -13,6 +13,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 class ChatControllerTest {
   private SimpMessagingTemplate messagingTemplate;
   private ChatController chatController;
+  private ChatService chatService;
   private String lobbyId;
   private String redTeam;
   private String blueTeam;
@@ -23,7 +24,8 @@ class ChatControllerTest {
   @BeforeEach
   void setUp() {
     messagingTemplate = mock(SimpMessagingTemplate.class);
-    chatController = new ChatController(messagingTemplate);
+    chatService = mock(ChatService.class);
+    chatController = new ChatController(messagingTemplate, chatService);
     lobbyId = "123";
     redTeam = "RED";
     blueTeam = "BLUE";

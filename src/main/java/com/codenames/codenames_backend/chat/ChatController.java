@@ -18,9 +18,9 @@ public class ChatController {
    *
    * @param messagingTemplate the messaging template used for broadcasting updates
    */
-  public ChatController(SimpMessagingTemplate messagingTemplate) {
+  public ChatController(SimpMessagingTemplate messagingTemplate, ChatService chatService) {
     this.messagingTemplate = messagingTemplate;
-    this.chatService = new ChatService();
+    this.chatService = chatService;
   }
 
   /**
