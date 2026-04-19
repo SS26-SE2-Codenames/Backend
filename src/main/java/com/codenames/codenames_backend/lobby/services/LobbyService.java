@@ -6,11 +6,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class LobbyService {
 
-    private final HashMap<String, Lobby> lobbyList = new HashMap<>();
+    private final Map<String, Lobby> lobbyList = new ConcurrentHashMap<>();
     private final LobbyCodeGenerator generator;
 
     public LobbyService(LobbyCodeGenerator generator) {

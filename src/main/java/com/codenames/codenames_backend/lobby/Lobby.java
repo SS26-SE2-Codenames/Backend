@@ -5,16 +5,16 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Getter
 public class Lobby {
     private static final int MAX_PLAYERS = 4;
     private final String lobbyCode;
-    private final List<Player> playerList;
+    private final List<Player> playerList = new CopyOnWriteArrayList<>();
 
     public Lobby(String lobbyCode, String username) {
         this.lobbyCode = lobbyCode;
-        this.playerList = new ArrayList<>();
         this.addPlayer(username);
     }
 
