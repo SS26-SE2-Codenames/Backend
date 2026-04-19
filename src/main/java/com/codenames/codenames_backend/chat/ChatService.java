@@ -35,4 +35,8 @@ public class ChatService {
 
     return chatDto;
   }
+
+  public void clearLobbyHistory(String lobbyId){
+    lobbyChatHistory.remove(lobbyId);
+  }
 }
