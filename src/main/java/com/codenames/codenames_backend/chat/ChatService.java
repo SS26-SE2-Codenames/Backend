@@ -12,16 +12,7 @@ public class ChatService {
   private static final int MAX_MESSAGES = 50;
 
   public ChatDto parsingAndStoringMessage(String lobbyId, ChatDto chatDto){
-    if (chatDto.senderUsername() == null || chatDto.senderUsername().isEmpty()) {
-      throw new IllegalArgumentException("Sender username cannot be null or empty");
-    }
-    if (chatDto.content() == null || chatDto.content().isEmpty()) {
-      throw new IllegalArgumentException("Content cannot be null or empty");
-    }
-    if (chatDto.type() == null) {
-      throw new IllegalArgumentException("Please specify chat type");
-    }
-
+    validateDto(chatDto);
 
     lobbyChatHistory.computeIfAbsent(lobbyId, (k) -> new CopyOnWriteArrayList<>());
     List<ChatDto> history = lobbyChatHistory.get(lobbyId);
@@ -34,6 +25,18 @@ public class ChatService {
     history.add(chatDto);
 
     return chatDto;
+  }
+
+  private static void validateDto(ChatDto chatDto) {
+    if (chatDto.senderUsername() == null || chatDto.senderUsername().isEmpty()) {
+      throw new IllegalArgumentException("Sender username cannot be null or empty");
+    }
+    if (chatDto.content() == null || chatDto.content().isEmpty()) {
+      throw new IllegalArgumentException("Content cannot be null or empty");
+    }
+    if (chatDto.type() == null) {
+      throw new IllegalArgumentException("Please specify chat type");
+    }
   }
 
   public void clearLobbyHistory(String lobbyId){
