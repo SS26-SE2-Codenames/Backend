@@ -32,7 +32,7 @@ public class ChatController {
   @MessageMapping("/chat/{lobbyId}")
   public void sendLobbyMessage(@DestinationVariable String lobbyId, @Payload ChatDto chatDto) {
     try {
-      ChatDto validatedMessage = chatService.parsingAndStoringMessage(lobbyId, chatDto);
+      ChatDto validatedMessage = chatService.processLobbyMessage(lobbyId, chatDto);
       messagingTemplate.convertAndSend("/topic/chat/" + lobbyId, validatedMessage);
     } catch (IllegalStateException e) {
       System.err.println("Invalid message: " + e.getMessage());
