@@ -47,7 +47,9 @@ class ChatControllerTest {
     chatController.sendTeamMessage(lobbyId, redTeam, chatDto);
 
     verify(messagingTemplate, times(1)).convertAndSend(eq(teamDestination), eq(chatDto));
-  }@Test
+  }
+
+  @Test
   void testSendTeamMessage_blueTeam() {
     teamDestination += blueTeam;
     chatController.sendTeamMessage(lobbyId, blueTeam, chatDto);

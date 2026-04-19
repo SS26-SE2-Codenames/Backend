@@ -34,26 +34,31 @@ class ChatDtoTest {
 
   @Test
   void testConstructor_nullName() {
-    assertThrows(IllegalArgumentException.class, () -> new ChatDto(null, "TestMessage", MessageType.CHAT));
+    assertThrows(
+        IllegalArgumentException.class, () -> new ChatDto(null, "TestMessage", MessageType.CHAT));
   }
 
   @Test
   void testConstructor_emptyName() {
-    assertThrows(IllegalArgumentException.class, () -> new ChatDto("", "TestMessage", MessageType.CHAT));
+    assertThrows(
+        IllegalArgumentException.class, () -> new ChatDto("", "TestMessage", MessageType.CHAT));
   }
 
   @Test
   void testConstructor_nullContent() {
-    assertThrows(IllegalArgumentException.class, () -> new ChatDto("TestName", null, MessageType.CHAT));
+    assertThrows(
+        IllegalArgumentException.class, () -> new ChatDto("TestName", null, MessageType.CHAT));
   }
 
   @Test
   void testConstructor_emptyContent() {
-    assertThrows(IllegalArgumentException.class, () -> new ChatDto("TestName", "", MessageType.CHAT));
+    assertThrows(
+        IllegalArgumentException.class, () -> new ChatDto("TestName", "", MessageType.CHAT));
   }
 
   @Test
   void testConstructor_nullType() {
-    assertThrows(IllegalArgumentException.class, () -> new ChatDto("TestName", "TestMessage", null));
+    assertThrows(
+        IllegalArgumentException.class, () -> new ChatDto("TestName", "TestMessage", null));
   }
 }

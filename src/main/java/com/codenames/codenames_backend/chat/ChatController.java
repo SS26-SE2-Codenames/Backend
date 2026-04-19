@@ -6,9 +6,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
-/**
- * Controller for broadcasting client messages to the desired destination.
- */
+/** Controller for broadcasting client messages to the desired destination. */
 @Controller
 public class ChatController {
 
@@ -42,7 +40,9 @@ public class ChatController {
    * @param chatDto the message of the client in chatDto format
    */
   @MessageMapping("/chat/{lobbyId}/{team}")
-  public void sendTeamMessage(@DestinationVariable String lobbyId, @DestinationVariable String team,
+  public void sendTeamMessage(
+      @DestinationVariable String lobbyId,
+      @DestinationVariable String team,
       @Payload ChatDto chatDto) {
     messagingTemplate.convertAndSend("/topic/chat/" + lobbyId + "/" + team, chatDto);
   }
