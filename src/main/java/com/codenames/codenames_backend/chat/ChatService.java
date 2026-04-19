@@ -22,6 +22,17 @@ public class ChatService {
       throw new IllegalArgumentException("Please specify chat type");
     }
 
+
+    lobbyChatHistory.computeIfAbsent(lobbyId, (k) -> new CopyOnWriteArrayList<>());
+    List<ChatDto> history = lobbyChatHistory.get(lobbyId);
+
+    if (history.size() > MAX_MESSAGES - 1){
+      history.remove(0);
+    }
+
+    // This updates the list the hashmap, and we do not need to replace the existing list.
+    history.add(chatDto);
+
     return chatDto;
   }
 }
