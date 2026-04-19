@@ -46,7 +46,7 @@ class ChatControllerTest {
     teamDestination += redTeam;
     chatController.sendTeamMessage(lobbyId, redTeam, chatDto);
 
-    verify(messagingTemplate, times(1)).convertAndSend(eq(teamDestination), eq(chatDto));
+    verify(messagingTemplate, times(1)).convertAndSend(teamDestination, chatDto);
   }
 
   @Test
@@ -54,6 +54,6 @@ class ChatControllerTest {
     teamDestination += blueTeam;
     chatController.sendTeamMessage(lobbyId, blueTeam, chatDto);
 
-    verify(messagingTemplate, times(1)).convertAndSend(eq(teamDestination), eq(chatDto));
+    verify(messagingTemplate, times(1)).convertAndSend(teamDestination, chatDto);
   }
 }
