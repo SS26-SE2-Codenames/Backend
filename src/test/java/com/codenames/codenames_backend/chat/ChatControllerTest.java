@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
+/** Unit test for Board. */
 class ChatControllerTest {
   private SimpMessagingTemplate messagingTemplate;
   private ChatController chatController;

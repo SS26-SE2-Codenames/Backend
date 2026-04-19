@@ -7,6 +7,7 @@ import com.codenames.codenames_backend.chat.ChatDto.MessageType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/** Unit test for Board. */
 class ChatDtoTest {
 
   ChatDto dto;
