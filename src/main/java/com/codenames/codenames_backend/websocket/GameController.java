@@ -51,7 +51,12 @@ public class GameController {
 
     String sessionId = headerAccessor.getSessionId();
 
-    lobbyService.joinLobby(message.getName(), message.getCode());
+    boolean joined = lobbyService.joinLobby(message.getName(), message.getCode());
+
+    if (!joined) {
+      messagingTemplate.convertAndSendToUser(sessionId, "/queue/errors", "Join failed");
+      return;
+    }
 
     sessionRegistry.register(sessionId, message.getName(), message.getCode());
 
