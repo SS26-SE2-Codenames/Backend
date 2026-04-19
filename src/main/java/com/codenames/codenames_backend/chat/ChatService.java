@@ -1,31 +1,13 @@
 package com.codenames.codenames_backend.chat;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ChatService {
-  // Each lobby has their own list of ChatDto.
-  private final Map<String, List<ChatDto>> lobbyChatHistory = new ConcurrentHashMap<>();
-
-  private static final int MAX_MESSAGES = 50;
-
-  public ChatDto parsingAndStoringMessage(String lobbyId, ChatDto chatDto){
-    validateDto(chatDto);
-
-    lobbyChatHistory.computeIfAbsent(lobbyId, (k) -> new CopyOnWriteArrayList<>());
-    List<ChatDto> history = lobbyChatHistory.get(lobbyId);
-
-    if (history.size() == MAX_MESSAGES){
-      history.remove(0);
-    }
-
-    // This updates the list the hashmap, and we do not need to replace the existing list.
-    history.add(chatDto);
-
-    return chatDto;
-  }
+  // Each lobby now stores 3 COWAL
+  private final Map<String, ChatHistory> lobbyChatHistory = new ConcurrentHashMap<>();
 
   private static void validateDto(ChatDto chatDto) {
     if (chatDto.senderUsername() == null || chatDto.senderUsername().isEmpty()) {
@@ -39,7 +21,27 @@ public class ChatService {
     }
   }
 
-  public void clearLobbyHistory(String lobbyId){
+  public ChatDto processLobbyMessage(String lobbyId, ChatDto chatDto) {
+    validateDto(chatDto);
+
+    ChatHistory currentLobbyChat =
+        lobbyChatHistory.computeIfAbsent(lobbyId, (k) -> new ChatHistory());
+    currentLobbyChat.addLobbyMessage(chatDto);
+
+    return chatDto;
+  }
+
+  public ChatDto processTeamMessage(String lobbyId, String team, ChatDto chatDto) {
+    validateDto(chatDto);
+
+    ChatHistory currentTeamChat =
+        lobbyChatHistory.computeIfAbsent(lobbyId, (k) -> new ChatHistory());
+    currentTeamChat.addTeamMessage(team, chatDto);
+
+    return chatDto;
+  }
+
+  public void clearLobbyHistory(String lobbyId) {
     lobbyChatHistory.remove(lobbyId);
   }
 }
