@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 public class ChatController {
 
   private final SimpMessagingTemplate messagingTemplate;
+  private final ChatService chatService;
 
   /**
    * Constructor for the ChatController.
@@ -19,6 +20,7 @@ public class ChatController {
    */
   public ChatController(SimpMessagingTemplate messagingTemplate) {
     this.messagingTemplate = messagingTemplate;
+    this.chatService = new ChatService();
   }
 
   /**
@@ -29,7 +31,13 @@ public class ChatController {
    */
   @MessageMapping("/chat/{lobbyId}")
   public void sendGlobalMessage(@DestinationVariable String lobbyId, @Payload ChatDto chatDto) {
-    messagingTemplate.convertAndSend("/topic/chat/" + lobbyId, chatDto);
+    try{
+      ChatDto validatedMessage = chatService.parsingAndStoringMessage(lobbyId, chatDto);
+      messagingTemplate.convertAndSend("/topic/chat/" + lobbyId, validatedMessage);
+    } catch(IllegalStateException e){
+      System.err.println("Invalid message: " + e.getMessage());
+    }
+
   }
 
   /**
@@ -44,6 +52,7 @@ public class ChatController {
       @DestinationVariable String lobbyId,
       @DestinationVariable String team,
       @Payload ChatDto chatDto) {
-    messagingTemplate.convertAndSend("/topic/chat/" + lobbyId + "/" + team, chatDto);
+    ChatDto validatedMessage = chatService.parsingAndStoringMessage(lobbyId, chatDto);
+    messagingTemplate.convertAndSend("/topic/chat/" + lobbyId + "/" + team, validatedMessage);
   }
 }
