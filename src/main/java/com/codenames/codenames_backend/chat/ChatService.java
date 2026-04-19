@@ -26,7 +26,7 @@ public class ChatService {
     lobbyChatHistory.computeIfAbsent(lobbyId, (k) -> new CopyOnWriteArrayList<>());
     List<ChatDto> history = lobbyChatHistory.get(lobbyId);
 
-    if (history.size() > MAX_MESSAGES - 1){
+    if (history.size() == MAX_MESSAGES){
       history.remove(0);
     }
 
