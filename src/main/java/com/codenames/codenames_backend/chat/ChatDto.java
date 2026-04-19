@@ -9,7 +9,7 @@ package com.codenames.codenames_backend.chat;
  */
 public record ChatDto(String senderUsername, String content, MessageType type) {
 
-    /** Various message types that can be used in the game. */
+  /** Various message types that can be used in the game. */
   public enum MessageType {
     CHAT
   }
