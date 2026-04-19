@@ -13,7 +13,10 @@ public class Lobby {
     private final String lobbyCode;
     private final List<String> playerList;
 
+    // username -> selected team
     private final Map<String, Team> playerTeams;
+
+    // username -> selected role
     private final Map<String, Role> playerRoles;
 
     public Lobby(String lobbyCode, String username) {
