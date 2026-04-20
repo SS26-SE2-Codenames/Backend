@@ -1,12 +1,9 @@
 package com.codenames.codenames_backend.chat;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import com.codenames.codenames_backend.chat.ChatDto.MessageType;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +20,7 @@ class ChatControllerTest {
   private String redTeam;
   private String blueTeam;
   private ChatDto chatDto;
-  private String globalDestination;
+  private String lobbyDestination;
   private String teamDestination;
 
   @BeforeEach
@@ -36,29 +33,26 @@ class ChatControllerTest {
     redTeam = "RED";
     blueTeam = "BLUE";
     chatDto = new ChatDto("TestName", "TestMessage", MessageType.CHAT);
-
-    globalDestination = "/topic/chat/";
-    teamDestination = "/topic/chat/" + lobbyId + "/";
   }
 
   @Test
   void testSendLobbyMessage() {
     chatController.sendLobbyMessage(lobbyId, chatDto);
 
-    verify(messagingTemplate, times(1)).convertAndSend(globalDestination, chatDto);
+    verify(chatService, times(1)).processLobbyMessage(lobbyId, chatDto);
   }
 
   @Test
   void testSendTeamMessage_redTeam() {
     chatController.sendTeamMessage(lobbyId, redTeam, chatDto);
 
-    verify(messagingTemplate, times(1)).convertAndSend(teamDestination, chatDto);
+    verify(chatService, times(1)).processTeamMessage(lobbyId, redTeam, chatDto);
   }
 
   @Test
   void testSendTeamMessage_blueTeam() {
     chatController.sendTeamMessage(lobbyId, blueTeam, chatDto);
 
-    verify(messagingTemplate, times(1)).convertAndSend(teamDestination, chatDto);
+    verify(chatService, times(1)).processTeamMessage(lobbyId, blueTeam, chatDto);
   }
 }
