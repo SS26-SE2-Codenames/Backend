@@ -101,4 +101,29 @@ class GameControllerTest {
     verifyNoInteractions(lobbyService);
     verifyNoInteractions(messagingTemplate);
   }
+
+  @Test
+  void shouldUseSessionAttributesFallback_whenSessionIdIsNull() {
+
+    JoinMessage msg = new JoinMessage();
+    msg.setName("Max");
+    msg.setCode("ABCDE");
+
+    SimpMessageHeaderAccessor accessor = SimpMessageHeaderAccessor.create();
+
+    java.util.Map<String, Object> attrs = new java.util.HashMap<>();
+    attrs.put("sessionId", "123");
+    accessor.setSessionAttributes(attrs);
+
+    when(lobbyService.joinLobby("Max", "ABCDE")).thenReturn(true);
+    when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max")));
+
+    controller.join(msg, accessor);
+
+    assertEquals("Max", sessionRegistry.getUser("123"));
+    assertEquals("ABCDE", sessionRegistry.getLobby("123"));
+
+    verify(lobbyService).joinLobby("Max", "ABCDE");
+    verify(messagingTemplate).convertAndSend(eq("/topic/lobby/ABCDE"), any(Object.class));
+  }
 }
