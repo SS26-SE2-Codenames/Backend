@@ -3,20 +3,26 @@ package com.codenames.codenames_backend.chat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import com.codenames.codenames_backend.chat.ChatDto.MessageType;
 import java.util.stream.Stream;
+import org.apache.logging.log4j.message.SimpleMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 /** Unit tests for ChatService. */
 class ChatServiceTest {
   private final String lobbyId = "TESTLOBBY";
   ChatDto message;
   private ChatService chatService;
+  private SimpMessagingTemplate messagingTemplate;
 
   private static Stream<Arguments> provideInvalidChatDto() {
     return Stream.of(
@@ -29,13 +35,15 @@ class ChatServiceTest {
 
   @BeforeEach
   void setUp() {
-    chatService = new ChatService();
+    messagingTemplate = mock(SimpMessagingTemplate.class);
+    chatService = new ChatService(messagingTemplate);
     message = new ChatDto("TestName", "TestMessage", MessageType.CHAT);
   }
 
   @ParameterizedTest(name = "[{index}] Rejects {0}")
   @MethodSource("provideInvalidChatDto")
   void testValidationLogic_invalidMessages(ChatDto invalidMessage) {
+    //TODO: fix this si not correct
     assertThrows(
         IllegalArgumentException.class,
         () -> chatService.processLobbyMessage(lobbyId, invalidMessage));
@@ -43,16 +51,16 @@ class ChatServiceTest {
 
   @Test
   void testProcessLobbyMessage() {
-    ChatDto result = chatService.processLobbyMessage(lobbyId, message);
+    chatService.processLobbyMessage(lobbyId, message);
 
-    assertEquals(message, result);
+    verify(messagingTemplate, times(1)).convertAndSend("/topic/chat/" + lobbyId, message);
   }
 
   @Test
   void testProcessTeamMessage() {
-    ChatDto result = chatService.processTeamMessage(lobbyId, "RED", message);
+    chatService.processTeamMessage(lobbyId, "RED", message);
 
-    assertEquals(message, result);
+    verify(messagingTemplate, times(1)).convertAndSend("/topic/chat/" + lobbyId + "/RED", message);
   }
 
   @Test
@@ -65,9 +73,9 @@ class ChatServiceTest {
 
   @Test
   void testGetChatHistory() {
-    ChatDto result = chatService.processLobbyMessage(lobbyId, message);
+    chatService.processLobbyMessage(lobbyId, message);
 
-    assertEquals(result, chatService.getChatHistory(lobbyId).getLobbyChat().get(0));
+    assertEquals(message, chatService.getChatHistory(lobbyId).getLobbyChat().get(0));
   }
 
   @Test
