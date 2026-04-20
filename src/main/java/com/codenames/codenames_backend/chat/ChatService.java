@@ -33,7 +33,7 @@ public class ChatService {
     validateDto(chatDto);
 
     ChatHistory currentLobbyChat =
-        lobbyChatHistory.computeIfAbsent(lobbyId, (k) -> new ChatHistory());
+        lobbyChatHistory.computeIfAbsent(lobbyId, k -> new ChatHistory());
     currentLobbyChat.addLobbyMessage(chatDto);
 
     return chatDto;
@@ -50,8 +50,7 @@ public class ChatService {
   public ChatDto processTeamMessage(String lobbyId, String team, ChatDto chatDto) {
     validateDto(chatDto);
 
-    ChatHistory currentTeamChat =
-        lobbyChatHistory.computeIfAbsent(lobbyId, (k) -> new ChatHistory());
+    ChatHistory currentTeamChat = lobbyChatHistory.computeIfAbsent(lobbyId, k -> new ChatHistory());
     currentTeamChat.addTeamMessage(team, chatDto);
 
     return chatDto;
