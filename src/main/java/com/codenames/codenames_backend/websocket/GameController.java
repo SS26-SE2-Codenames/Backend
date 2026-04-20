@@ -51,6 +51,10 @@ public class GameController {
 
     String sessionId = headerAccessor.getSessionId();
 
+    if (sessionId == null) {
+      return;
+    }
+
     boolean joined = lobbyService.joinLobby(message.getName(), message.getCode());
 
     if (!joined) {
