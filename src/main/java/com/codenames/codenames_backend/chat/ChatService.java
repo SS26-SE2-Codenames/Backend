@@ -1,5 +1,6 @@
 package com.codenames.codenames_backend.chat;
 
+import com.codenames.codenames_backend.utility.Team;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.extern.slf4j.Slf4j;
@@ -58,14 +59,14 @@ public class ChatService {
    * @param chatDto the message to process and store
    * @throws IllegalArgumentException if validation fails
    */
-  public void processTeamMessage(String lobbyId, String team, ChatDto chatDto) {
+  public void processTeamMessage(String lobbyId, Team team, ChatDto chatDto) {
     try {
       validateDto(chatDto);
 
       ChatHistory currentTeamChat =
           lobbyChatHistory.computeIfAbsent(lobbyId, k -> new ChatHistory());
       currentTeamChat.addTeamMessage(team, chatDto);
-      messagingTemplate.convertAndSend("/topic/chat/" + lobbyId + "/" + team, chatDto);
+      messagingTemplate.convertAndSend("/topic/chat/" + lobbyId + "/" + team.name(), chatDto);
     } catch (IllegalArgumentException e) {
       log.error("Invalid team message: {}", e.getMessage());
     }

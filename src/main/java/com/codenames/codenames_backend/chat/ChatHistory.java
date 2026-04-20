@@ -1,5 +1,6 @@
 package com.codenames.codenames_backend.chat;
 
+import com.codenames.codenames_backend.utility.Team;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.Getter;
@@ -31,13 +32,12 @@ public class ChatHistory {
    * @param chatDto the message to add
    * @throws IllegalArgumentException if the team name is not recognized
    */
-  public void addTeamMessage(String team, ChatDto chatDto) {
-    if ("RED".equalsIgnoreCase(team)) {
-      addMessage(redTeamChat, chatDto);
-    } else if ("BLUE".equalsIgnoreCase(team)) {
-      addMessage(blueTeamChat, chatDto);
-    } else {
-      throw new IllegalArgumentException("Unknown Team: " + team);
+  public void addTeamMessage(Team team, ChatDto chatDto) {
+    switch (team) {
+      case RED:
+        addMessage(redTeamChat, chatDto);
+      case BlUE:
+        addMessage(blueTeamChat, chatDto);
     }
   }
 

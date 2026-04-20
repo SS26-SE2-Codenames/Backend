@@ -46,7 +46,7 @@ public class ChatController {
   @MessageMapping("/chat/{lobbyId}/{team}")
   public void sendTeamMessage(
       @DestinationVariable String lobbyId,
-      @DestinationVariable String team,
+      @DestinationVariable Team team,
       @Payload ChatDto chatDto) {
     chatService.processTeamMessage(lobbyId, team, chatDto);
   }
