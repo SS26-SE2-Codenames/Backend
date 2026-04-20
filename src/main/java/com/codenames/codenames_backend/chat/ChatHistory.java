@@ -2,16 +2,18 @@ package com.codenames.codenames_backend.chat;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import lombok.Getter;
 
+@Getter
 public class ChatHistory {
-  private final List<ChatDto> globalChat = new CopyOnWriteArrayList<>();
+  private final List<ChatDto> lobbyChat = new CopyOnWriteArrayList<>();
   private final List<ChatDto> redTeamChat = new CopyOnWriteArrayList<>();
   private final List<ChatDto> blueTeamChat = new CopyOnWriteArrayList<>();
 
   private static final int MAX_MESSAGES = 50;
 
   public void addLobbyMessage(ChatDto chatDto){
-    addMessage(globalChat, chatDto);
+    addMessage(lobbyChat, chatDto);
   }
 
   public void addTeamMessage(String team, ChatDto chatDto){
