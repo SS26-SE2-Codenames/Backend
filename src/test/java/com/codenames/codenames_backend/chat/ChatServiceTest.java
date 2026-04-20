@@ -9,6 +9,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.codenames.codenames_backend.chat.ChatDto.MessageType;
+import com.codenames.codenames_backend.utility.Team;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,8 +20,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 /** Unit tests for ChatService. */
 class ChatServiceTest {
-  private final String lobbyId = "TESTLOBBY";
   ChatDto message;
+  private String lobbyId;
+  private Team team;
   private ChatService chatService;
   private SimpMessagingTemplate messagingTemplate;
 
@@ -35,6 +37,8 @@ class ChatServiceTest {
 
   @BeforeEach
   void setUp() {
+    lobbyId = "TESTLOBBY";
+    team = Team.RED;
     messagingTemplate = mock(SimpMessagingTemplate.class);
     chatService = new ChatService(messagingTemplate);
     message = new ChatDto("TestName", "TestMessage", MessageType.CHAT);
@@ -51,9 +55,10 @@ class ChatServiceTest {
   @ParameterizedTest(name = "[{index}] Rejects {0}")
   @MethodSource("provideInvalidChatDto")
   void testTeamValidationLogic_invalidMessages(ChatDto invalidMessage) {
-    chatService.processTeamMessage(lobbyId, "RED", invalidMessage);
+    chatService.processTeamMessage(lobbyId, team, invalidMessage);
 
-    verify(messagingTemplate, never()).convertAndSend("/topic/chat/" + lobbyId + "/RED", message);
+    verify(messagingTemplate, never())
+        .convertAndSend("/topic/chat/" + lobbyId + "/" + team.name(), message);
   }
 
   @Test
@@ -65,9 +70,10 @@ class ChatServiceTest {
 
   @Test
   void testProcessTeamMessage() {
-    chatService.processTeamMessage(lobbyId, "RED", message);
+    chatService.processTeamMessage(lobbyId, team, message);
 
-    verify(messagingTemplate, times(1)).convertAndSend("/topic/chat/" + lobbyId + "/RED", message);
+    verify(messagingTemplate, times(1))
+        .convertAndSend("/topic/chat/" + lobbyId + "/" + team.name(), message);
   }
 
   @Test

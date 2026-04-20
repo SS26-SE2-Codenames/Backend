@@ -5,6 +5,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.codenames.codenames_backend.chat.ChatDto.MessageType;
+import com.codenames.codenames_backend.utility.Team;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,8 +15,8 @@ class ChatControllerTest {
   private ChatService chatService;
 
   private String lobbyId;
-  private String redTeam;
-  private String blueTeam;
+  private Team redTeam;
+  private Team blueTeam;
   private ChatDto chatDto;
 
   @BeforeEach
@@ -24,9 +25,10 @@ class ChatControllerTest {
     chatController = new ChatController(chatService);
 
     lobbyId = "123";
-    redTeam = "RED";
-    blueTeam = "BLUE";
     chatDto = new ChatDto("TestName", "TestMessage", MessageType.CHAT);
+
+    redTeam = Team.RED;
+    blueTeam = Team.BlUE;
   }
 
   @Test

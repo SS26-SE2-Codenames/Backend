@@ -1,5 +1,6 @@
 package com.codenames.codenames_backend.chat;
 
+import com.codenames.codenames_backend.utility.Team;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Controller;
  * <p>The destination is based on the lobbyID or team parameters passed when the method is invoked.
  * The parameters are appended to the destination and broadcasted to all subscribers.
  */
-
 @Controller
 public class ChatController {
 
@@ -28,6 +28,7 @@ public class ChatController {
 
   /**
    * Sends a message to all players in the same lobby.
+   *
    * @param lobbyId the ID of where the message is broadcasted to
    * @param chatDto the message of the client in chatDto format
    */
