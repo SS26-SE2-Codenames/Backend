@@ -2,6 +2,7 @@ package com.codenames.codenames_backend.chat;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,4 +45,13 @@ public class ChatService {
   public void clearLobbyHistory(String lobbyId) {
     lobbyChatHistory.remove(lobbyId);
   }
+
+  public ChatHistory getChatHistory(String lobbyId) {
+    ChatHistory history = lobbyChatHistory.get(lobbyId);
+    if (history == null) {
+      throw new IllegalArgumentException("No lobby found with id: " + lobbyId);
+    }
+    return history;
+  }
+
 }
