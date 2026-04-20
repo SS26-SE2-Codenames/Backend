@@ -1,5 +1,6 @@
 package com.codenames.codenames_backend.chat;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Controller;
  * <p>The destination is based on the lobbyID or team parameters passed when the method is invoked.
  * The parameters are appended to the destination and broadcasted to all subscribers.
  */
+@Slf4j
 @Controller
 public class ChatController {
 
@@ -41,7 +43,7 @@ public class ChatController {
       ChatDto validatedMessage = chatService.processLobbyMessage(lobbyId, chatDto);
       messagingTemplate.convertAndSend("/topic/chat/" + lobbyId, validatedMessage);
     } catch (IllegalArgumentException e) {
-      System.err.println("Invalid message: " + e.getMessage());
+      log.error("Invalid lobby message: {}", e.getMessage());
     }
   }
 
@@ -61,7 +63,7 @@ public class ChatController {
       ChatDto validatedMessage = chatService.processTeamMessage(lobbyId, team, chatDto);
       messagingTemplate.convertAndSend("/topic/chat/" + lobbyId + "/" + team, validatedMessage);
     } catch (IllegalArgumentException e) {
-      System.err.println("Invalid message: " + e.getMessage());
+      log.error("Invalid team message: {}", e.getMessage());
     }
   }
 }
