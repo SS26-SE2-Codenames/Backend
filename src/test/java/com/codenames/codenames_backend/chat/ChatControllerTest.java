@@ -28,7 +28,7 @@ class ChatControllerTest {
     chatDto = new ChatDto("TestName", "TestMessage", MessageType.CHAT);
 
     redTeam = Team.RED;
-    blueTeam = Team.BlUE;
+    blueTeam = Team.BLUE;
   }
 
   @Test

@@ -40,7 +40,7 @@ public class ChatHistory {
       case RED:
         addMessage(redTeamChat, chatDto);
         break;
-      case BlUE:
+      case BLUE:
         addMessage(blueTeamChat, chatDto);
         break;
         // google code style accepts switches as exhaustive if all enums are in the switch.

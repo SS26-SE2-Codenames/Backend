@@ -35,7 +35,7 @@ class ChatHistoryTest {
 
   @Test
   void testAddTeamMessage_blue() {
-    chatHistory.addTeamMessage(Team.BlUE, message);
+    chatHistory.addTeamMessage(Team.BLUE, message);
 
     assertEquals(1, chatHistory.getBlueTeamChat().size());
   }
