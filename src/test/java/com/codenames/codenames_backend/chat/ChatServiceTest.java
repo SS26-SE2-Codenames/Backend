@@ -2,14 +2,13 @@ package com.codenames.codenames_backend.chat;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.codenames.codenames_backend.chat.ChatDto.MessageType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/** Unit tests for ChatService. */
 class ChatServiceTest {
-
   private final String lobbyId = "TESTLOBBY";
   ChatDto message;
   private ChatService chatService;
@@ -22,27 +21,46 @@ class ChatServiceTest {
 
   @Test
   void testNullUsername() {
-    assertThrows(IllegalArgumentException.class, () -> chatService.processLobbyMessage(lobbyId, new ChatDto(null, "TestMessage", MessageType.CHAT)));
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            chatService.processLobbyMessage(
+                lobbyId, new ChatDto(null, "TestMessage", MessageType.CHAT)));
   }
 
   @Test
   void testEmptyUsername() {
-    assertThrows(IllegalArgumentException.class, () -> chatService.processLobbyMessage(lobbyId, new ChatDto("", "TestMessage", MessageType.CHAT)));
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            chatService.processLobbyMessage(
+                lobbyId, new ChatDto("", "TestMessage", MessageType.CHAT)));
   }
 
   @Test
   void testNullContent() {
-    assertThrows(IllegalArgumentException.class, () -> chatService.processLobbyMessage(lobbyId, new ChatDto("TestName", null, MessageType.CHAT)));
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            chatService.processLobbyMessage(
+                lobbyId, new ChatDto("TestName", null, MessageType.CHAT)));
   }
 
   @Test
   void testEmptyContent() {
-    assertThrows(IllegalArgumentException.class, () -> chatService.processLobbyMessage(lobbyId, new ChatDto("TestName", "", MessageType.CHAT)));
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            chatService.processLobbyMessage(
+                lobbyId, new ChatDto("TestName", "", MessageType.CHAT)));
   }
 
   @Test
   void testNullType() {
-    assertThrows(IllegalArgumentException.class, () -> chatService.processLobbyMessage(lobbyId, new ChatDto("TestName", "TestMessage", null)));
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            chatService.processLobbyMessage(lobbyId, new ChatDto("TestName", "TestMessage", null)));
   }
 
   @Test

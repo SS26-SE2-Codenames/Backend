@@ -7,8 +7,8 @@ import com.codenames.codenames_backend.chat.ChatDto.MessageType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/** Unit tests for ChatHistory. */
 class ChatHistoryTest {
-
   ChatDto message;
   private ChatHistory chatHistory;
 
