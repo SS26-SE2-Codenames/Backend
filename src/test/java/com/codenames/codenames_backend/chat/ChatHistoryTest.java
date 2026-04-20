@@ -40,6 +40,10 @@ class ChatHistoryTest {
     assertEquals(1, chatHistory.getBlueTeamChat().size());
   }
 
+  @Test
+  void testAddTeamMessage_nullTeam() {
+    assertThrows(IllegalArgumentException.class, () -> chatHistory.addTeamMessage(null, message));
+  }
 
   @Test
   void testAddMessage_exceedCapacity() {

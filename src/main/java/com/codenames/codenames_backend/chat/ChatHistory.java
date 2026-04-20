@@ -33,11 +33,17 @@ public class ChatHistory {
    * @throws IllegalArgumentException if the team name is not recognized
    */
   public void addTeamMessage(Team team, ChatDto chatDto) {
+    if (team == null) {
+      throw new IllegalArgumentException("Team cannot be null");
+    }
     switch (team) {
       case RED:
         addMessage(redTeamChat, chatDto);
+        break;
       case BlUE:
         addMessage(blueTeamChat, chatDto);
+        break;
+        // google code style accepts switches as exhaustive if all enums are in the switch.
     }
   }
 
