@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -44,8 +43,11 @@ class GameControllerTest {
     msg.setCode("ABCDE");
 
     SimpMessageHeaderAccessor accessor = SimpMessageHeaderAccessor.create();
-    accessor.setSessionAttributes(new java.util.HashMap<>());
-    accessor.getSessionAttributes().put("sessionId", "123");
+
+    java.util.Map<String, Object> attrs = new java.util.HashMap<>();
+    attrs.put("sessionId", "123");
+
+    accessor.setSessionAttributes(attrs);
 
     when(lobbyService.joinLobby("Max", "ABCDE")).thenReturn(true);
 
