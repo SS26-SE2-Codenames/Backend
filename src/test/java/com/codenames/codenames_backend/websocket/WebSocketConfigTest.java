@@ -1,5 +1,6 @@
 package com.codenames.codenames_backend.websocket;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -35,14 +36,16 @@ class WebSocketConfigTest {
         mock(org.springframework.web.socket.config.annotation.SockJsServiceRegistration.class);
 
     when(registry.addEndpoint("/ws")).thenReturn(endpointRegistration);
-    when(endpointRegistration.setAllowedOrigins("http://localhost:8080"))
+
+    when(endpointRegistration.setAllowedOrigins(any(String[].class)))
         .thenReturn(endpointRegistration);
+
     when(endpointRegistration.withSockJS()).thenReturn(sockJsRegistration);
 
     config.registerStompEndpoints(registry);
 
     verify(registry).addEndpoint("/ws");
-    verify(endpointRegistration).setAllowedOrigins("http://localhost:8080");
+    verify(endpointRegistration).setAllowedOrigins("http://localhost:8080", "http://10.0.2.2:8080");
     verify(endpointRegistration).withSockJS();
   }
 }
