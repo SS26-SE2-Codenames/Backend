@@ -44,13 +44,16 @@ class GameControllerTest {
     msg.setCode("ABCDE");
 
     SimpMessageHeaderAccessor accessor = SimpMessageHeaderAccessor.create();
-    accessor.setSessionId("123");
+    accessor.setSessionAttributes(new java.util.HashMap<>());
+    accessor.getSessionAttributes().put("sessionId", "123");
+
+    when(lobbyService.joinLobby("Max", "ABCDE")).thenReturn(true);
 
     when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max")));
 
     controller.join(msg, accessor);
 
-    verify(lobbyService, never()).joinLobby(any(), any());
+    verify(lobbyService).joinLobby("Max", "ABCDE");
 
     assertEquals("Max", sessionRegistry.getUser("123"));
     assertEquals("ABCDE", sessionRegistry.getLobby("123"));
