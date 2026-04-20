@@ -10,7 +10,6 @@ import static org.mockito.Mockito.verify;
 
 import com.codenames.codenames_backend.chat.ChatDto.MessageType;
 import java.util.stream.Stream;
-import org.apache.logging.log4j.message.SimpleMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

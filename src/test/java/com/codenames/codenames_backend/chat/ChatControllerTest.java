@@ -1,6 +1,5 @@
 package com.codenames.codenames_backend.chat;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -8,11 +7,9 @@ import static org.mockito.Mockito.verify;
 import com.codenames.codenames_backend.chat.ChatDto.MessageType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 /** Unit test for Board. */
 class ChatControllerTest {
-  private SimpMessagingTemplate messagingTemplate;
   private ChatController chatController;
   private ChatService chatService;
 
@@ -20,12 +17,9 @@ class ChatControllerTest {
   private String redTeam;
   private String blueTeam;
   private ChatDto chatDto;
-  private String lobbyDestination;
-  private String teamDestination;
 
   @BeforeEach
   void setUp() {
-    messagingTemplate = mock(SimpMessagingTemplate.class);
     chatService = mock(ChatService.class);
     chatController = new ChatController(chatService);
 
