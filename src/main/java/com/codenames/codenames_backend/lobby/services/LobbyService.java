@@ -46,6 +46,11 @@ public class LobbyService {
 
     private String generateLobbyCode() {
         String code = generator.generateLobbyCode();
+
+        if (code == null || code.isBlank()) {
+            return null;
+        }
+
         while (lobbyList.containsKey(code)) {
             code = generator.generateLobbyCode();
         }
