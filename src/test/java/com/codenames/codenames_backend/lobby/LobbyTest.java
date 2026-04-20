@@ -55,4 +55,19 @@ class LobbyTest {
 
     assertEquals(1, lobby.getPlayerList().size());
   }
+
+  @Test
+  void addPlayer_shouldNotAddDuplicatePlayer() {
+    Lobby lobby = new Lobby("ABCDE", "Host");
+
+    boolean first = lobby.addPlayer("Max");
+    boolean second = lobby.addPlayer("Max");
+
+    assertTrue(first);
+    assertFalse(second);
+
+    long count = lobby.getPlayerList().stream().filter(p -> p.getUsername().equals("Max")).count();
+
+    assertEquals(1, count);
+  }
 }
