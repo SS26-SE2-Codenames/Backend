@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import com.codenames.codenames_backend.lobby.services.LobbyService;
@@ -62,4 +63,27 @@ class GameControllerTest {
 
     verify(messagingTemplate).convertAndSend(eq("/topic/lobby/ABCDE"), any(Object.class));
   }
+
+  @Test
+  void shouldSendErrorMessage_whenJoinFails() {
+
+    JoinMessage msg = new JoinMessage();
+    msg.setName("Max");
+    msg.setCode("ABCDE");
+
+    SimpMessageHeaderAccessor accessor = SimpMessageHeaderAccessor.create();
+
+    java.util.Map<String, Object> attrs = new java.util.HashMap<>();
+    attrs.put("sessionId", "123");
+    accessor.setSessionAttributes(attrs);
+
+    when(lobbyService.joinLobby("Max", "ABCDE")).thenReturn(false);
+
+    controller.join(msg, accessor);
+
+    verify(messagingTemplate).convertAndSendToUser("123", "/queue/errors", "Join failed");
+
+    verifyNoMoreInteractions(messagingTemplate);
+  }
+  
 }
