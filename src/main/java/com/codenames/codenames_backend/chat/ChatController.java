@@ -6,7 +6,12 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
-/** Controller for broadcasting client messages to the desired destination. */
+/**
+ * Controller for broadcasting client messages to the desired destination with STOMP.
+ *
+ * <p>The destination is based on the lobbyID or team parameters passed when the method is invoked.
+ * The parameters are appended to the destination and broadcasted to all subscribers.
+ */
 @Controller
 public class ChatController {
 
@@ -17,6 +22,7 @@ public class ChatController {
    * Constructor for the ChatController.
    *
    * @param messagingTemplate the messaging template used for broadcasting updates
+   * @param chatService the service used to validate and persist chat history
    */
   public ChatController(SimpMessagingTemplate messagingTemplate, ChatService chatService) {
     this.messagingTemplate = messagingTemplate;
