@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
 /** Unit tests for {@link WebSocketConfig}. */
@@ -37,15 +38,18 @@ class WebSocketConfigTest {
 
     when(registry.addEndpoint("/ws")).thenReturn(endpointRegistration);
 
-    when(endpointRegistration.setAllowedOrigins(any(String[].class)))
-        .thenReturn(endpointRegistration);
+    String[] origins = new String[] {"http://localhost:8080", "http://10.0.2.2:8080"};
+
+    ReflectionTestUtils.setField(config, "allowedOrigins", origins);
+
+    when(endpointRegistration.setAllowedOrigins(origins)).thenReturn(endpointRegistration);
 
     when(endpointRegistration.withSockJS()).thenReturn(sockJsRegistration);
 
     config.registerStompEndpoints(registry);
 
     verify(registry).addEndpoint("/ws");
-    verify(endpointRegistration).setAllowedOrigins("http://localhost:8080", "http://10.0.2.2:8080");
+    verify(endpointRegistration).setAllowedOrigins(origins);
     verify(endpointRegistration).withSockJS();
   }
 }

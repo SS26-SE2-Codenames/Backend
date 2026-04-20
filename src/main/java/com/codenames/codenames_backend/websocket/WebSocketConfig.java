@@ -1,5 +1,6 @@
 package com.codenames.codenames_backend.websocket;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -14,6 +15,9 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+  @Value("${app.allowed-origins}")
+  private String[] allowedOrigins;
 
   /**
    * Configures the message broker used for routing messages between clients.
@@ -40,7 +44,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
   public void registerStompEndpoints(StompEndpointRegistry registry) {
     registry
         .addEndpoint("/ws")
-        .setAllowedOrigins("http://localhost:8080", "http://10.0.2.2:8080")
+        .setAllowedOrigins(allowedOrigins)
         .withSockJS();
   }
 }
