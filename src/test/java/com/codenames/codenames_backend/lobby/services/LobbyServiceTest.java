@@ -12,87 +12,106 @@ import static org.mockito.Mockito.when;
 
 class LobbyServiceTest {
 
-    private LobbyService lobbyService;
-    private LobbyCodeGenerator generator;
+  private LobbyService lobbyService;
+  private LobbyCodeGenerator generator;
 
-    @BeforeEach
-    void setup() {
-        generator = mock(LobbyCodeGenerator.class);
-        lobbyService = new LobbyService(generator);
-    }
+  @BeforeEach
+  void setup() {
+    generator = mock(LobbyCodeGenerator.class);
+    lobbyService = new LobbyService(generator);
+  }
 
-    @Test
-    void createLobby_ReturnLobbyCode() {
-        when(generator.generateLobbyCode()).thenReturn("ABCDE");
-        lobbyService.createLobby("Host");
-        boolean result = lobbyService.joinLobby("TestUser", "ABCDE");
+  @Test
+  void createLobby_ReturnLobbyCode() {
+    when(generator.generateLobbyCode()).thenReturn("ABCDE");
+    lobbyService.createLobby("Host");
+    boolean result = lobbyService.joinLobby("TestUser", "ABCDE");
 
-        assertTrue(result);
+    assertTrue(result);
 
-        List<Player> players = lobbyService.getPlayers("ABCDE");
-        assertTrue(players.stream().anyMatch(p -> p.getUsername().equals("TestUser")));
-    }
+    List<Player> players = lobbyService.getPlayers("ABCDE");
+    assertTrue(players.stream().anyMatch(p -> p.getUsername().equals("TestUser")));
+  }
 
-    @Test
-    void createLobby_LobbyCodeIsNull() {
-        when(generator.generateLobbyCode()).thenReturn(null);
-        String result = lobbyService.createLobby("Host");
+  @Test
+  void createLobby_LobbyCodeIsNull() {
+    when(generator.generateLobbyCode()).thenReturn(null);
+    String result = lobbyService.createLobby("Host");
 
-        assertNull(result);
-    }
+    assertNull(result);
+  }
 
-    @Test
-    void createLobby_LobbyCodeIsBlank() {
-        when(generator.generateLobbyCode()).thenReturn("");
-        String result = lobbyService.createLobby("Host");
+  @Test
+  void createLobby_LobbyCodeIsBlank() {
+    when(generator.generateLobbyCode()).thenReturn("");
+    String result = lobbyService.createLobby("Host");
 
-        assertNull(result);
-    }
+    assertNull(result);
+  }
 
-    @Test
-    void joinLobby_ReturnFalse_LobbyNotExists() {
-        boolean result = lobbyService.joinLobby("TestUser", "ABCDE");
-        assertFalse(result);
-    }
+  @Test
+  void joinLobby_ReturnFalse_LobbyNotExists() {
+    boolean result = lobbyService.joinLobby("TestUser", "ABCDE");
+    assertFalse(result);
+  }
 
-    @Test
-    void leaveLobby_ReturnTrue_LobbyExists() {
-        when(generator.generateLobbyCode()).thenReturn("ABCDE");
-        lobbyService.createLobby("Host");
+  @Test
+  void leaveLobby_ReturnTrue_LobbyExists() {
+    when(generator.generateLobbyCode()).thenReturn("ABCDE");
+    lobbyService.createLobby("Host");
 
-        boolean result = lobbyService.leaveLobby("Host", "ABCDE");
+    boolean result = lobbyService.leaveLobby("Host", "ABCDE");
 
-        assertTrue(result);
+    assertTrue(result);
 
-        List<Player> players = lobbyService.getPlayers("ABCDE");
+    List<Player> players = lobbyService.getPlayers("ABCDE");
 
-        assertFalse(players.stream().anyMatch(p -> p.getUsername().equals("Host")));
-    }
+    assertFalse(players.stream().anyMatch(p -> p.getUsername().equals("Host")));
+  }
 
-    @Test
-    void leaveLobby_ReturnFalse_LobbyNotExists() {
-        boolean result = lobbyService.leaveLobby("Host", "ABCDE");
-        assertFalse(result);
-    }
+  @Test
+  void leaveLobby_ReturnFalse_LobbyNotExists() {
+    boolean result = lobbyService.leaveLobby("Host", "ABCDE");
+    assertFalse(result);
+  }
 
-    @Test
-    void createLobby_shouldGenerateNewCode_ifDuplicateExists() {
-        when(generator.generateLobbyCode())
-                .thenReturn("ABCDE") // erster Versuch
-                .thenReturn("ABCDE") // zweiter Versuch
-                .thenReturn("FGHIJ"); // dritter Versuch - anderes Ergebnis
+  @Test
+  void createLobby_shouldGenerateNewCode_ifDuplicateExists() {
+    when(generator.generateLobbyCode())
+        .thenReturn("ABCDE") // erster Versuch
+        .thenReturn("ABCDE") // zweiter Versuch
+        .thenReturn("FGHIJ"); // dritter Versuch - anderes Ergebnis
 
-        lobbyService.createLobby("Host1");
-        String code2 = lobbyService.createLobby("Host2");
+    lobbyService.createLobby("Host1");
+    String code2 = lobbyService.createLobby("Host2");
 
-        assertEquals("FGHIJ", code2);
-    }
+    assertEquals("FGHIJ", code2);
+  }
 
-    @Test
-    void getPlayers_shouldReturnEmptyList_whenLobbyDoesNotExist() {
-        List<Player> players = lobbyService.getPlayers("UNKNOWN");
+  @Test
+  void getPlayers_shouldReturnEmptyList_whenLobbyDoesNotExist() {
+    List<Player> players = lobbyService.getPlayers("UNKNOWN");
 
-        assertNotNull(players);
-        assertTrue(players.isEmpty());
-    }
+    assertNotNull(players);
+    assertTrue(players.isEmpty());
+  }
+
+  @Test
+  void joinLobby_shouldReturnFalse_whenPlayerAlreadyExists() {
+    when(generator.generateLobbyCode()).thenReturn("ABCDE");
+
+    lobbyService.createLobby("Host");
+
+    boolean first = lobbyService.joinLobby("Max", "ABCDE");
+    boolean second = lobbyService.joinLobby("Max", "ABCDE");
+
+    assertTrue(first);
+    assertFalse(second);
+
+    List<Player> players = lobbyService.getPlayers("ABCDE");
+
+    long count = players.stream().filter(p -> p.getUsername().equals("Max")).count();
+
+    assertEquals(1, count);
+  }
 }
