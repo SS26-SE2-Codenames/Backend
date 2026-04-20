@@ -30,7 +30,7 @@ class ChatControllerTest {
   void setUp() {
     messagingTemplate = mock(SimpMessagingTemplate.class);
     chatService = mock(ChatService.class);
-    chatController = new ChatController(messagingTemplate, chatService);
+    chatController = new ChatController(chatService);
 
     lobbyId = "123";
     redTeam = "RED";
@@ -43,9 +43,6 @@ class ChatControllerTest {
 
   @Test
   void testSendLobbyMessage() {
-    globalDestination += lobbyId;
-    when(chatService.processLobbyMessage(lobbyId, chatDto)).thenReturn(chatDto);
-
     chatController.sendLobbyMessage(lobbyId, chatDto);
 
     verify(messagingTemplate, times(1)).convertAndSend(globalDestination, chatDto);
@@ -53,9 +50,6 @@ class ChatControllerTest {
 
   @Test
   void testSendTeamMessage_redTeam() {
-    teamDestination += redTeam;
-    when(chatService.processTeamMessage(lobbyId, redTeam, chatDto)).thenReturn(chatDto);
-
     chatController.sendTeamMessage(lobbyId, redTeam, chatDto);
 
     verify(messagingTemplate, times(1)).convertAndSend(teamDestination, chatDto);
@@ -63,33 +57,8 @@ class ChatControllerTest {
 
   @Test
   void testSendTeamMessage_blueTeam() {
-    teamDestination += blueTeam;
-    when(chatService.processTeamMessage(lobbyId, blueTeam, chatDto)).thenReturn(chatDto);
-
     chatController.sendTeamMessage(lobbyId, blueTeam, chatDto);
 
     verify(messagingTemplate, times(1)).convertAndSend(teamDestination, chatDto);
-  }
-
-  @Test
-  void testSendLobbyMessage_invalidMessage() {
-    globalDestination += lobbyId;
-    when(chatService.processLobbyMessage(lobbyId, chatDto))
-        .thenThrow(new IllegalArgumentException("Invalid message content"));
-
-    chatController.sendLobbyMessage(lobbyId, chatDto);
-
-    verify(messagingTemplate, never()).convertAndSend(anyString(), any(ChatDto.class));
-  }
-
-  @Test
-  void testSendTeamMessage_invalidMessage() {
-    teamDestination += redTeam;
-    when(chatService.processTeamMessage(lobbyId, redTeam, chatDto))
-        .thenThrow(new IllegalArgumentException("Invalid team or message"));
-
-    chatController.sendTeamMessage(lobbyId, redTeam, chatDto);
-
-    verify(messagingTemplate, never()).convertAndSend(anyString(), any(ChatDto.class));
   }
 }
