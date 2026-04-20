@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -42,11 +43,18 @@ class ChatServiceTest {
 
   @ParameterizedTest(name = "[{index}] Rejects {0}")
   @MethodSource("provideInvalidChatDto")
-  void testValidationLogic_invalidMessages(ChatDto invalidMessage) {
-    //TODO: fix this si not correct
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> chatService.processLobbyMessage(lobbyId, invalidMessage));
+  void testLobbyValidationLogic_invalidMessages(ChatDto invalidMessage) {
+    chatService.processLobbyMessage(lobbyId, invalidMessage);
+
+    verify(messagingTemplate, never()).convertAndSend("/topic/chat/" + lobbyId, message);
+  }
+
+  @ParameterizedTest(name = "[{index}] Rejects {0}")
+  @MethodSource("provideInvalidChatDto")
+  void testTeamValidationLogic_invalidMessages(ChatDto invalidMessage) {
+    chatService.processTeamMessage(lobbyId, "RED", invalidMessage);
+
+    verify(messagingTemplate, never()).convertAndSend("/topic/chat/" + lobbyId + "/RED", message);
   }
 
   @Test
