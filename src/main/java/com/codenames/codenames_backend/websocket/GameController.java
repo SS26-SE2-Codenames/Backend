@@ -51,6 +51,10 @@ public class GameController {
 
     String sessionId = headerAccessor.getSessionId();
 
+    if (sessionId == null && headerAccessor.getSessionAttributes() != null) {
+      sessionId = (String) headerAccessor.getSessionAttributes().get("sessionId");
+    }
+
     if (sessionId == null) {
       return;
     }
