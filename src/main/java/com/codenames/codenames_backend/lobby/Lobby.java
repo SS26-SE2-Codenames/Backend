@@ -7,14 +7,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import java.security.SecureRandom;
 
 @Getter
 public class Lobby {
     private static final int MAX_PLAYERS = 4;
     private final String lobbyCode;
     private final List<Player> playerList;
-    private final Random random = new Random();
+    private final SecureRandom random = new SecureRandom();
 
     private final Map<String, Team> playerTeams;
     private final Map<String, Role> playerRoles;
