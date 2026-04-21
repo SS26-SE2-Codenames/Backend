@@ -28,14 +28,16 @@ class WebSocketConfigTest {
     WebSocketConfig config = new WebSocketConfig();
 
     StompEndpointRegistry registry = mock(StompEndpointRegistry.class);
+
     var endpointRegistration =
         mock(
             org.springframework.web.socket.config.annotation.StompWebSocketEndpointRegistration
                 .class);
-    var sockJsRegistration =
-        mock(org.springframework.web.socket.config.annotation.SockJsServiceRegistration.class);
 
     when(registry.addEndpoint("/ws")).thenReturn(endpointRegistration);
+
+    var sockJsRegistration =
+        mock(org.springframework.web.socket.config.annotation.SockJsServiceRegistration.class);
 
     String[] origins = new String[] {"http://localhost:8080", "http://10.0.2.2:8080"};
 
