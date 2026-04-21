@@ -25,7 +25,7 @@ class LobbyServiceTest {
   }
 
   @Test
-  void createLobby_ReturnLobbyCode() {
+  void createLobbyReturnLobbyCode() {
     when(generator.generateLobbyCode()).thenReturn("ABCDE");
     lobbyService.createLobby("Host");
     boolean result = lobbyService.joinLobby("TestUser", "ABCDE");
@@ -37,7 +37,7 @@ class LobbyServiceTest {
   }
 
   @Test
-  void createLobby_LobbyCodeIsNull() {
+  void createLobbyLobbyCodeIsNull() {
     when(generator.generateLobbyCode()).thenReturn(null);
     String result = lobbyService.createLobby("Host");
 
@@ -45,7 +45,7 @@ class LobbyServiceTest {
   }
 
   @Test
-  void createLobby_LobbyCodeIsBlank() {
+  void createLobbyLobbyCodeIsBlank() {
     when(generator.generateLobbyCode()).thenReturn("");
     String result = lobbyService.createLobby("Host");
 
@@ -53,13 +53,13 @@ class LobbyServiceTest {
   }
 
   @Test
-  void joinLobby_ReturnFalse_LobbyNotExists() {
+  void joinLobbyReturnFalseLobbyNotExists() {
     boolean result = lobbyService.joinLobby("TestUser", "ABCDE");
     assertFalse(result);
   }
 
   @Test
-  void leaveLobby_ReturnTrue_LobbyExists() {
+  void leaveLobbyReturnTrueLobbyExists() {
     when(generator.generateLobbyCode()).thenReturn("ABCDE");
     lobbyService.createLobby("Host");
 
@@ -73,13 +73,13 @@ class LobbyServiceTest {
   }
 
   @Test
-  void leaveLobby_ReturnFalse_LobbyNotExists() {
+  void leaveLobbyReturnFalseLobbyNotExists() {
     boolean result = lobbyService.leaveLobby("Host", "ABCDE");
     assertFalse(result);
   }
 
   @Test
-  void createLobby_shouldGenerateNewCode_ifDuplicateExists() {
+  void createLobbyShouldGenerateNewCodeIfDuplicateExists() {
     when(generator.generateLobbyCode())
         .thenReturn("ABCDE") // erster Versuch
         .thenReturn("ABCDE") // zweiter Versuch
@@ -92,7 +92,7 @@ class LobbyServiceTest {
   }
 
   @Test
-  void getPlayers_shouldReturnEmptyList_whenLobbyDoesNotExist() {
+  void getPlayersShouldReturnEmptyListWhenLobbyDoesNotExist() {
     List<Player> players = lobbyService.getPlayers("UNKNOWN");
 
     assertNotNull(players);
@@ -100,7 +100,7 @@ class LobbyServiceTest {
   }
 
   @Test
-  void joinLobby_shouldReturnFalse_whenPlayerAlreadyExists() {
+  void joinLobbyShouldReturnFalseWhenPlayerAlreadyExists() {
     when(generator.generateLobbyCode()).thenReturn("ABCDE");
 
     lobbyService.createLobby("Host");

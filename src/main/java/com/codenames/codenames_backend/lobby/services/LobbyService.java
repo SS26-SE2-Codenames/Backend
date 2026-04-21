@@ -19,7 +19,9 @@ public class LobbyService {
 
   public String createLobby(String username) {
     String lobbyCode = generateLobbyCode();
-    if (lobbyCode == null || lobbyCode.isBlank()) return null;
+    if (lobbyCode == null || lobbyCode.isBlank()) {
+      return null;
+    }
     Lobby lobby = new Lobby(lobbyCode, username);
     lobbyList.put(lobbyCode, lobby);
     return lobbyCode;

@@ -19,7 +19,7 @@ class LobbyControllerTest {
   @MockBean private LobbyService service;
 
   @Test
-  void createLobby_shouldReturn200() throws Exception {
+  void createLobbyShouldReturn200() throws Exception {
     when(service.createLobby("TestUser")).thenReturn("ABCDE");
 
     mockMvc
@@ -30,7 +30,7 @@ class LobbyControllerTest {
   }
 
   @Test
-  void createLobby_BlankLobbyCode() throws Exception {
+  void createLobbyBlankLobbyCode() throws Exception {
     when(service.createLobby("TestUser")).thenReturn("");
 
     mockMvc
@@ -41,7 +41,7 @@ class LobbyControllerTest {
   }
 
   @Test
-  void joinLobby_shouldReturn200_whenSuccess() throws Exception {
+  void joinLobbyShouldReturn200WhenSuccess() throws Exception {
     when(service.joinLobby("TestUser", "ABCDE")).thenReturn(true);
 
     mockMvc
@@ -51,7 +51,7 @@ class LobbyControllerTest {
   }
 
   @Test
-  void joinLobby_shouldReturn400_whenNotFound() throws Exception {
+  void joinLobbyShouldReturn400WhenNotFound() throws Exception {
     when(service.joinLobby("TestUser", "XXXXX")).thenReturn(false);
 
     mockMvc
@@ -61,7 +61,7 @@ class LobbyControllerTest {
   }
 
   @Test
-  void leaveLobby_shouldReturn200_whenSuccess() throws Exception {
+  void leaveLobbyShouldReturn200WhenSuccess() throws Exception {
     when(service.leaveLobby("TestUser", "ABCDE")).thenReturn(true);
 
     mockMvc
@@ -70,7 +70,7 @@ class LobbyControllerTest {
   }
 
   @Test
-  void leaveLobby_noSuccess() throws Exception {
+  void leaveLobbyNoSuccess() throws Exception {
     when(service.leaveLobby("TestUser", "ABCDE")).thenReturn(false);
 
     mockMvc

@@ -14,7 +14,7 @@ class LobbyCodeGeneratorTest {
   }
 
   @Test
-  void testCodeGeneration_ReturnsStringOfCodeSize() {
+  void testCodeGenerationReturnsStringOfCodeSize() {
     String result = this.generator.generateLobbyCode();
 
     Assertions.assertEquals(5, result.length());
