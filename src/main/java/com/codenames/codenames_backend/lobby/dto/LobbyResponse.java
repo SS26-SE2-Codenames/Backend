@@ -8,7 +8,7 @@ public class LobbyResponse {
     private String lobbyCode;
 
     public LobbyResponse(String message, String lobbyCode) {
-        this.lobbyCode = lobbyCode;
         this.message = message;
+        this.lobbyCode = lobbyCode;
     }
 }

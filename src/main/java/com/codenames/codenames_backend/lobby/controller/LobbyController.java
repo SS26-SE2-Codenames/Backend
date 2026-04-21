@@ -3,10 +3,8 @@ package com.codenames.codenames_backend.lobby.controller;
 import com.codenames.codenames_backend.lobby.dto.LobbyResponse;
 import com.codenames.codenames_backend.lobby.services.LobbyService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.codenames.codenames_backend.lobby.dto.PositionSelectMessage;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/lobby")
@@ -21,7 +19,7 @@ public class LobbyController {
     @PostMapping("/create")
     public ResponseEntity<LobbyResponse> createLobby(@RequestParam String username) {
         String lobbyCode = service.createLobby(username);
-        if (lobbyCode.isBlank()) {
+        if (lobbyCode == null || lobbyCode.isBlank()) {
             return ResponseEntity.internalServerError().body(new LobbyResponse("Error while creating lobby.", ""));
         } else {
             return ResponseEntity.ok(new LobbyResponse("Successfully created Lobby.", lobbyCode));
@@ -45,6 +43,28 @@ public class LobbyController {
             return ResponseEntity.ok(new LobbyResponse("Left lobby successfully.", lobbyCode));
         } else {
             return ResponseEntity.badRequest().body(new LobbyResponse("Could not find lobby.", lobbyCode));
+        }
+    }
+
+    @PostMapping("/select-position")
+    public ResponseEntity<LobbyResponse> selectPosition(
+            @RequestBody PositionSelectMessage request
+    ) {
+        boolean updated = service.selectPosition(
+                request.getUsername(),
+                request.getLobbyCode(),
+                request.getTeam(),
+                request.getRole()
+        );
+
+        if (updated) {
+            return ResponseEntity.ok(
+                    new LobbyResponse("Position selected successfully.", request.getLobbyCode())
+            );
+        } else {
+            return ResponseEntity.badRequest().body(
+                    new LobbyResponse("Could not assign selected team/role.", request.getLobbyCode())
+            );
         }
     }
 }

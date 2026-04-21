@@ -12,7 +12,8 @@ class LobbyTest {
 
         assertEquals("ABCDE", lobby.getLobbyCode());
         assertEquals(1, lobby.getPlayerList().size());
-        assertTrue(lobby.getPlayerList().contains("Host"));
+        assertTrue(lobby.getPlayerList().stream()
+                .anyMatch(player -> player.getUsername().equals("Host")));
     }
 
     @Test
@@ -21,8 +22,9 @@ class LobbyTest {
 
         lobby.addPlayer("P1");
 
-        assertTrue(lobby.getPlayerList().contains("P1"));
         assertEquals(2, lobby.getPlayerList().size());
+        assertTrue(lobby.getPlayerList().stream()
+                .anyMatch(player -> player.getUsername().equals("P1")));
     }
 
     @Test
@@ -32,9 +34,18 @@ class LobbyTest {
         lobby.addPlayer("P1");
         lobby.addPlayer("P2");
         lobby.addPlayer("P3");
-        lobby.addPlayer("P4"); // sollte ignoriert werden
+        lobby.addPlayer("P4");
 
         assertEquals(4, lobby.getPlayerList().size());
+    }
+
+    @Test
+    void addPlayer_shouldNotAddDuplicatePlayer() {
+        Lobby lobby = new Lobby("ABCDE", "Host");
+
+        lobby.addPlayer("Host");
+
+        assertEquals(1, lobby.getPlayerList().size());
     }
 
     @Test
@@ -44,7 +55,8 @@ class LobbyTest {
         lobby.addPlayer("P1");
         lobby.removePlayer("P1");
 
-        assertFalse(lobby.getPlayerList().contains("P1"));
+        assertFalse(lobby.getPlayerList().stream()
+                .anyMatch(player -> player.getUsername().equals("P1")));
     }
 
     @Test
@@ -54,5 +66,50 @@ class LobbyTest {
         lobby.removePlayer("Ghost");
 
         assertEquals(1, lobby.getPlayerList().size());
+    }
+
+    @Test
+    void hasPlayer_shouldReturnTrueIfPlayerExists() {
+        Lobby lobby = new Lobby("ABCDE", "Host");
+
+        assertTrue(lobby.hasPlayer("Host"));
+    }
+
+    @Test
+    void hasPlayer_shouldReturnFalseIfPlayerDoesNotExist() {
+        Lobby lobby = new Lobby("ABCDE", "Host");
+
+        assertFalse(lobby.hasPlayer("Ghost"));
+    }
+
+    @Test
+    void setPlayerTeam_shouldStoreSelectedTeam() {
+        Lobby lobby = new Lobby("ABCDE", "Host");
+
+        lobby.setPlayerTeam("Host", Team.RED);
+
+        assertEquals(Team.RED, lobby.getPlayerTeam("Host"));
+    }
+
+    @Test
+    void setPlayerRole_shouldStoreSelectedRole() {
+        Lobby lobby = new Lobby("ABCDE", "Host");
+
+        lobby.setPlayerRole("Host", Role.SPYMASTER);
+
+        assertEquals(Role.SPYMASTER, lobby.getPlayerRole("Host"));
+    }
+
+    @Test
+    void removePlayer_shouldAlsoRemoveStoredTeamAndRole() {
+        Lobby lobby = new Lobby("ABCDE", "Host");
+
+        lobby.setPlayerTeam("Host", Team.BLUE);
+        lobby.setPlayerRole("Host", Role.OPERATIVE);
+
+        lobby.removePlayer("Host");
+
+        assertNull(lobby.getPlayerTeam("Host"));
+        assertNull(lobby.getPlayerRole("Host"));
     }
 }
