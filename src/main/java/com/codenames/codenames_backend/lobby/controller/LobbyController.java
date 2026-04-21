@@ -8,16 +8,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * REST controller for handling lobby management operations.
+ *
+ * <p>Provides endpoints for creating, joining, and leaving lobbies. Delegates business logic to
+ * {@link LobbyService}.
+ */
 @RestController
 @RequestMapping("/lobby")
 public class LobbyController {
 
   private final LobbyService service;
 
+  /**
+   * Creates a new {@code LobbyController}.
+   *
+   * @param service the lobby service used to handle business logic
+   */
   public LobbyController(LobbyService service) {
     this.service = service;
   }
 
+  /**
+   * Handles a request to create a new lobby.
+   *
+   * @param username the username of the requesting user
+   * @return a response containing the result and the generated lobby code
+   */
   @PostMapping("/create")
   public ResponseEntity<LobbyResponse> createLobby(@RequestParam String username) {
     String lobbyCode = service.createLobby(username);
@@ -29,6 +46,13 @@ public class LobbyController {
     }
   }
 
+  /**
+   * Handles a request to join an existing lobby.
+   *
+   * @param username the username of the player
+   * @param lobbyCode the lobby code identifying the lobby
+   * @return a response indicating whether the join was successful
+   */
   @PostMapping("/join")
   public ResponseEntity<LobbyResponse> joinLobby(
       @RequestParam String username, @RequestParam String lobbyCode) {
@@ -41,6 +65,13 @@ public class LobbyController {
     }
   }
 
+  /**
+   * Handles a request to leave a lobby.
+   *
+   * @param username the username of the player
+   * @param lobbyCode the lobby code identifying the lobby
+   * @return a response indicating whether the operation was successful
+   */
   @PostMapping("/leave")
   public ResponseEntity<LobbyResponse> leaveLobby(
       @RequestParam String username, @RequestParam String lobbyCode) {

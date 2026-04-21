@@ -5,12 +5,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Component;
 
 /**
- * Registry for tracking WebSocket sessions and their associated users and lobbies.
+ * Registry for managing WebSocket sessions and their associated users and lobbies.
  *
- * <p>Maintains mappings between session IDs, usernames, and lobby codes to enable efficient lookup
- * during messaging and disconnect events.
+ * <p>Maintains mappings between session IDs, usernames, and lobby codes to support messaging and
+ * cleanup on disconnect.
  *
- * <p>This implementation is thread-safe using {@link ConcurrentHashMap}.
+ * <p>This implementation is thread-safe.
  */
 @Component
 public class SessionRegistry {
@@ -18,11 +18,11 @@ public class SessionRegistry {
   private final Map<String, String> sessionToUser = new ConcurrentHashMap<>();
 
   /**
-   * Registers a WebSocket session with its associated username and lobby code.
+   * Registers a session with its associated user and lobby.
    *
    * @param sessionId the WebSocket session ID
-   * @param username the username of the connected player
-   * @param lobbyCode the lobby code the player joined
+   * @param username the username of the player
+   * @param lobbyCode the lobby code
    */
   public void register(String sessionId, String username, String lobbyCode) {
     sessionToLobby.put(sessionId, lobbyCode);
@@ -30,7 +30,7 @@ public class SessionRegistry {
   }
 
   /**
-   * Returns the lobby code associated with the given session ID.
+   * Returns the lobby code associated with the given session.
    *
    * @param sessionId the WebSocket session ID
    * @return the lobby code, or {@code null} if not found
