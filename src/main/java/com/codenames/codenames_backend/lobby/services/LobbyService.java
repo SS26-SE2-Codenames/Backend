@@ -5,7 +5,7 @@ import com.codenames.codenames_backend.lobby.Role;
 import com.codenames.codenames_backend.lobby.Team;
 import com.codenames.codenames_backend.websocket.Player;
 import org.springframework.stereotype.Service;
-
+import java.util.List;
 import java.util.HashMap;
 
 @Service
@@ -80,6 +80,11 @@ public class LobbyService {
             code = generator.generateLobbyCode();
         }
         return code;
+    }
+
+    public List<Player> getPlayers(String lobbyCode) {
+        Lobby lobby = lobbyList.get(lobbyCode);
+        return lobby != null ? lobby.getPlayerList() : List.of();
     }
 
 }
