@@ -6,10 +6,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * Tests for {@link Lobby}.
+ *
+ * <p>Validates player management and lobby constraints.
+ */
 class LobbyTest {
 
   @Test
-  void constructor_shouldInitializeLobbyCorrectly() {
+  void constructorShouldInitializeLobbyCorrectly() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
     assertEquals("ABCDE", lobby.getLobbyCode());
@@ -18,7 +23,7 @@ class LobbyTest {
   }
 
   @Test
-  void addPlayer_shouldAddPlayer() {
+  void addPlayerShouldAddPlayer() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
     lobby.addPlayer("P1");
@@ -28,7 +33,7 @@ class LobbyTest {
   }
 
   @Test
-  void addPlayer_shouldNotExceedMaxPlayers() {
+  void addPlayerShouldNotExceedMaxPlayers() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
     lobby.addPlayer("P1");
@@ -40,7 +45,7 @@ class LobbyTest {
   }
 
   @Test
-  void removePlayer_shouldRemovePlayer() {
+  void removePlayerShouldRemovePlayer() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
     lobby.addPlayer("P1");
@@ -50,7 +55,7 @@ class LobbyTest {
   }
 
   @Test
-  void removePlayer_shouldDoNothingIfPlayerNotExists() {
+  void removePlayerShouldDoNothingIfPlayerNotExists() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
     lobby.removePlayer("Ghost");
@@ -59,7 +64,7 @@ class LobbyTest {
   }
 
   @Test
-  void addPlayer_shouldNotAddDuplicatePlayer() {
+  void addPlayerShouldNotAddDuplicatePlayer() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
     boolean first = lobby.addPlayer("Max");

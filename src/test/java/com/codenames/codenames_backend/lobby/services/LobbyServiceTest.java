@@ -13,6 +13,11 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Tests for {@link LobbyService}.
+ *
+ * <p>Validates lobby creation, joining, leaving, and player management behavior.
+ */
 class LobbyServiceTest {
 
   private LobbyService lobbyService;

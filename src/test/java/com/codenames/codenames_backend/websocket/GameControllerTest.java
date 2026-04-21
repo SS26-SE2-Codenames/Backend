@@ -66,7 +66,7 @@ class GameControllerTest {
   }
 
   @Test
-  void shouldSendErrorMessage_whenJoinFails() {
+  void shouldSendErrorMessageWhenJoinFails() {
 
     JoinMessage msg = new JoinMessage();
     msg.setName("Max");
@@ -88,7 +88,7 @@ class GameControllerTest {
   }
 
   @Test
-  void shouldDoNothing_whenSessionIdIsNull() {
+  void shouldDoNothingWhenSessionIdIsNull() {
 
     JoinMessage msg = new JoinMessage();
     msg.setName("Max");
@@ -103,7 +103,7 @@ class GameControllerTest {
   }
 
   @Test
-  void shouldUseSessionAttributesFallback_whenSessionIdIsNull() {
+  void shouldUseSessionAttributesFallbackWhenSessionIdIsNull() {
 
     JoinMessage msg = new JoinMessage();
     msg.setName("Max");

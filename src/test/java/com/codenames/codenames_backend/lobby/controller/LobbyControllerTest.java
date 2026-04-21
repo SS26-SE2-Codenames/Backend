@@ -12,6 +12,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+/**
+ * Tests for {@link LobbyController}.
+ *
+ * <p>Verifies REST endpoints for creating, joining, and leaving lobbies.
+ */
 @WebMvcTest(LobbyController.class)
 class LobbyControllerTest {
   @Autowired private MockMvc mockMvc;

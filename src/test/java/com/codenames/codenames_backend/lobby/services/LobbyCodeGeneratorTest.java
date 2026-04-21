@@ -4,6 +4,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Tests for {@link LobbyCodeGenerator}.
+ *
+ * <p>Ensures that generated lobby codes meet expected constraints.
+ */
 class LobbyCodeGeneratorTest {
 
   private LobbyCodeGenerator generator;
