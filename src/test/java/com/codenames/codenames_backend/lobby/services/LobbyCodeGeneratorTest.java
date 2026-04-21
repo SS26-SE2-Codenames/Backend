@@ -6,17 +6,17 @@ import org.junit.jupiter.api.Test;
 
 class LobbyCodeGeneratorTest {
 
-    private LobbyCodeGenerator generator;
+  private LobbyCodeGenerator generator;
 
-    @BeforeEach
-    void setup() {
-        this.generator = new LobbyCodeGenerator();
-    }
+  @BeforeEach
+  void setup() {
+    this.generator = new LobbyCodeGenerator();
+  }
 
-    @Test
-    void testCodeGeneration_ReturnsStringOfCodeSize() {
-        String result = this.generator.generateLobbyCode();
+  @Test
+  void testCodeGeneration_ReturnsStringOfCodeSize() {
+    String result = this.generator.generateLobbyCode();
 
-        Assertions.assertEquals(5, result.length());
-    }
+    Assertions.assertEquals(5, result.length());
+  }
 }

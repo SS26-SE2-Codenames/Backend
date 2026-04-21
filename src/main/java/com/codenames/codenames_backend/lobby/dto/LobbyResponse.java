@@ -4,11 +4,11 @@ import lombok.Getter;
 
 @Getter
 public class LobbyResponse {
-    private String message;
-    private String lobbyCode;
+  private String message;
+  private String lobbyCode;
 
-    public LobbyResponse(String message, String lobbyCode) {
-        this.lobbyCode = lobbyCode;
-        this.message = message;
-    }
+  public LobbyResponse(String message, String lobbyCode) {
+    this.lobbyCode = lobbyCode;
+    this.message = message;
+  }
 }
