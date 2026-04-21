@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public class LobbyResponse {
-    private String message;
-    private String lobbyCode;
+    private final String message;
+    private final String lobbyCode;
 
     public LobbyResponse(String message, String lobbyCode) {
         this.message = message;
