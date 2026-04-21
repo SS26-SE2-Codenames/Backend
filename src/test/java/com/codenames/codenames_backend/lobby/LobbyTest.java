@@ -112,4 +112,12 @@ class LobbyTest {
         assertNull(lobby.getPlayerTeam("Host"));
         assertNull(lobby.getPlayerRole("Host"));
     }
+    @Test
+    void startingTeam_shouldBeEitherRedOrBlue() {
+        Lobby lobby = new Lobby("ABCDE", "Host");
+
+        Team startingTeam = lobby.getStartingTeam();
+
+        assertTrue(startingTeam == Team.RED || startingTeam == Team.BLUE);
+    }
 }

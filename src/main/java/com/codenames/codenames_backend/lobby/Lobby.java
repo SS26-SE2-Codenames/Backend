@@ -4,8 +4,8 @@ import com.codenames.codenames_backend.websocket.Player;
 import lombok.Getter;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -14,11 +14,10 @@ public class Lobby {
     private final String lobbyCode;
     private final List<Player> playerList;
 
-    // username -> selected team
     private final Map<String, Team> playerTeams;
-
-    // username -> selected role
     private final Map<String, Role> playerRoles;
+
+    private Team startingTeam;
 
     public Lobby(String lobbyCode, String username) {
         this.lobbyCode = lobbyCode;
@@ -26,6 +25,7 @@ public class Lobby {
         this.playerTeams = new HashMap<>();
         this.playerRoles = new HashMap<>();
         this.addPlayer(username);
+        this.decideStartingTeam();
     }
 
     public void addPlayer(String username) {
@@ -36,8 +36,8 @@ public class Lobby {
 
     public void removePlayer(String username) {
         playerList.removeIf(p -> p.getUsername().equals(username));
-        this.playerTeams.remove(username);
-        this.playerRoles.remove(username);
+        playerTeams.remove(username);
+        playerRoles.remove(username);
     }
 
     public boolean hasPlayer(String username) {
@@ -59,5 +59,13 @@ public class Lobby {
 
     public Role getPlayerRole(String username) {
         return playerRoles.get(username);
+    }
+
+    public void decideStartingTeam() {
+        if (Math.random() < 0.5) {
+            startingTeam = Team.RED;
+        } else {
+            startingTeam = Team.BLUE;
+        }
     }
 }
