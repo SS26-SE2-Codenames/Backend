@@ -6,7 +6,7 @@ import lombok.Setter;
 /**
  * Message payload sent by clients to join a lobby.
  *
- * <p>Contains the player's name and the lobby code they want to join.
+ * <p>Contains the player's username and the target lobby code.
  */
 @Getter
 @Setter

@@ -2,13 +2,24 @@ package com.codenames.codenames_backend.lobby.dto;
 
 import lombok.Getter;
 
+/**
+ * Data transfer object representing the result of a lobby operation.
+ *
+ * <p>Contains a message describing the outcome and the associated lobby code.
+ */
 @Getter
 public class LobbyResponse {
-    private String message;
-    private String lobbyCode;
+  private final String message;
+  private final String lobbyCode;
 
-    public LobbyResponse(String message, String lobbyCode) {
-        this.lobbyCode = lobbyCode;
-        this.message = message;
-    }
+  /**
+   * Creates a new lobby response.
+   *
+   * @param message the message describing the result of the operation
+   * @param lobbyCode the associated lobby code
+   */
+  public LobbyResponse(String message, String lobbyCode) {
+    this.lobbyCode = lobbyCode;
+    this.message = message;
+  }
 }
