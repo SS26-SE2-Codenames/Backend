@@ -82,7 +82,7 @@ class GameControllerTest {
 
     controller.join(msg, accessor);
 
-    verify(messagingTemplate).convertAndSendToUser("123", "/queue/errors", "Join failed");
+    verify(messagingTemplate).convertAndSend("/topic/errors/123", "Join failed");
 
     verifyNoMoreInteractions(messagingTemplate);
   }

@@ -61,7 +61,7 @@ public class GameController {
     boolean joined = lobbyService.joinLobby(message.getName(), message.getCode());
 
     if (!joined) {
-      messagingTemplate.convertAndSendToUser(sessionId, "/queue/errors", "Join failed");
+      messagingTemplate.convertAndSend("/topic/errors/" + sessionId, "Join failed");
       return;
     }
 
