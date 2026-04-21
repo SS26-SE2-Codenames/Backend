@@ -12,7 +12,8 @@ class LobbyTest {
 
         assertEquals("ABCDE", lobby.getLobbyCode());
         assertEquals(1, lobby.getPlayerList().size());
-        assertTrue(lobby.getPlayerList().contains("Host"));
+        assertTrue(lobby.getPlayerList().stream()
+                .anyMatch(player -> player.getUsername().equals("Host")));
     }
 
     @Test
@@ -21,8 +22,9 @@ class LobbyTest {
 
         lobby.addPlayer("P1");
 
-        assertTrue(lobby.getPlayerList().contains("P1"));
         assertEquals(2, lobby.getPlayerList().size());
+        assertTrue(lobby.getPlayerList().stream()
+                .anyMatch(player -> player.getUsername().equals("P1")));
     }
 
     @Test
@@ -32,9 +34,18 @@ class LobbyTest {
         lobby.addPlayer("P1");
         lobby.addPlayer("P2");
         lobby.addPlayer("P3");
-        lobby.addPlayer("P4"); // sollte ignoriert werden
+        lobby.addPlayer("P4");
 
         assertEquals(4, lobby.getPlayerList().size());
+    }
+
+    @Test
+    void addPlayer_shouldNotAddDuplicatePlayer() {
+        Lobby lobby = new Lobby("ABCDE", "Host");
+
+        lobby.addPlayer("Host");
+
+        assertEquals(1, lobby.getPlayerList().size());
     }
 
     @Test
@@ -44,7 +55,8 @@ class LobbyTest {
         lobby.addPlayer("P1");
         lobby.removePlayer("P1");
 
-        assertFalse(lobby.getPlayerList().contains("P1"));
+        assertFalse(lobby.getPlayerList().stream()
+                .anyMatch(player -> player.getUsername().equals("P1")));
     }
 
     @Test
@@ -52,15 +64,6 @@ class LobbyTest {
         Lobby lobby = new Lobby("ABCDE", "Host");
 
         lobby.removePlayer("Ghost");
-
-        assertEquals(1, lobby.getPlayerList().size());
-    }
-
-    @Test
-    void addPlayer_shouldNotAddDuplicatePlayer() {
-        Lobby lobby = new Lobby("ABCDE", "Host");
-
-        lobby.addPlayer("Host");
 
         assertEquals(1, lobby.getPlayerList().size());
     }

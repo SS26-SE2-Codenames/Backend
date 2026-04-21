@@ -1,5 +1,6 @@
 package com.codenames.codenames_backend.lobby;
 
+import com.codenames.codenames_backend.websocket.Player;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.Map;
 public class Lobby {
     private static final int MAX_PLAYERS = 4;
     private final String lobbyCode;
-    private final List<String> playerList;
+    private final List<Player> playerList;
 
     // username -> selected team
     private final Map<String, Team> playerTeams;
@@ -28,19 +29,20 @@ public class Lobby {
     }
 
     public void addPlayer(String username) {
-        if (playerList.size() < MAX_PLAYERS && !playerList.contains(username)) {
-            this.playerList.add(username);
+        if (playerList.size() < MAX_PLAYERS && !hasPlayer(username)) {
+            playerList.add(new Player(username));
         }
     }
 
     public void removePlayer(String username) {
-        this.playerList.remove(username);
+        playerList.removeIf(p -> p.getUsername().equals(username));
         this.playerTeams.remove(username);
         this.playerRoles.remove(username);
     }
 
     public boolean hasPlayer(String username) {
-        return playerList.contains(username);
+        return playerList.stream()
+                .anyMatch(p -> p.getUsername().equals(username));
     }
 
     public void setPlayerTeam(String username, Team team) {

@@ -3,6 +3,7 @@ package com.codenames.codenames_backend.lobby.services;
 import com.codenames.codenames_backend.lobby.Lobby;
 import com.codenames.codenames_backend.lobby.Role;
 import com.codenames.codenames_backend.lobby.Team;
+import com.codenames.codenames_backend.websocket.Player;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -63,10 +64,10 @@ public class LobbyService {
     }
 
     private boolean isSpymasterAlreadyAssigned(Lobby lobby, String username, Team team) {
-        for (String player : lobby.getPlayerList()) {
-            if (!player.equals(username)
-                    && lobby.getPlayerTeam(player) == team
-                    && lobby.getPlayerRole(player) == Role.SPYMASTER) {
+        for (Player player : lobby.getPlayerList()) {
+            if (!player.getUsername().equals(username)
+                    && lobby.getPlayerTeam(player.getUsername()) == team
+                    && lobby.getPlayerRole(player.getUsername()) == Role.SPYMASTER) {
                 return true;
             }
         }
@@ -80,4 +81,5 @@ public class LobbyService {
         }
         return code;
     }
+
 }
