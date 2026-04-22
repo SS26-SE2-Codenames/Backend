@@ -13,6 +13,7 @@ import lombok.Getter;
  */
 @Getter
 public class Lobby {
+
   private static final int MAX_PLAYERS = 4;
   private final String lobbyCode;
   private final List<Player> playerList = new CopyOnWriteArrayList<>();
