@@ -3,8 +3,10 @@ package com.codenames.codenames_backend.websocket;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.client.ExpectedCount.times;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
@@ -35,6 +37,7 @@ class WebSocketConfigTest {
                 .class);
 
     when(registry.addEndpoint("/ws")).thenReturn(endpointRegistration);
+    when(registry.addEndpoint("/ws-fallback")).thenReturn(endpointRegistration);
 
     var sockJsRegistration =
         mock(org.springframework.web.socket.config.annotation.SockJsServiceRegistration.class);
@@ -50,7 +53,8 @@ class WebSocketConfigTest {
     config.registerStompEndpoints(registry);
 
     verify(registry).addEndpoint("/ws");
-    verify(endpointRegistration).setAllowedOrigins(origins);
+    verify(endpointRegistration, Mockito.times(2)).setAllowedOrigins(origins);
     verify(endpointRegistration).withSockJS();
+    verify(registry).addEndpoint("/ws-fallback");
   }
 }
