@@ -54,16 +54,24 @@ class CardGeneratorTest {
     assertThrows(IllegalArgumentException.class, () -> cardGenerator.pickWords(totalWords));
   }
 
+  // This makes the sum of colors 26, which is not equal to totalWords
   @Test
   void testGenerateCards_invalidTotalWords() {
     int totalWords = 25;
     int red = 9;
     int blue = 8;
     int white = 7;
-    int black = 2; // This makes the sum of colors 26, which is not equal to totalWords
+    int black = 2;
 
     assertThrows(
         IllegalArgumentException.class,
         () -> cardGenerator.generateCards(totalWords, red, blue, white, black));
+  }
+
+  @Test
+  void testPickWords_fileNotFound() {
+    String nonExistentFile = "Test.txt";
+    CardGenerator cardGenerator = new CardGenerator(nonExistentFile);
+    assertThrows(IllegalStateException.class, () -> cardGenerator.pickWords(5));
   }
 }
