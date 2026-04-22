@@ -6,12 +6,13 @@ import org.springframework.stereotype.Service;
 /**
  * Utility service for generating unique lobby codes.
  *
- * <p>Codes consist of uppercase letters and digits, excluding ambiguous characters. Uses {@link
- * java.security.SecureRandom} for randomness.
+ * <p>Codes consist of uppercase letters and digits, excluding ambiguous characters.
+ * Uses {@link SecureRandom} for randomness.
  */
 @Service
 public class LobbyCodeGenerator {
 
+  @SuppressWarnings("SpellCheckingInspection")
   private static final String CHARACTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
   private static final int CODE_LENGTH = 5;
