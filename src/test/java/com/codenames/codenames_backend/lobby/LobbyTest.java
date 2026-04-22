@@ -1,9 +1,5 @@
 package com.codenames.codenames_backend.lobby;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.Test;
 
 /**
@@ -11,10 +7,13 @@ import org.junit.jupiter.api.Test;
  *
  * <p>Validates player management and lobby constraints.
  */
+
+import static org.junit.jupiter.api.Assertions.*;
+
 class LobbyTest {
 
   @Test
-  void constructorShouldInitializeLobbyCorrectly() {
+  void constructor_shouldInitializeLobbyCorrectly() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
     assertEquals("ABCDE", lobby.getLobbyCode());
@@ -23,7 +22,7 @@ class LobbyTest {
   }
 
   @Test
-  void addPlayerShouldAddPlayer() {
+  void addPlayer_shouldAddPlayer() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
     lobby.addPlayer("P1");
@@ -33,7 +32,7 @@ class LobbyTest {
   }
 
   @Test
-  void addPlayerShouldNotExceedMaxPlayers() {
+  void addPlayer_shouldNotExceedMaxPlayers() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
     lobby.addPlayer("P1");
@@ -45,7 +44,7 @@ class LobbyTest {
   }
 
   @Test
-  void removePlayerShouldRemovePlayer() {
+  void removePlayer_shouldRemovePlayer() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
     lobby.addPlayer("P1");
@@ -55,7 +54,7 @@ class LobbyTest {
   }
 
   @Test
-  void removePlayerShouldDoNothingIfPlayerNotExists() {
+  void removePlayer_shouldDoNothingIfPlayerNotExists() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
     lobby.removePlayer("Ghost");
@@ -76,5 +75,50 @@ class LobbyTest {
     long count = lobby.getPlayerList().stream().filter(p -> p.getUsername().equals("Max")).count();
 
     assertEquals(1, count);
+  }
+
+  @Test
+  void hasPlayer_shouldReturnTrueIfPlayerExists() {
+      Lobby lobby = new Lobby("ABCDE", "Host");
+
+      assertTrue(lobby.hasPlayer("Host"));
+  }
+
+  @Test
+  void hasPlayer_shouldReturnFalseIfPlayerDoesNotExist() {
+      Lobby lobby = new Lobby("ABCDE", "Host");
+
+      assertFalse(lobby.hasPlayer("Ghost"));
+  }
+
+  @Test
+  void setPlayerTeam_shouldStoreSelectedTeam() {
+      Lobby lobby = new Lobby("ABCDE", "Host");
+
+      lobby.setPlayerTeam("Host", Team.RED);
+
+      assertEquals(Team.RED, lobby.getPlayerTeam("Host"));
+  }
+
+  @Test
+  void setPlayerRole_shouldStoreSelectedRole() {
+    Lobby lobby = new Lobby("ABCDE", "Host");
+
+    lobby.setPlayerRole("Host", Role.SPYMASTER);
+
+    assertEquals(Role.SPYMASTER, lobby.getPlayerRole("Host"));
+  }
+
+  @Test
+  void removePlayer_shouldAlsoRemoveStoredTeamAndRole() {
+    Lobby lobby = new Lobby("ABCDE", "Host");
+
+    lobby.setPlayerTeam("Host", Team.BLUE);
+    lobby.setPlayerRole("Host", Role.OPERATIVE);
+
+    lobby.removePlayer("Host");
+
+    assertNull(lobby.getPlayerTeam("Host"));
+    assertNull(lobby.getPlayerRole("Host"));
   }
 }
