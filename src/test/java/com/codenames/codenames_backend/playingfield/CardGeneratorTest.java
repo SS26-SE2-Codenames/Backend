@@ -71,7 +71,7 @@ class CardGeneratorTest {
   @Test
   void testPickWords_fileNotFound() {
     String nonExistentFile = "Test.txt";
-    CardGenerator cardGenerator = new CardGenerator(nonExistentFile);
-    assertThrows(IllegalStateException.class, () -> cardGenerator.pickWords(5));
+    CardGenerator cardGeneratorMissingFile = new CardGenerator(nonExistentFile);
+    assertThrows(IllegalStateException.class, () -> cardGeneratorMissingFile.pickWords(5));
   }
 }
