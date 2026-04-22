@@ -116,7 +116,7 @@ class GameManagerTest {
 
   @Test
   void testGetWinner_redStartsRedWins() {
-    GameManager gameManager = helperMethodGenerateFullCardList(Color.RED, Color.RED);
+    gameManager = helperMethodGenerateFullCardList(Color.RED, Color.RED);
 
     for (int i = 0; i < 9; i++) {
       gameManager.flipCard(i, Color.RED);
@@ -126,7 +126,7 @@ class GameManagerTest {
 
   @Test
   void testGetWinner_redStartsBlueWins() {
-    GameManager gameManager = helperMethodGenerateFullCardList(Color.BLUE, Color.RED);
+    gameManager = helperMethodGenerateFullCardList(Color.BLUE, Color.RED);
 
     for (int i = 0; i < 8; i++) {
       gameManager.flipCard(i, Color.BLUE);
@@ -136,7 +136,7 @@ class GameManagerTest {
 
   @Test
   void testGetWinner_blueStartsRedWins() {
-    GameManager gameManager = helperMethodGenerateFullCardList(Color.RED, Color.BLUE);
+    gameManager = helperMethodGenerateFullCardList(Color.RED, Color.BLUE);
 
     for (int i = 0; i < 8; i++) {
       gameManager.flipCard(i, Color.RED);
@@ -146,7 +146,7 @@ class GameManagerTest {
 
   @Test
   void testGetWinner_blueStartsBlueWins() {
-    GameManager gameManager = helperMethodGenerateFullCardList(Color.BLUE, Color.BLUE);
+    gameManager = helperMethodGenerateFullCardList(Color.BLUE, Color.BLUE);
 
     for (int i = 0; i < 9; i++) {
       gameManager.flipCard(i, Color.BLUE);
