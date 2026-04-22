@@ -6,6 +6,13 @@ import org.springframework.http.ResponseEntity;
 import com.codenames.codenames_backend.lobby.dto.PositionSelectMessage;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * REST controller for handling lobby management operations.
+ *
+ * <p>Provides endpoints for creating, joining, and leaving lobbies. Delegates business logic to
+ * {@link LobbyService}.
+ */
+
 @RestController
 @RequestMapping("/lobby")
 public class LobbyController {
@@ -20,6 +27,13 @@ public class LobbyController {
   public LobbyController(LobbyService service) {
     this.service = service;
   }
+
+    /**
+     * Handles a request to create a new lobby.
+     *
+     * @param username the username of the requesting user
+     * @return a response containing the result and the generated lobby code
+     */
 
     @PostMapping("/create")
     public ResponseEntity<LobbyResponse> createLobby(@RequestParam String username) {

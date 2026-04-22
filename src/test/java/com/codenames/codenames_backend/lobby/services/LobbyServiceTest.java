@@ -14,6 +14,12 @@ import org.junit.jupiter.api.Test;
 import com.codenames.codenames_backend.lobby.Role;
 import com.codenames.codenames_backend.lobby.Team;
 
+/**
+ * Tests for {@link LobbyService}.
+ *
+ * <p>Validates lobby creation, joining, leaving, and player management behavior.
+ */
+
 class LobbyServiceTest {
 
     private LobbyService lobbyService;

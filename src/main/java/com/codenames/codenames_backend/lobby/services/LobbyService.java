@@ -10,15 +10,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Service responsible for managing lobbies and player interactions.
+ *
+ * <p>Handles creation of lobbies, player joins/leaves, and retrieval of lobby data. Ensures
+ * uniqueness of lobby codes and thread-safe access to lobby storage.
+ */
+
 @Service
 public class LobbyService {
 
     private final Map<String, Lobby> lobbyList = new ConcurrentHashMap<>();
     private final LobbyCodeGenerator generator;
 
+    /**
+     * Creates a new {@code LobbyService}.
+     *
+     * @param generator the lobby code generator used to create unique lobby codes
+     */
+
     public LobbyService(LobbyCodeGenerator generator) {
         this.generator = generator;
     }
+
+    /**
+     * Creates a new lobby and adds the given user as the first player.
+     *
+     * @param username the username of the player creating the lobby
+     * @return the generated lobby code, or {@code null} if creation fails
+     */
 
     public String createLobby(String username) {
         String lobbyCode = generateLobbyCode();
@@ -30,6 +50,14 @@ public class LobbyService {
         lobbyList.put(lobbyCode, lobby);
         return lobbyCode;
     }
+
+    /**
+     * Adds a player to an existing lobby.
+     *
+     * @param username the username of the player
+     * @param lobbyCode the lobby code identifying the lobby
+     * @return {@code true} if the player successfully joined, {@code false} otherwise
+     */
 
     public boolean joinLobby(String username, String lobbyCode) {
         Lobby lobby = lobbyList.get(lobbyCode);

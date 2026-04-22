@@ -8,6 +8,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents a game lobby containing a limited number of players.
+ *
+ * <p>Supports adding and removing players while enforcing constraints such as maximum player count
+ * and unique usernames.
+ */
+
 @Getter
 public class Lobby {
   private static final int MAX_PLAYERS = 4;
@@ -19,6 +26,13 @@ public class Lobby {
 
     // username -> selected role
     private final Map<String, Role> playerRoles;
+
+    /**
+     * Creates a new lobby and adds the initial player.
+     *
+     * @param lobbyCode the unique code identifying the lobby
+     * @param username the username of the player creating the lobby
+     */
 
     public Lobby(String lobbyCode, String username) {
         this.lobbyCode = lobbyCode;
@@ -43,6 +57,12 @@ public class Lobby {
     playerList.add(new Player(username));
     return true;
   }
+
+    /**
+     * Removes a player from the lobby.
+     *
+     * @param username the username of the player to remove
+     */
 
     public void removePlayer(String username) {
         playerList.removeIf(p -> p.getUsername().equals(username));

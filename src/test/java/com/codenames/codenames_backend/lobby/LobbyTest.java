@@ -2,6 +2,12 @@ package com.codenames.codenames_backend.lobby;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * Tests for {@link Lobby}.
+ *
+ * <p>Validates player management and lobby constraints.
+ */
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class LobbyTest {
