@@ -3,16 +3,16 @@ package com.codenames.codenames_backend.lobby;
 import com.codenames.codenames_backend.websocket.Player;
 import lombok.Getter;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 @Getter
 public class Lobby {
-    private static final int MAX_PLAYERS = 4;
-    private final String lobbyCode;
-    private final List<Player> playerList;
+  private static final int MAX_PLAYERS = 4;
+  private final String lobbyCode;
+  private final List<Player> playerList = new CopyOnWriteArrayList<>();
 
     // username -> selected team
     private final Map<String, Team> playerTeams;
@@ -22,17 +22,27 @@ public class Lobby {
 
     public Lobby(String lobbyCode, String username) {
         this.lobbyCode = lobbyCode;
-        this.playerList = new ArrayList<>();
         this.playerTeams = new HashMap<>();
         this.playerRoles = new HashMap<>();
         this.addPlayer(username);
     }
 
-    public void addPlayer(String username) {
-        if (playerList.size() < MAX_PLAYERS && !hasPlayer(username)) {
-            playerList.add(new Player(username));
-        }
+  /**
+   * Adds a player to the lobby if capacity allows and the username is unique.
+   *
+   * @param username the username of the player
+   * @return {@code true} if the player was added, {@code false} otherwise
+   */
+  public boolean addPlayer(String username) {
+    boolean alreadyExists = playerList.stream().anyMatch(p -> p.getUsername().equals(username));
+
+    if (alreadyExists || playerList.size() >= MAX_PLAYERS) {
+      return false;
     }
+
+    playerList.add(new Player(username));
+    return true;
+  }
 
     public void removePlayer(String username) {
         playerList.removeIf(p -> p.getUsername().equals(username));

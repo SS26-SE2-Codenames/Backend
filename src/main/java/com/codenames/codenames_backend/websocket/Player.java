@@ -3,9 +3,9 @@ package com.codenames.codenames_backend.websocket;
 import lombok.Getter;
 
 /**
- * Represents a player connected via WebSocket.
+ * Represents a player connected to the system.
  *
- * <p>A player is identified by a username and is associated with a WebSocket session.
+ * <p>A player is identified by a username and may be associated with a WebSocket session.
  */
 @Getter
 public class Player {

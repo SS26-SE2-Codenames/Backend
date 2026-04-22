@@ -5,54 +5,50 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.codenames.codenames_backend.chat.ChatDto.MessageType;
+import com.codenames.codenames_backend.utility.Team;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 /** Unit test for Board. */
 class ChatControllerTest {
-  private SimpMessagingTemplate messagingTemplate;
   private ChatController chatController;
+  private ChatService chatService;
+
   private String lobbyId;
-  private String redTeam;
-  private String blueTeam;
+  private Team redTeam;
+  private Team blueTeam;
   private ChatDto chatDto;
-  private String globalDestination;
-  private String teamDestination;
 
   @BeforeEach
   void setUp() {
-    messagingTemplate = mock(SimpMessagingTemplate.class);
-    chatController = new ChatController(messagingTemplate);
+    chatService = mock(ChatService.class);
+    chatController = new ChatController(chatService);
+
     lobbyId = "123";
-    redTeam = "RED";
-    blueTeam = "BLUE";
     chatDto = new ChatDto("TestName", "TestMessage", MessageType.CHAT);
-    globalDestination = "/topic/chat/";
-    teamDestination = "/topic/chat/" + lobbyId + "/";
+
+    redTeam = Team.RED;
+    blueTeam = Team.BLUE;
   }
 
   @Test
-  void testSendGlobalMessage() {
-    globalDestination += lobbyId;
-    chatController.sendGlobalMessage(lobbyId, chatDto);
+  void testSendLobbyMessage() {
+    chatController.sendLobbyMessage(lobbyId, chatDto);
 
-    verify(messagingTemplate, times(1)).convertAndSend(globalDestination, chatDto);
+    verify(chatService, times(1)).processLobbyMessage(lobbyId, chatDto);
   }
 
   @Test
   void testSendTeamMessage_redTeam() {
-    teamDestination += redTeam;
     chatController.sendTeamMessage(lobbyId, redTeam, chatDto);
 
-    verify(messagingTemplate, times(1)).convertAndSend(teamDestination, chatDto);
+    verify(chatService, times(1)).processTeamMessage(lobbyId, redTeam, chatDto);
   }
 
   @Test
   void testSendTeamMessage_blueTeam() {
-    teamDestination += blueTeam;
     chatController.sendTeamMessage(lobbyId, blueTeam, chatDto);
 
-    verify(messagingTemplate, times(1)).convertAndSend(teamDestination, chatDto);
+    verify(chatService, times(1)).processTeamMessage(lobbyId, blueTeam, chatDto);
   }
 }

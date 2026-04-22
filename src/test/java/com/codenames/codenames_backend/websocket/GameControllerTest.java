@@ -4,8 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import com.codenames.codenames_backend.lobby.services.LobbyService;
@@ -44,17 +45,85 @@ class GameControllerTest {
     msg.setCode("ABCDE");
 
     SimpMessageHeaderAccessor accessor = SimpMessageHeaderAccessor.create();
-    accessor.setSessionId("123");
+
+    java.util.Map<String, Object> attrs = new java.util.HashMap<>();
+    attrs.put("sessionId", "123");
+
+    accessor.setSessionAttributes(attrs);
+
+    when(lobbyService.joinLobby("Max", "ABCDE")).thenReturn(true);
 
     when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max")));
 
     controller.join(msg, accessor);
 
-    verify(lobbyService, never()).joinLobby(any(), any());
+    verify(lobbyService).joinLobby("Max", "ABCDE");
 
     assertEquals("Max", sessionRegistry.getUser("123"));
     assertEquals("ABCDE", sessionRegistry.getLobby("123"));
 
+    verify(messagingTemplate).convertAndSend(eq("/topic/lobby/ABCDE"), any(Object.class));
+  }
+
+  @Test
+  void shouldSendErrorMessageWhenJoinFails() {
+
+    JoinMessage msg = new JoinMessage();
+    msg.setName("Max");
+    msg.setCode("ABCDE");
+
+    SimpMessageHeaderAccessor accessor = SimpMessageHeaderAccessor.create();
+
+    java.util.Map<String, Object> attrs = new java.util.HashMap<>();
+    attrs.put("sessionId", "123");
+    accessor.setSessionAttributes(attrs);
+
+    when(lobbyService.joinLobby("Max", "ABCDE")).thenReturn(false);
+
+    controller.join(msg, accessor);
+
+    verify(messagingTemplate).convertAndSend("/topic/errors/123", "Join failed");
+
+    verifyNoMoreInteractions(messagingTemplate);
+  }
+
+  @Test
+  void shouldDoNothingWhenSessionIdIsNull() {
+
+    JoinMessage msg = new JoinMessage();
+    msg.setName("Max");
+    msg.setCode("ABCDE");
+
+    SimpMessageHeaderAccessor accessor = SimpMessageHeaderAccessor.create();
+
+    controller.join(msg, accessor);
+
+    verifyNoInteractions(lobbyService);
+    verifyNoInteractions(messagingTemplate);
+  }
+
+  @Test
+  void shouldUseSessionAttributesFallbackWhenSessionIdIsNull() {
+
+    JoinMessage msg = new JoinMessage();
+    msg.setName("Max");
+    msg.setCode("ABCDE");
+
+    SimpMessageHeaderAccessor accessor = SimpMessageHeaderAccessor.create();
+
+    java.util.Map<String, Object> attrs = new java.util.HashMap<>();
+    attrs.put("sessionId", "123");
+    accessor.setSessionAttributes(attrs);
+
+    when(lobbyService.joinLobby("Max", "ABCDE")).thenReturn(true);
+    when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max")));
+
+    controller.join(msg, accessor);
+
+    assertEquals("Max", sessionRegistry.getUser("123"));
+    assertEquals("ABCDE", sessionRegistry.getLobby("123"));
+
+    verify(lobbyService).joinLobby("Max", "ABCDE");
     verify(messagingTemplate).convertAndSend(eq("/topic/lobby/ABCDE"), any(Object.class));
   }
 }

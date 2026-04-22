@@ -5,13 +5,15 @@ import com.codenames.codenames_backend.lobby.Role;
 import com.codenames.codenames_backend.lobby.Team;
 import com.codenames.codenames_backend.websocket.Player;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
-import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class LobbyService {
 
-    private final HashMap<String, Lobby> lobbyList = new HashMap<>();
+    private final Map<String, Lobby> lobbyList = new ConcurrentHashMap<>();
     private final LobbyCodeGenerator generator;
 
     public LobbyService(LobbyCodeGenerator generator) {
@@ -38,6 +40,13 @@ public class LobbyService {
         return false;
     }
 
+    /**
+     * Removes a player from a lobby.
+     *
+     * @param username the username of the player
+     * @param lobbyCode the lobby code identifying the lobby
+     * @return {@code true} if the player was removed, {@code false} if the lobby does not exist
+     */
     public boolean leaveLobby(String username, String lobbyCode) {
         Lobby lobby = lobbyList.get(lobbyCode);
         if (lobby != null) {
@@ -76,15 +85,28 @@ public class LobbyService {
 
     private String generateLobbyCode() {
         String code = generator.generateLobbyCode();
+
+        if (code == null || code.isBlank()) {
+            return null;
+        }
+
         while (lobbyList.containsKey(code)) {
             code = generator.generateLobbyCode();
+            if (code == null || code.isBlank()) {
+                return null;
+            }
         }
         return code;
     }
 
+    /**
+     * Retrieves all players in the specified lobby.
+     *
+     * @param lobbyCode the lobby code identifying the lobby
+     * @return a list of players, or an empty list if the lobby does not exist
+     */
     public List<Player> getPlayers(String lobbyCode) {
         Lobby lobby = lobbyList.get(lobbyCode);
         return lobby != null ? lobby.getPlayerList() : List.of();
     }
-
 }
