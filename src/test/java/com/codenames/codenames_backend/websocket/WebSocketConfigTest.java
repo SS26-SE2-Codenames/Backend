@@ -3,7 +3,6 @@ package com.codenames.codenames_backend.websocket;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.client.ExpectedCount.times;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
