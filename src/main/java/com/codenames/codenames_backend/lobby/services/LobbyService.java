@@ -34,8 +34,7 @@ public class LobbyService {
     public boolean joinLobby(String username, String lobbyCode) {
         Lobby lobby = lobbyList.get(lobbyCode);
         if (lobby != null) {
-            lobby.addPlayer(username);
-            return true;
+            return lobby.addPlayer(username);
         }
         return false;
     }
