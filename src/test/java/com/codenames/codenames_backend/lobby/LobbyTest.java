@@ -2,6 +2,7 @@ package com.codenames.codenames_backend.lobby;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -11,8 +12,6 @@ import org.junit.jupiter.api.Test;
  *
  * <p>Validates player management and lobby constraints.
  */
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class LobbyTest {
 
@@ -130,7 +129,7 @@ class LobbyTest {
     void startingTeam_shouldBeEitherRedOrBlue() {
         Lobby lobby = new Lobby("ABCDE", "Host");
 
-        Team startingTeam = lobby.getStartingTeam();
+        Team startingTeam = lobby.decideStartingTeam();
 
         assertTrue(startingTeam == Team.RED || startingTeam == Team.BLUE);
     }

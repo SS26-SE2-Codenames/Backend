@@ -1,12 +1,13 @@
 package com.codenames.codenames_backend.lobby;
 
 import com.codenames.codenames_backend.websocket.Player;
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.Getter;
-import java.security.SecureRandom;
+
 
 /**
  * Represents a game lobby containing a limited number of players.
@@ -22,7 +23,6 @@ public class Lobby {
   private final String lobbyCode;
   private final List<Player> playerList = new CopyOnWriteArrayList<>();
   private final SecureRandom random = new SecureRandom();
-
   /**
    * Maps a username to the selected team.
    */
@@ -126,11 +126,12 @@ public class Lobby {
     return playerRoles.get(username);
   }
 
-  public void decideStartingTeam() {
-    if (random.nextBoolean()) {
-      startingTeam = Team.RED;
-    } else {
-      startingTeam = Team.BLUE;
-    }
+  /**
+   * Randomly decides which team starts the game.
+   *
+   * @return the team that starts the game
+   */
+  public Team decideStartingTeam() {
+    return random.nextBoolean() ? Team.RED : Team.BLUE;
   }
 }
