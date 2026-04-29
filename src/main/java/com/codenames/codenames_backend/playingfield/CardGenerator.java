@@ -10,6 +10,22 @@ import org.springframework.core.io.ClassPathResource;
 /** Utility class for reading the file of words and generating random cards. */
 public class CardGenerator {
 
+  private final String wordFile;
+
+  /** Default constructor that passes the txt file to the dependency injection constructor. */
+  public CardGenerator() {
+    this("CodenamesWordlist.txt");
+  }
+
+  /**
+   * DI constructor implemented to ease testing.
+   *
+   * @param wordFile the txt file containing the words used for the cards
+   */
+  public CardGenerator(String wordFile) {
+    this.wordFile = wordFile;
+  }
+
   /**
    * Selects a random amount of words from the file.
    *
@@ -22,7 +38,7 @@ public class CardGenerator {
     if (totalWords <= 0) {
       throw new IllegalArgumentException("totalWords must be greater than 0");
     }
-    ClassPathResource resource = new ClassPathResource("CodenamesWordlist.txt");
+    ClassPathResource resource = new ClassPathResource(this.wordFile);
     List<String> words = new ArrayList<>();
 
     try (Scanner myReader = new Scanner(resource.getInputStream())) {

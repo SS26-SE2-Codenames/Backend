@@ -1,16 +1,24 @@
 package com.codenames.codenames_backend.lobby.services;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import com.codenames.codenames_backend.websocket.Player;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import com.codenames.codenames_backend.lobby.Role;
 import com.codenames.codenames_backend.lobby.Team;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+/**
+ * Tests for {@link LobbyService}.
+ *
+ * <p>Validates lobby creation, joining, leaving, and player management behavior.
+ */
 
 class LobbyServiceTest {
 
@@ -154,5 +162,34 @@ class LobbyServiceTest {
 
         assertTrue(firstResult);
         assertTrue(secondResult);
+    }
+
+    @Test
+    void getPlayersShouldReturnEmptyListWhenLobbyDoesNotExist() {
+        List<Player> players = lobbyService.getPlayers("UNKNOWN");
+
+        assertNotNull(players);
+        assertTrue(players.isEmpty());
+    }
+
+    @Test
+    void joinLobbyShouldReturnFalseWhenPlayerAlreadyExists() {
+        when(generator.generateLobbyCode()).thenReturn("ABCDE");
+
+        lobbyService.createLobby("Host");
+
+        boolean first = lobbyService.joinLobby("Max", "ABCDE");
+        boolean second = lobbyService.joinLobby("Max", "ABCDE");
+
+        assertTrue(first);
+        assertFalse(second);
+
+        List<Player> players = lobbyService.getPlayers("ABCDE");
+
+        long count = players.stream()
+                .filter(p -> p.getUsername().equals("Max"))
+                .count();
+
+        assertEquals(1, count);
     }
 }
