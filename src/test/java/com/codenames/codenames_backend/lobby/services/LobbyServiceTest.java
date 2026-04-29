@@ -192,4 +192,24 @@ class LobbyServiceTest {
 
         assertEquals(1, count);
     }
+
+    @Test
+    void selectPosition_shouldReturnFalseIfTeamIsNull() {
+        when(generator.generateLobbyCode()).thenReturn("ABCDE");
+        String lobbyCode = lobbyService.createLobby("Host");
+
+        boolean result = lobbyService.selectPosition("Host", lobbyCode, null, Role.OPERATIVE);
+
+        assertFalse(result);
+    }
+
+    @Test
+    void selectPosition_shouldReturnFalseIfRoleIsNull() {
+        when(generator.generateLobbyCode()).thenReturn("ABCDE");
+        String lobbyCode = lobbyService.createLobby("Host");
+
+        boolean result = lobbyService.selectPosition("Host", lobbyCode, Team.RED, null);
+
+        assertFalse(result);
+    }
 }

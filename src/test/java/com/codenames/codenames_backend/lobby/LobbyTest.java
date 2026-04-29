@@ -82,25 +82,25 @@ class LobbyTest {
 
   @Test
   void hasPlayer_shouldReturnTrueIfPlayerExists() {
-      Lobby lobby = new Lobby("ABCDE", "Host");
+    Lobby lobby = new Lobby("ABCDE", "Host");
 
-      assertTrue(lobby.hasPlayer("Host"));
+    assertTrue(lobby.hasPlayer("Host"));
   }
 
   @Test
   void hasPlayer_shouldReturnFalseIfPlayerDoesNotExist() {
-      Lobby lobby = new Lobby("ABCDE", "Host");
+    Lobby lobby = new Lobby("ABCDE", "Host");
 
-      assertFalse(lobby.hasPlayer("Ghost"));
+    assertFalse(lobby.hasPlayer("Ghost"));
   }
 
   @Test
   void setPlayerTeam_shouldStoreSelectedTeam() {
-      Lobby lobby = new Lobby("ABCDE", "Host");
+    Lobby lobby = new Lobby("ABCDE", "Host");
 
-      lobby.setPlayerTeam("Host", Team.RED);
+    lobby.setPlayerTeam("Host", Team.RED);
 
-      assertEquals(Team.RED, lobby.getPlayerTeam("Host"));
+    assertEquals(Team.RED, lobby.getPlayerTeam("Host"));
   }
 
   @Test
@@ -125,12 +125,12 @@ class LobbyTest {
     assertNull(lobby.getPlayerRole("Host"));
   }
 
-    @Test
-    void startingTeam_shouldBeEitherRedOrBlue() {
-        Lobby lobby = new Lobby("ABCDE", "Host");
+  @Test
+  void startingTeam_shouldBeEitherRedOrBlue() {
+    Lobby lobby = new Lobby("ABCDE", "Host");
 
-        Team startingTeam = lobby.decideStartingTeam();
+    Team startingTeam = lobby.decideStartingTeam();
 
-        assertTrue(startingTeam == Team.RED || startingTeam == Team.BLUE);
-    }
+    assertTrue(startingTeam == Team.RED || startingTeam == Team.BLUE);
+  }
 }
