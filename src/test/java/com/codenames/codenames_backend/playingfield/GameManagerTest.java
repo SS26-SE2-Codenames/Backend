@@ -13,6 +13,7 @@ import static org.mockito.Mockito.when;
 
 import com.codenames.codenames_backend.gameplay.Clue;
 import com.codenames.codenames_backend.gameplay.ClueValidationService;
+import com.codenames.codenames_backend.utility.Color;
 import java.util.ArrayList;
 import java.util.List;
 import org.jspecify.annotations.NonNull;

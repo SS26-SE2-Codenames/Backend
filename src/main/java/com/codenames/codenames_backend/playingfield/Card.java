@@ -1,5 +1,6 @@
 package com.codenames.codenames_backend.playingfield;
 
+import com.codenames.codenames_backend.utility.Color;
 import lombok.Getter;
 
 /** Represents a single card on a board. */

@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 import com.codenames.codenames_backend.playingfield.Board;
 import com.codenames.codenames_backend.playingfield.Card;
 import com.codenames.codenames_backend.playingfield.CardGenerator;
-import com.codenames.codenames_backend.playingfield.Color;
+import com.codenames.codenames_backend.utility.Color;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

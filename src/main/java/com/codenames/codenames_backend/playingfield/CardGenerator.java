@@ -1,5 +1,6 @@
 package com.codenames.codenames_backend.playingfield;
 
+import com.codenames.codenames_backend.utility.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;

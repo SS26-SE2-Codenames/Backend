@@ -3,6 +3,7 @@ package com.codenames.codenames_backend.playingfield;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.codenames.codenames_backend.utility.Color;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

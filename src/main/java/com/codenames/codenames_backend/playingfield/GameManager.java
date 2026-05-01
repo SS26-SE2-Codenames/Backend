@@ -2,6 +2,7 @@ package com.codenames.codenames_backend.playingfield;
 
 import com.codenames.codenames_backend.gameplay.Clue;
 import com.codenames.codenames_backend.gameplay.ClueValidationService;
+import com.codenames.codenames_backend.utility.Color;
 import java.util.List;
 import lombok.Getter;
 

@@ -7,7 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.codenames.codenames_backend.playingfield.Card;
-import com.codenames.codenames_backend.playingfield.Color;
+import com.codenames.codenames_backend.utility.Color;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
