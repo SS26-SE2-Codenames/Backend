@@ -1,5 +1,6 @@
 package com.codenames.codenames_backend.lobby;
 
+import com.codenames.codenames_backend.utility.Team;
 import com.codenames.codenames_backend.utility.Role;
 import com.codenames.codenames_backend.websocket.Player;
 import java.util.HashMap;

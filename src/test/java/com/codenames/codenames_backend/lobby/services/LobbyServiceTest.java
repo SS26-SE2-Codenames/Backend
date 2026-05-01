@@ -12,7 +12,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import com.codenames.codenames_backend.utility.Role;
-import com.codenames.codenames_backend.lobby.Team;
+import com.codenames.codenames_backend.utility.Team;
 
 /**
  * Tests for {@link LobbyService}.
