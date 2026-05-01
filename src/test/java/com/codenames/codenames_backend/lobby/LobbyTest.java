@@ -1,5 +1,6 @@
 package com.codenames.codenames_backend.lobby;
 
+import com.codenames.codenames_backend.utility.Role;
 import org.junit.jupiter.api.Test;
 
 /**

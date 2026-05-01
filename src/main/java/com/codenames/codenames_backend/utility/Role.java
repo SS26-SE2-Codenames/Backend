@@ -1,4 +1,4 @@
-package com.codenames.codenames_backend.lobby;
+package com.codenames.codenames_backend.utility;
 
 /**
  * Represents the role of a player in the game.

@@ -1,6 +1,6 @@
 package com.codenames.codenames_backend.lobby.dto;
 
-import com.codenames.codenames_backend.lobby.Role;
+import com.codenames.codenames_backend.utility.Role;
 import com.codenames.codenames_backend.lobby.Team;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

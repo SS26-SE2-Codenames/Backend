@@ -1,6 +1,6 @@
 package com.codenames.codenames_backend.lobby.controller;
 
-import com.codenames.codenames_backend.lobby.Role;
+import com.codenames.codenames_backend.utility.Role;
 import com.codenames.codenames_backend.lobby.Team;
 import com.codenames.codenames_backend.lobby.services.LobbyService;
 import org.junit.jupiter.api.Test;
