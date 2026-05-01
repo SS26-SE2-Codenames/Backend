@@ -2,6 +2,7 @@ package com.codenames.codenames_backend.serialization;
 
 import com.codenames.codenames_backend.playingfield.Card;
 import com.codenames.codenames_backend.playingfield.GameManager;
+import com.codenames.codenames_backend.utility.Role;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,11 +57,5 @@ public class DataTransferObjectService {
         gameManager.getCurrentClueWord(),
         gameManager.getRemainingGuesses(),
         cardDataTransferObject);
-  }
-
-  /** Roles of the game, needed for the DTO. */
-  public enum Role {
-    SPYMASTER,
-    OPERATIVE
   }
 }

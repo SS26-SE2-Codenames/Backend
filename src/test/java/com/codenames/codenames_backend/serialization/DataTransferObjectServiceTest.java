@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 import com.codenames.codenames_backend.playingfield.Card;
 import com.codenames.codenames_backend.utility.Color;
 import com.codenames.codenames_backend.playingfield.GameManager;
-import com.codenames.codenames_backend.serialization.DataTransferObjectService.Role;
+import com.codenames.codenames_backend.utility.Role;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,8 +37,7 @@ class DataTransferObjectServiceTest {
   @Test
   void testSpymasterVisibility() {
     gameStateDto =
-        service.createGameStateDataTransferObject(
-            mockGameManager, DataTransferObjectService.Role.SPYMASTER, "RED");
+        service.createGameStateDataTransferObject(mockGameManager, Role.SPYMASTER, "RED");
     assertEquals("RED", gameStateDto.cardList().get(0).color());
   }
 
