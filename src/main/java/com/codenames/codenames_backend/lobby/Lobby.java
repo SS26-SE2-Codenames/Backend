@@ -1,7 +1,7 @@
 package com.codenames.codenames_backend.lobby;
 
-import com.codenames.codenames_backend.utility.Team;
 import com.codenames.codenames_backend.utility.Role;
+import com.codenames.codenames_backend.utility.Team;
 import com.codenames.codenames_backend.websocket.Player;
 import java.util.HashMap;
 import java.util.List;
@@ -12,8 +12,8 @@ import lombok.Getter;
 /**
  * Represents a game lobby containing a limited number of players.
  *
- * <p>Supports adding and removing players while enforcing constraints such as
- * maximum player count and unique usernames.
+ * <p>Supports adding and removing players while enforcing constraints such as maximum player count
+ * and unique usernames.
  */
 @Getter
 public class Lobby {
@@ -49,8 +49,7 @@ public class Lobby {
    * @return {@code true} if the player was added, {@code false} otherwise
    */
   public boolean addPlayer(String username) {
-    boolean alreadyExists = playerList.stream()
-        .anyMatch(p -> p.getUsername().equals(username));
+    boolean alreadyExists = playerList.stream().anyMatch(p -> p.getUsername().equals(username));
 
     if (alreadyExists || playerList.size() >= MAX_PLAYERS) {
       return false;
@@ -78,8 +77,7 @@ public class Lobby {
    * @return {@code true} if the player exists in the lobby, {@code false} otherwise
    */
   public boolean hasPlayer(String username) {
-    return playerList.stream()
-        .anyMatch(p -> p.getUsername().equals(username));
+    return playerList.stream().anyMatch(p -> p.getUsername().equals(username));
   }
 
   /**
