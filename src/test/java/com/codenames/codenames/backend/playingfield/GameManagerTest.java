@@ -20,8 +20,6 @@ import java.util.List;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
 
 /** Unit test for GameManager. */
 class GameManagerTest {
@@ -235,5 +233,10 @@ class GameManagerTest {
     when(mockClueValidationService.validateWord(any(), anyString())).thenReturn(false);
     Clue invalidClue = new Clue("InvalidClue", 1);
     assertThrows(IllegalArgumentException.class, () -> gameManager.submitClue((invalidClue)));
+  }
+
+  @Test
+  void testGetCurrentClueWordNullUponInitializaiton(){
+    assertNull(gameManager.getCurrentClueWord());
   }
 }

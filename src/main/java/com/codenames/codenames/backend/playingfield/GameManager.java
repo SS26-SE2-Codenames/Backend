@@ -38,9 +38,7 @@ public class GameManager {
    * @throws IllegalArgumentException if team is null, white or black
    */
   public GameManager(
-      Team startingTeam,
-      CardGenerator cardGenerator,
-      ClueValidationService clueValidationService) {
+      Team startingTeam, CardGenerator cardGenerator, ClueValidationService clueValidationService) {
     if (startingTeam == null) {
       throw new IllegalArgumentException("startingTeam cannot be null");
     }
@@ -170,6 +168,9 @@ public class GameManager {
    * @return the current clue word
    */
   public String getCurrentClueWord() {
+    if (currentClue == null) {
+      return null;
+    }
     return currentClue.word();
   }
 }
