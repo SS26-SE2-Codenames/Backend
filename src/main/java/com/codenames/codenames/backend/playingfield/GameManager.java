@@ -3,6 +3,7 @@ package com.codenames.codenames.backend.playingfield;
 import com.codenames.codenames.backend.clue.Clue;
 import com.codenames.codenames.backend.clue.ClueValidationService;
 import com.codenames.codenames.backend.utility.Color;
+import com.codenames.codenames.backend.utility.Team;
 import java.util.List;
 import lombok.Getter;
 
@@ -37,17 +38,14 @@ public class GameManager {
    * @throws IllegalArgumentException if team is null, white or black
    */
   public GameManager(
-      Color startingTeam,
+      Team startingTeam,
       CardGenerator cardGenerator,
       ClueValidationService clueValidationService) {
     if (startingTeam == null) {
       throw new IllegalArgumentException("startingTeam cannot be null");
     }
-    if (startingTeam != Color.RED && startingTeam != Color.BLUE) {
-      throw new IllegalArgumentException("startingTeam MUST be Color.RED or Color.BLUE");
-    }
     this.clueValidationService = clueValidationService;
-    if (startingTeam == Color.RED) {
+    if (startingTeam == Team.RED) {
       this.redCards = 9;
       this.blueCards = 8;
     } else {
