@@ -11,8 +11,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.codenames.codenames.backend.gameplay.Clue;
-import com.codenames.codenames.backend.gameplay.ClueValidationService;
+import com.codenames.codenames.backend.clue.Clue;
+import com.codenames.codenames.backend.clue.ClueValidationService;
 import com.codenames.codenames.backend.utility.Color;
 import java.util.ArrayList;
 import java.util.List;

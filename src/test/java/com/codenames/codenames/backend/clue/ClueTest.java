@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.gameplay;
+package com.codenames.codenames.backend.clue;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

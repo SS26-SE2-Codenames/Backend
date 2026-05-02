@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.gameplay;
+package com.codenames.codenames.backend.clue;
 
 /** Clue class that holds the clue word and guess amount + 1. */
 public record Clue(String word, int guessAmount) {
