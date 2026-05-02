@@ -14,7 +14,7 @@ class CardGeneratorTest {
 
   @BeforeEach
   void setup() {
-    cardGenerator = new CardGenerator();
+    cardGenerator = new CardGenerator("CodenamesWordlist.txt");
   }
 
   @Test

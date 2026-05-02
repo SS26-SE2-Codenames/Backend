@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
@@ -15,17 +17,13 @@ public class CardGenerator {
 
   private final String wordFile;
 
-  /** Default constructor that passes the txt file to the dependency injection constructor. */
-  public CardGenerator() {
-    this("CodenamesWordlist.txt");
-  }
-
   /**
-   * DI constructor implemented to ease testing.
+   * Defaults to "CodenamesWordlist.txt" if no property is provided, but accepts custom file paths
+   * for unit testing.
    *
-   * @param wordFile the txt file containing the words used for the cards
+   * @param wordFile the text file containing the words used for the cards
    */
-  public CardGenerator(String wordFile) {
+  public CardGenerator(@Value("${codenames.wordFile:CodenamesWordlist.txt}") String wordFile) {
     this.wordFile = wordFile;
   }
 
