@@ -3,8 +3,10 @@ package com.codenames.codenames.backend.clue;
 import com.codenames.codenames.backend.playingfield.Board;
 import com.codenames.codenames.backend.playingfield.Card;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 /** Handles the validation of clues from the spymaster. */
+@Service
 public class ClueValidationService {
 
   /**

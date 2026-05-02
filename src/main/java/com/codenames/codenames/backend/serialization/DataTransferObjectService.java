@@ -5,8 +5,10 @@ import com.codenames.codenames.backend.playingfield.GameManager;
 import com.codenames.codenames.backend.utility.Role;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 /** Service to create the DTO for the game state, which is then serialized into JSON. */
+@Service
 public class DataTransferObjectService {
 
   /**

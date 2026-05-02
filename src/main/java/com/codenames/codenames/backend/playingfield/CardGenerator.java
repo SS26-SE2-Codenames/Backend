@@ -7,8 +7,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Component;
 
 /** Utility class for reading the file of words and generating random cards. */
+@Component
 public class CardGenerator {
 
   private final String wordFile;
