@@ -55,6 +55,9 @@ public class ChatController {
     if (realUsername == null) {
       throw new IllegalStateException("Null username.");
     }
+    if (targetLobbyId == null) {
+      throw new IllegalStateException("Null lobby ID.");
+    }
     if (!targetLobbyId.equals(realLobbyId)) {
       throw new IllegalStateException("Wrong lobby, user not in lobby " + realLobbyId);
     }
