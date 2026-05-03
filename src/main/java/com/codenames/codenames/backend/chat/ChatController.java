@@ -126,7 +126,8 @@ public class ChatController {
     Role playerRole = lobbyService.getPlayerRole(realUsername, lobbyId);
 
     if (playerTeam != team || playerRole != Role.OPERATIVE) {
-      throw new SecurityException("You do not have operative access for team " + team.name());
+      throw new IllegalStateException(
+          "You are either not an operative or are sending to the wrong team.");
     }
 
     ChatDto verifiedDto = new ChatDto(realUsername, chatDto.content(), chatDto.type());
