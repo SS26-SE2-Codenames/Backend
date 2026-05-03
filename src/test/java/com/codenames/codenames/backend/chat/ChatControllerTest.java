@@ -4,12 +4,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.codenames.codenames.backend.chat.ChatDto.MessageType;
+import com.codenames.codenames.backend.utility.ChatMessageType;
 import com.codenames.codenames.backend.utility.Team;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/** Unit test for Board. */
+/** Unit test for ChatController. */
 class ChatControllerTest {
   private ChatController chatController;
   private ChatService chatService;
@@ -25,7 +25,7 @@ class ChatControllerTest {
     chatController = new ChatController(chatService);
 
     lobbyId = "123";
-    chatDto = new ChatDto("TestName", "TestMessage", MessageType.CHAT);
+    chatDto = new ChatDto("TestName", "TestMessage", ChatMessageType.CHAT);
 
     redTeam = Team.RED;
     blueTeam = Team.BLUE;
@@ -35,20 +35,20 @@ class ChatControllerTest {
   void testSendLobbyMessage() {
     chatController.sendLobbyMessage(lobbyId, chatDto);
 
-    verify(chatService, times(1)).processLobbyMessage(lobbyId, chatDto);
+    verify(chatService, times(1)).processMessage(lobbyId, "LOBBY", "", chatDto);
   }
 
   @Test
   void testSendTeamMessage_redTeam() {
     chatController.sendTeamMessage(lobbyId, redTeam, chatDto);
 
-    verify(chatService, times(1)).processTeamMessage(lobbyId, redTeam, chatDto);
+    verify(chatService, times(1)).processMessage(lobbyId, "TEAM_RED", "/RED", chatDto);
   }
 
   @Test
-  void testSendTeamMessage_blueTeam() {
-    chatController.sendTeamMessage(lobbyId, blueTeam, chatDto);
+  void testSendTeamOperativeMessage_blueTeam() {
+    chatController.sendTeamOperativeMessage(lobbyId, blueTeam, chatDto);
 
-    verify(chatService, times(1)).processTeamMessage(lobbyId, blueTeam, chatDto);
+    verify(chatService, times(1)).processMessage(lobbyId, "OPERATIVE_BLUE", "/BLUE/operative", chatDto);
   }
 }
