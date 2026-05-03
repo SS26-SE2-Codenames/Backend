@@ -31,16 +31,16 @@ class ChatHistoryTest {
 
   @Test
   void testAddTeamMessage_red() {
-    chatHistory.addMessage("TEAM_RED", message);
+    chatHistory.addMessage(teamRedRoomKey, message);
 
-    assertEquals(1, chatHistory.getChatLogs().get("TEAM_RED").size());
+    assertEquals(1, chatHistory.getChatLogs().get(teamRedRoomKey).size());
   }
 
   @Test
   void testAddTeamMessage_blue() {
-    chatHistory.addMessage("TEAM_BLUE", message);
+    chatHistory.addMessage(teamBlueRoomKey, message);
 
-    assertEquals(1, chatHistory.getChatLogs().get("TEAM_BLUE").size());
+    assertEquals(1, chatHistory.getChatLogs().get(teamBlueRoomKey).size());
   }
 
   @Test
@@ -56,8 +56,8 @@ class ChatHistoryTest {
   @Test
   void testAddMessage_exceedCapacity() {
     for (int i = 1; i <= 51; i++) {
-      chatHistory.addMessage("LOBBY", message);
+      chatHistory.addMessage(lobbyRoomKey, message);
     }
-    assertEquals(50, chatHistory.getChatLogs().get("LOBBY").size());
+    assertEquals(50, chatHistory.getChatLogs().get(lobbyRoomKey).size());
   }
 }
