@@ -49,6 +49,7 @@ class ChatControllerTest {
   void testSendTeamOperativeMessage_blueTeam() {
     chatController.sendTeamOperativeMessage(lobbyId, blueTeam, chatDto);
 
-    verify(chatService, times(1)).processMessage(lobbyId, "OPERATIVE_BLUE", "/BLUE/operative", chatDto);
+    verify(chatService, times(1))
+        .processMessage(lobbyId, "OPERATIVE_BLUE", "/BLUE/operative", chatDto);
   }
 }

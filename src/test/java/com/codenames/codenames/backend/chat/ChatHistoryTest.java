@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.codenames.codenames.backend.utility.ChatMessageType;
-import com.codenames.codenames.backend.utility.Team;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,9 +11,9 @@ import org.junit.jupiter.api.Test;
 class ChatHistoryTest {
   private ChatDto message;
   private ChatHistory chatHistory;
-  private String lobbyRoomKey = "LOBBY";
-  private String teamRedRoomKey = "TEAM_RED";
-  private String teamBlueRoomKey = "TEAM_BLUE";
+  private final String lobbyRoomKey = "LOBBY";
+  private final String teamRedRoomKey = "TEAM_RED";
+  private final String teamBlueRoomKey = "TEAM_BLUE";
 
   @BeforeEach
   void setUp() {

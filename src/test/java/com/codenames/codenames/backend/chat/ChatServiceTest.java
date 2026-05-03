@@ -3,7 +3,6 @@ package com.codenames.codenames.backend.chat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -100,7 +99,7 @@ class ChatServiceTest {
 
   @ParameterizedTest
   @NullAndEmptySource
-  void testProcessMessage_invalidroomKey(String input) {
+  void testProcessMessage_invalidRoomKey(String input) {
     chatService.processMessage(lobbyId, input, "", message);
     verify(messagingTemplate, never()).convertAndSend("/topic/chat/" + lobbyId, message);
   }
