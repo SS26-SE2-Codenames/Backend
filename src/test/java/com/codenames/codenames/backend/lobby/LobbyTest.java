@@ -1,5 +1,9 @@
 package com.codenames.codenames.backend.lobby;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.codenames.codenames.backend.utility.Team;
 import com.codenames.codenames.backend.utility.Role;
 import org.junit.jupiter.api.Test;
@@ -10,7 +14,6 @@ import org.junit.jupiter.api.Test;
  * <p>Validates player management and lobby constraints.
  */
 
-import static org.junit.jupiter.api.Assertions.*;
 
 class LobbyTest {
 
@@ -81,25 +84,25 @@ class LobbyTest {
 
   @Test
   void hasPlayer_shouldReturnTrueIfPlayerExists() {
-      Lobby lobby = new Lobby("ABCDE", "Host");
+    Lobby lobby = new Lobby("ABCDE", "Host");
 
-      assertTrue(lobby.hasPlayer("Host"));
+    assertTrue(lobby.hasPlayer("Host"));
   }
 
   @Test
   void hasPlayer_shouldReturnFalseIfPlayerDoesNotExist() {
-      Lobby lobby = new Lobby("ABCDE", "Host");
+    Lobby lobby = new Lobby("ABCDE", "Host");
 
-      assertFalse(lobby.hasPlayer("Ghost"));
+    assertFalse(lobby.hasPlayer("Ghost"));
   }
 
   @Test
   void setPlayerTeam_shouldStoreSelectedTeam() {
-      Lobby lobby = new Lobby("ABCDE", "Host");
+    Lobby lobby = new Lobby("ABCDE", "Host");
 
-      lobby.setPlayerTeam("Host", Team.RED);
+    lobby.setPlayerTeam("Host", Team.RED);
 
-      assertEquals(Team.RED, lobby.getPlayerTeam("Host"));
+    assertEquals(Team.RED, lobby.getPlayerTeam("Host"));
   }
 
   @Test
@@ -122,5 +125,14 @@ class LobbyTest {
 
     assertNull(lobby.getPlayerTeam("Host"));
     assertNull(lobby.getPlayerRole("Host"));
+  }
+
+  @Test
+  void startingTeam_shouldBeEitherRedOrBlue() {
+    Lobby lobby = new Lobby("ABCDE", "Host");
+
+    Team startingTeam = lobby.decideStartingTeam();
+
+    assertTrue(startingTeam == Team.RED || startingTeam == Team.BLUE);
   }
 }

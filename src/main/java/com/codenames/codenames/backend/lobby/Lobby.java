@@ -3,6 +3,7 @@ package com.codenames.codenames.backend.lobby;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import com.codenames.codenames.backend.websocket.Player;
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,18 +23,22 @@ public class Lobby {
 
   private final String lobbyCode;
   private final List<Player> playerList = new CopyOnWriteArrayList<>();
-
-  /** Maps a username to the selected team. */
+  private final SecureRandom random = new SecureRandom();
+  /**
+   * Maps a username to the selected team.
+   */
   private final Map<String, Team> playerTeams;
 
-  /** Maps a username to the selected role. */
+  /**
+   * Maps a username to the selected role.
+   */
   private final Map<String, Role> playerRoles;
 
   /**
    * Creates a new lobby and adds the initial player.
    *
    * @param lobbyCode the unique code identifying the lobby
-   * @param username the username of the player creating the lobby
+   * @param username  the username of the player creating the lobby
    */
   public Lobby(String lobbyCode, String username) {
     this.lobbyCode = lobbyCode;
@@ -118,5 +123,14 @@ public class Lobby {
    */
   public Role getPlayerRole(String username) {
     return playerRoles.get(username);
+  }
+
+  /**
+   * Randomly decides which team starts the game.
+   *
+   * @return the team that starts the game
+   */
+  public Team decideStartingTeam() {
+    return random.nextBoolean() ? Team.RED : Team.BLUE;
   }
 }
