@@ -29,11 +29,11 @@ class LobbyServiceTest {
     void setup() {
         generator = mock(LobbyCodeGenerator.class);
         lobbyService = new LobbyService(generator);
+      when(generator.generateLobbyCode()).thenReturn("ABCDE");
     }
 
     @Test
     void createLobby_ReturnLobbyCode() {
-        when(generator.generateLobbyCode()).thenReturn("ABCDE");
         lobbyService.createLobby("Host");
         boolean result = lobbyService.joinLobby("TestUser", "ABCDE");
 
@@ -67,7 +67,6 @@ class LobbyServiceTest {
 
     @Test
     void leaveLobby_ReturnTrue_LobbyExists() {
-        when(generator.generateLobbyCode()).thenReturn("ABCDE");
         lobbyService.createLobby("Host");
 
         boolean result = lobbyService.leaveLobby("Host", "ABCDE");
@@ -100,7 +99,6 @@ class LobbyServiceTest {
 
     @Test
     void selectPosition_shouldReturnTrue_WhenPlayerChoosesTeamAndRole() {
-        when(generator.generateLobbyCode()).thenReturn("ABCDE");
         lobbyService.createLobby("Host");
 
         boolean result = lobbyService.selectPosition("Host", "ABCDE", Team.RED, Role.SPYMASTER);
@@ -117,7 +115,6 @@ class LobbyServiceTest {
 
     @Test
     void selectPosition_shouldReturnFalse_WhenPlayerIsNotInLobby() {
-        when(generator.generateLobbyCode()).thenReturn("ABCDE");
         lobbyService.createLobby("Host");
 
         boolean result = lobbyService.selectPosition("Ghost", "ABCDE", Team.RED, Role.SPYMASTER);
@@ -127,7 +124,6 @@ class LobbyServiceTest {
 
     @Test
     void selectPosition_shouldReturnFalse_WhenSecondSpymasterChoosesSameTeam() {
-        when(generator.generateLobbyCode()).thenReturn("ABCDE");
         lobbyService.createLobby("Host");
         lobbyService.joinLobby("P1", "ABCDE");
 
@@ -140,7 +136,6 @@ class LobbyServiceTest {
 
     @Test
     void selectPosition_shouldReturnTrue_WhenSpymastersChooseDifferentTeams() {
-        when(generator.generateLobbyCode()).thenReturn("ABCDE");
         lobbyService.createLobby("Host");
         lobbyService.joinLobby("P1", "ABCDE");
 
@@ -153,7 +148,6 @@ class LobbyServiceTest {
 
     @Test
     void selectPosition_shouldReturnTrue_WhenMultipleOperativesChooseSameTeam() {
-        when(generator.generateLobbyCode()).thenReturn("ABCDE");
         lobbyService.createLobby("Host");
         lobbyService.joinLobby("P1", "ABCDE");
 
@@ -174,8 +168,6 @@ class LobbyServiceTest {
 
     @Test
     void joinLobbyShouldReturnFalseWhenPlayerAlreadyExists() {
-        when(generator.generateLobbyCode()).thenReturn("ABCDE");
-
         lobbyService.createLobby("Host");
 
         boolean first = lobbyService.joinLobby("Max", "ABCDE");
@@ -192,4 +184,5 @@ class LobbyServiceTest {
 
         assertEquals(1, count);
     }
+
 }
