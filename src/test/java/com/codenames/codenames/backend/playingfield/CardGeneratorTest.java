@@ -28,16 +28,10 @@ class CardGeneratorTest {
     List<Card> cards = cardGenerator.generateCards(total, red, blue, white, black);
 
     assertEquals(total, cards.size());
-
-    long redAmount = cards.stream().filter(card -> card.getColor() == Color.RED).count();
-    long blueAmount = cards.stream().filter(card -> card.getColor() == Color.BLUE).count();
-    long whiteAmount = cards.stream().filter(card -> card.getColor() == Color.WHITE).count();
-    long blackAmount = cards.stream().filter(card -> card.getColor() == Color.BLACK).count();
-
-    assertEquals(red, redAmount);
-    assertEquals(blue, blueAmount);
-    assertEquals(white, whiteAmount);
-    assertEquals(black, blackAmount);
+    assertEquals(red, cards.stream().filter(card -> card.getColor() == Color.RED).count());
+    assertEquals(blue, cards.stream().filter(card -> card.getColor() == Color.BLUE).count());
+    assertEquals(white, cards.stream().filter(card -> card.getColor() == Color.WHITE).count());
+    assertEquals(black, cards.stream().filter(card -> card.getColor() == Color.BLACK).count());
   }
 
   @Test
