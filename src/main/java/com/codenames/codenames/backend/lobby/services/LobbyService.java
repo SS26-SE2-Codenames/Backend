@@ -153,4 +153,34 @@ public class LobbyService {
     }
     return code;
   }
+
+  /**
+   * Retrieves the team of a player in a lobby.
+   *
+   * @param username the username of a player
+   * @param lobbyCode the lobby code of the lobby
+   * @return the team of the player, or {@code null} if the lobby or player does not exist
+   */
+  public Team getPlayerTeam(String username, String lobbyCode) {
+    Lobby lobby = lobbyList.get(lobbyCode);
+    if (lobby != null) {
+      return lobby.getPlayerTeam(username);
+    }
+    return null;
+  }
+
+  /**
+   * Retrieves the role of a player in a lobby.
+   *
+   * @param username the username of a player
+   * @param lobbyCode the lobby code of the lobby
+   * @return the role of the player, or {@code null} if the lobby or player does not exist
+   */
+  public Role getPlayerRole(String username, String lobbyCode) {
+    Lobby lobby = lobbyList.get(lobbyCode);
+    if (lobby != null) {
+      return lobby.getPlayerRole(username);
+    }
+    return null;
+  }
 }

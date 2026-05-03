@@ -236,7 +236,7 @@ class GameManagerTest {
   }
 
   @Test
-  void testGetCurrentClueWordNullUponInitializaiton(){
+  void testGetCurrentClueWordNullUponInitialization() {
     assertNull(gameManager.getCurrentClueWord());
   }
 }
