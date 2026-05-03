@@ -184,5 +184,43 @@ class LobbyServiceTest {
 
         assertEquals(1, count);
     }
+  @Test
+  void testGetPlayerTeam(){
+    lobbyService.createLobby("Host");
+    lobbyService.selectPosition("Host", "ABCDE", Team.RED, Role.SPYMASTER);
 
+    assertEquals(Team.RED, lobbyService.getPlayerTeam("Host", "ABCDE"));
+  }
+
+  @Test
+  void getPlayerTeam_wrongCode() {
+    assertNull(lobbyService.getPlayerTeam("Host", "invalidCode"));
+  }
+
+  @Test
+  void getPlayerTeam_nonExistentPlayer() {
+    String lobbyCode = lobbyService.createLobby("Host");
+
+    assertNull(lobbyService.getPlayerTeam("nonExistentPlayer", lobbyCode));
+  }
+
+  @Test
+  void testGetPlayerRole(){
+    lobbyService.createLobby("Host");
+    lobbyService.selectPosition("Host", "ABCDE", Team.RED, Role.OPERATIVE);
+
+    assertEquals(Role.OPERATIVE, lobbyService.getPlayerRole("Host", "ABCDE"));
+  }
+
+  @Test
+  void getPlayerRole_wrongCode() {
+    assertNull(lobbyService.getPlayerRole("Host", "test"));
+  }
+
+  @Test
+  void getPlayerRole_nonExistentPlayer() {
+    String lobbyCode = lobbyService.createLobby("Host");
+
+    assertNull(lobbyService.getPlayerRole("nonExistentPlayer", lobbyCode));
+  }
 }
