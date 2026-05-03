@@ -54,5 +54,20 @@ public class ChatController {
     chatService.processMessage(lobbyId, roomKey, topicSuffix, chatDto);
   }
 
+  /**
+   * Sends a message to the operatives on the respective team.
+   *
+   * @param lobbyId the ID of the lobby the client is in
+   * @param team the team the client is in (RED, BLUE)
+   * @param chatDto the message to be sent
+   */
+  @MessageMapping("/chat/{lobbyId}/{team}/operative")
+  public void sendTeamOperativeMessage(
+      @DestinationVariable String lobbyId,
+      @DestinationVariable Team team,
+      @Payload ChatDto chatDto) {
+    String roomKey = "OPERATIVE_" + team.name();
+    String topicSuffix = "/" + team.name() + "/operative";
+    chatService.processMessage(lobbyId, roomKey, topicSuffix, chatDto);
   }
 }
