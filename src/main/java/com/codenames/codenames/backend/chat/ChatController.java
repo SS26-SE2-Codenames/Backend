@@ -27,28 +27,32 @@ public class ChatController {
   }
 
   /**
-   * Sends a message to all players in the same lobby.
+   * Sends a message to the entire lobby.
    *
-   * @param lobbyId the ID of where the message is broadcasted to
-   * @param chatDto the message of the client in chatDto format
+   * @param lobbyId the ID of the lobby the client is in
+   * @param chatDto the message to be sent
    */
   @MessageMapping("/chat/{lobbyId}")
   public void sendLobbyMessage(@DestinationVariable String lobbyId, @Payload ChatDto chatDto) {
-    chatService.processLobbyMessage(lobbyId, chatDto);
+    chatService.processMessage(lobbyId, "LOBBY", "", chatDto);
   }
 
   /**
-   * Sends a message to all players in the same lobby and on the same team.
+   * Sends a message to the entire team.
    *
-   * @param lobbyId the ID of where the message is broadcasted to
-   * @param team the team of the client who calls the method
-   * @param chatDto the message of the client in chatDto format
+   * @param lobbyId the ID of the lobby the client is in
+   * @param team the team the client is in (RED, BLUE)
+   * @param chatDto the message to be sent
    */
   @MessageMapping("/chat/{lobbyId}/{team}")
   public void sendTeamMessage(
       @DestinationVariable String lobbyId,
       @DestinationVariable Team team,
       @Payload ChatDto chatDto) {
-    chatService.processTeamMessage(lobbyId, team, chatDto);
+    String roomKey = "TEAM_" + team.name();
+    String topicSuffix = "/" + team.name();
+    chatService.processMessage(lobbyId, roomKey, topicSuffix, chatDto);
+  }
+
   }
 }
