@@ -1,0 +1,30 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build Docker image
+        run: |
+          docker build -t ghcr.io/ss26-se2-codenames/backend:latest .
+          docker build -t ghcr.io/ss26-se2-codenames/backend:${{ github.sha }} .
+
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/ss26-se2-codenames/backend:latest
+          docker push ghcr.io/ss26-se2-codenames/backend:${{ github.sha }}
