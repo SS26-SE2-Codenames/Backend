@@ -35,7 +35,8 @@ class SerializationJsonTest {
   void testSerialize_pass() {
     String expectedResult =
         "{\"winner\":\"RED\",\"currentTurn\":\"RED\",\"currentRedFound\":0,\"currentBlueFound\":0"
-            + ",\"currentClue\":\"Test\",\"remainingGuesses\":1,\"cardList\":[{\"word\":\"TEST\",\"color\":\"HIDDEN\",\"isGuessed\":false}]}";
+            + ",\"currentClue\":\"Test\",\"remainingGuesses\":1,\"cardList\":[{\"word\":\"TEST\","
+            + "\"color\":\"HIDDEN\",\"isGuessed\":false}]}";
     String result = serializer.serialize(dummyGameState);
     assertEquals(expectedResult, result);
   }
@@ -52,7 +53,7 @@ class SerializationJsonTest {
   }
 
   // Testing exception for writeValueAsString requires passing objectMapper in a constructor.
-  // We then create this custom exception and throw it. (Solution fround on stack overflow)
+  // We then create this custom exception and throw it. (Solution found on stack overflow)
   static class MockJsonProcessingException extends JsonProcessingException {
     public MockJsonProcessingException(String message) {
       super(message);

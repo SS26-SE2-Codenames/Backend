@@ -8,7 +8,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.codenames.codenames.backend.chat.ChatDto.MessageType;
+import com.codenames.codenames.backend.utility.ChatMessageType;
 import com.codenames.codenames.backend.utility.Team;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 /** Unit tests for ChatService. */
@@ -25,52 +26,45 @@ class ChatServiceTest {
   private Team team;
   private ChatService chatService;
   private SimpMessagingTemplate messagingTemplate;
+  private final String lobbyRoomKey = "LOBBY";
+  private final String teamRoomKey = "TEAM_";
 
   private static Stream<Arguments> provideInvalidChatDto() {
     return Stream.of(
-        arguments(new ChatDto(null, "TestMessage", MessageType.CHAT)),
-        arguments(new ChatDto("", "TestMessage", MessageType.CHAT)),
-        arguments(new ChatDto("TestName", null, MessageType.CHAT)),
-        arguments(new ChatDto("TestName", "", MessageType.CHAT)),
+        arguments(new ChatDto(null, "TestMessage", ChatMessageType.CHAT)),
+        arguments(new ChatDto("", "TestMessage", ChatMessageType.CHAT)),
+        arguments(new ChatDto("TestName", null, ChatMessageType.CHAT)),
+        arguments(new ChatDto("TestName", "", ChatMessageType.CHAT)),
         arguments(new ChatDto("TestName", "TestMessage", null)));
   }
 
   @BeforeEach
   void setUp() {
-    lobbyId = "TESTLOBBY";
+    lobbyId = "123";
     team = Team.RED;
     messagingTemplate = mock(SimpMessagingTemplate.class);
     chatService = new ChatService(messagingTemplate);
-    message = new ChatDto("TestName", "TestMessage", MessageType.CHAT);
+    message = new ChatDto("TestName", "TestMessage", ChatMessageType.CHAT);
   }
 
-  @ParameterizedTest(name = "[{index}] Rejects {0}")
+  @ParameterizedTest
   @MethodSource("provideInvalidChatDto")
-  void testLobbyValidationLogic_invalidMessages(ChatDto invalidMessage) {
-    chatService.processLobbyMessage(lobbyId, invalidMessage);
+  void testProcessMessage_invalidMessages(ChatDto invalidMessage) {
+    chatService.processMessage(lobbyId, lobbyRoomKey, "", invalidMessage);
 
     verify(messagingTemplate, never()).convertAndSend("/topic/chat/" + lobbyId, message);
   }
 
-  @ParameterizedTest(name = "[{index}] Rejects {0}")
-  @MethodSource("provideInvalidChatDto")
-  void testTeamValidationLogic_invalidMessages(ChatDto invalidMessage) {
-    chatService.processTeamMessage(lobbyId, team, invalidMessage);
-
-    verify(messagingTemplate, never())
-        .convertAndSend("/topic/chat/" + lobbyId + "/" + team.name(), message);
-  }
-
   @Test
   void testProcessLobbyMessage() {
-    chatService.processLobbyMessage(lobbyId, message);
+    chatService.processMessage(lobbyId, lobbyRoomKey, "", message);
 
     verify(messagingTemplate, times(1)).convertAndSend("/topic/chat/" + lobbyId, message);
   }
 
   @Test
   void testProcessTeamMessage() {
-    chatService.processTeamMessage(lobbyId, team, message);
+    chatService.processMessage(lobbyId, teamRoomKey + team.name(), "/" + team.name(), message);
 
     verify(messagingTemplate, times(1))
         .convertAndSend("/topic/chat/" + lobbyId + "/" + team.name(), message);
@@ -78,7 +72,7 @@ class ChatServiceTest {
 
   @Test
   void testClearLobbyHistory() {
-    chatService.processLobbyMessage(lobbyId, message);
+    chatService.processMessage(lobbyId, lobbyRoomKey, "", message);
     chatService.clearLobbyHistory(lobbyId);
 
     assertThrows(IllegalArgumentException.class, () -> chatService.getChatHistory(lobbyId));
@@ -86,13 +80,28 @@ class ChatServiceTest {
 
   @Test
   void testGetChatHistory() {
-    chatService.processLobbyMessage(lobbyId, message);
+    chatService.processMessage(lobbyId, lobbyRoomKey, "", message);
 
-    assertEquals(message, chatService.getChatHistory(lobbyId).getLobbyChat().get(0));
+    assertEquals(message, chatService.getChatHistory(lobbyId).getChatLogs().get("LOBBY").get(0));
   }
 
   @Test
   void testGetChatHistory_noMessageYet() {
     assertThrows(IllegalArgumentException.class, () -> chatService.getChatHistory(lobbyId));
   }
+
+  @ParameterizedTest
+  @NullAndEmptySource
+  void testProcessMessage_invalidLobbyId(String input) {
+    chatService.processMessage(input, lobbyRoomKey, "", message);
+    verify(messagingTemplate, never()).convertAndSend("/topic/chat/" + lobbyId, message);
+  }
+
+  @ParameterizedTest
+  @NullAndEmptySource
+  void testProcessMessage_invalidRoomKey(String input) {
+    chatService.processMessage(lobbyId, input, "", message);
+    verify(messagingTemplate, never()).convertAndSend("/topic/chat/" + lobbyId, message);
+  }
+
 }
