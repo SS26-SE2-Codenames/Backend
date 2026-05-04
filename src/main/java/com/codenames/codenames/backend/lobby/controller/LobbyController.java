@@ -50,7 +50,6 @@ public class LobbyController {
     }
   }
 
-
   /**
    * Handles a request to join an existing lobby.
    *
