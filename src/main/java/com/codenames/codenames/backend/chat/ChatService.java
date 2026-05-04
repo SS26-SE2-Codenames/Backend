@@ -1,6 +1,5 @@
 package com.codenames.codenames.backend.chat;
 
-import com.codenames.codenames.backend.utility.Team;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.extern.slf4j.Slf4j;
@@ -12,9 +11,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChatService {
   private final SimpMessagingTemplate messagingTemplate;
-  // Each lobby now stores 3 COWAL
+  // Contains all chat history for all lobbies
   private final Map<String, ChatHistory> lobbyChatHistory = new ConcurrentHashMap<>();
 
+  /**
+   * Constructor for ChatService.
+   *
+   * @param messagingTemplate the template for broadcasting
+   */
   public ChatService(SimpMessagingTemplate messagingTemplate) {
     this.messagingTemplate = messagingTemplate;
   }
@@ -32,43 +36,37 @@ public class ChatService {
   }
 
   /**
-   * Validates and saves a message fin the lobby chat history logs.
+   * Validates, stores, and broadcasts a message to a specific topic.
    *
-   * @param lobbyId the ID of the lobby
+   * @param lobbyId the ID of the lobby for map across all lobbies
+   * @param roomKey the internal key used to store history (e.g., "LOBBY", "TEAM_RED") per lobby
+   * @param destinationTopic the specific STOMP topic suffix to broadcast to
    * @param chatDto the message to process and store
-   * @throws IllegalArgumentException if validation fails
+   * @throws IllegalArgumentException invalid chatDto or when lobbyId/roomKey are null or empty
    */
-  public void processLobbyMessage(String lobbyId, ChatDto chatDto) {
+  public void processMessage(
+      String lobbyId, String roomKey, String destinationTopic, ChatDto chatDto) {
     try {
       validateDto(chatDto);
+
+      if (lobbyId == null || lobbyId.trim().isEmpty()) {
+        log.error("Attempted to process message for invalid lobbyId.");
+        throw new IllegalArgumentException("Lobby ID cannot be null or empty");
+      }
+
+      if (roomKey == null || roomKey.trim().isEmpty()) {
+        log.error("Invalid roomKey: null or empty");
+        throw new IllegalArgumentException("roomKey cannot be null or empty");
+      }
 
       ChatHistory currentLobbyChat =
           lobbyChatHistory.computeIfAbsent(lobbyId, k -> new ChatHistory());
-      currentLobbyChat.addLobbyMessage(chatDto);
-      messagingTemplate.convertAndSend("/topic/chat/" + lobbyId, chatDto);
-    } catch (IllegalArgumentException e) {
-      log.error("Invalid lobby message: {}", e.getMessage());
-    }
-  }
 
-  /**
-   * Validates and saves a message fin the team chat history logs.
-   *
-   * @param lobbyId the ID of the lobby
-   * @param team the color of the team ("RED" or "BLUE")
-   * @param chatDto the message to process and store
-   * @throws IllegalArgumentException if validation fails
-   */
-  public void processTeamMessage(String lobbyId, Team team, ChatDto chatDto) {
-    try {
-      validateDto(chatDto);
+      currentLobbyChat.addMessage(roomKey, chatDto);
 
-      ChatHistory currentTeamChat =
-          lobbyChatHistory.computeIfAbsent(lobbyId, k -> new ChatHistory());
-      currentTeamChat.addTeamMessage(team, chatDto);
-      messagingTemplate.convertAndSend("/topic/chat/" + lobbyId + "/" + team.name(), chatDto);
+      messagingTemplate.convertAndSend("/topic/chat/" + lobbyId + destinationTopic, chatDto);
     } catch (IllegalArgumentException e) {
-      log.error("Invalid team message: {}", e.getMessage());
+      log.error("Invalid chat message for room {}: {}", roomKey, e.getMessage());
     }
   }
 

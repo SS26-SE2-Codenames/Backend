@@ -1,62 +1,34 @@
 package com.codenames.codenames.backend.chat;
 
-import com.codenames.codenames.backend.utility.Team;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.Getter;
 
-/**
- * Manages the different message logs for a single lobby, this includes the lobby and both team
- * chats.
- */
+/** Manages the different message logs for a lobby. */
 @Getter
 public class ChatHistory {
   private static final int MAX_MESSAGES = 50;
-  private final List<ChatDto> lobbyChat = new CopyOnWriteArrayList<>();
-  private final List<ChatDto> redTeamChat = new CopyOnWriteArrayList<>();
-  private final List<ChatDto> blueTeamChat = new CopyOnWriteArrayList<>();
+
+  private final Map<String, List<ChatDto>> chatLogs = new ConcurrentHashMap<>();
 
   /**
-   * Adds a message to the lobby chat history.
+   * Adds a message to the specified chat room history.
    *
+   * @param roomKey the unique identifier for the chat room (lobby, team color, role)
    * @param chatDto the message to add
    */
-  public void addLobbyMessage(ChatDto chatDto) {
-    addMessage(lobbyChat, chatDto);
-  }
-
-  /**
-   * Adds a message to the team chat history.
-   *
-   * @param team the color of the team ("RED" or "BLUE")
-   * @param chatDto the message to add
-   * @throws IllegalArgumentException if the team name is not recognized
-   */
-  public void addTeamMessage(Team team, ChatDto chatDto) {
-    if (team == null) {
-      throw new IllegalArgumentException("Team cannot be null");
+  public void addMessage(String roomKey, ChatDto chatDto) {
+    if (roomKey == null || roomKey.isBlank()) {
+      throw new IllegalArgumentException("Room key cannot be null or empty");
     }
-    switch (team) {
-      case RED:
-        addMessage(redTeamChat, chatDto);
-        break;
-      case BLUE:
-        addMessage(blueTeamChat, chatDto);
-        break;
-        // google code style accepts switches as exhaustive if all enums are in the switch.
-    }
-  }
 
-  /**
-   * Helper method to make the limit is not exceeded. This to save memory.
-   *
-   * @param target the list where the message is to be saved
-   * @param chatDto the message to append
-   */
-  private void addMessage(List<ChatDto> target, ChatDto chatDto) {
-    target.add(chatDto);
-    if (target.size() > MAX_MESSAGES) {
-      target.remove(0);
+    List<ChatDto> targetLog = chatLogs.computeIfAbsent(roomKey, k -> new CopyOnWriteArrayList<>());
+
+    targetLog.add(chatDto);
+    if (targetLog.size() > MAX_MESSAGES) {
+      targetLog.remove(0);
     }
   }
 }

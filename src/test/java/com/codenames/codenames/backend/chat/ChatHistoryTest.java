@@ -3,8 +3,7 @@ package com.codenames.codenames.backend.chat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.codenames.codenames.backend.chat.ChatDto.MessageType;
-import com.codenames.codenames.backend.utility.Team;
+import com.codenames.codenames.backend.utility.ChatMessageType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,44 +11,52 @@ import org.junit.jupiter.api.Test;
 class ChatHistoryTest {
   private ChatDto message;
   private ChatHistory chatHistory;
+  private final String lobbyRoomKey = "LOBBY";
+  private final String teamRedRoomKey = "TEAM_RED";
+  private final String teamBlueRoomKey = "TEAM_BLUE";
 
   @BeforeEach
   void setUp() {
     chatHistory = new ChatHistory();
-    message = new ChatDto("TestName", "TestMessage", MessageType.CHAT);
+    message = new ChatDto("TestName", "TestMessage", ChatMessageType.CHAT);
   }
 
   @Test
   void testAddLobbyMessage() {
-    chatHistory.addLobbyMessage(message);
+    chatHistory.addMessage(lobbyRoomKey, message);
 
-    assertEquals(1, chatHistory.getLobbyChat().size());
+    assertEquals(1, chatHistory.getChatLogs().size());
   }
 
   @Test
   void testAddTeamMessage_red() {
-    chatHistory.addTeamMessage(Team.RED, message);
+    chatHistory.addMessage(teamRedRoomKey, message);
 
-    assertEquals(1, chatHistory.getRedTeamChat().size());
+    assertEquals(1, chatHistory.getChatLogs().get(teamRedRoomKey).size());
   }
 
   @Test
   void testAddTeamMessage_blue() {
-    chatHistory.addTeamMessage(Team.BLUE, message);
+    chatHistory.addMessage(teamBlueRoomKey, message);
 
-    assertEquals(1, chatHistory.getBlueTeamChat().size());
+    assertEquals(1, chatHistory.getChatLogs().get(teamBlueRoomKey).size());
   }
 
   @Test
-  void testAddTeamMessage_nullTeam() {
-    assertThrows(IllegalArgumentException.class, () -> chatHistory.addTeamMessage(null, message));
+  void testAddTeamMessage_nullRoomKey() {
+    assertThrows(IllegalArgumentException.class, () -> chatHistory.addMessage(null, message));
+  }
+
+  @Test
+  void testAddTeamMessage_blankRoomKey() {
+    assertThrows(IllegalArgumentException.class, () -> chatHistory.addMessage("", message));
   }
 
   @Test
   void testAddMessage_exceedCapacity() {
     for (int i = 1; i <= 51; i++) {
-      chatHistory.addLobbyMessage(message);
+      chatHistory.addMessage(lobbyRoomKey, message);
     }
-    assertEquals(50, chatHistory.getLobbyChat().size());
+    assertEquals(50, chatHistory.getChatLogs().get(lobbyRoomKey).size());
   }
 }
