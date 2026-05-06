@@ -74,6 +74,7 @@ class ChatControllerTest {
         IllegalStateException.class,
         () -> chatController.sendLobbyMessage(lobbyId, chatDto, headerAccessor));
   }
+
   @Test
   void testSendLobbyMessage_nullLobby() {
     when(sessionRegistry.getLobby(sessionId)).thenReturn("differentLobby");
