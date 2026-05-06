@@ -90,7 +90,7 @@ public class LobbyService {
   public boolean selectPosition(String username, String lobbyCode, Team team, Role role) {
     Lobby lobby = lobbyList.get(lobbyCode);
 
-    if (lobby == null || !lobby.hasPlayer(username)) {
+    if (lobby == null || !lobby.hasPlayer(username) || team == null || role == null) {
       return false;
     }
 

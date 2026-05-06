@@ -1,7 +1,12 @@
 package com.codenames.codenames.backend.lobby;
 
-import com.codenames.codenames.backend.utility.Team;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.codenames.codenames.backend.utility.Role;
+import com.codenames.codenames.backend.utility.Team;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -10,12 +15,10 @@ import org.junit.jupiter.api.Test;
  * <p>Validates player management and lobby constraints.
  */
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class LobbyTest {
 
   @Test
-  void constructor_shouldInitializeLobbyCorrectly() {
+  void constructorShouldInitializeLobbyCorrectly() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
     assertEquals("ABCDE", lobby.getLobbyCode());
@@ -24,7 +27,7 @@ class LobbyTest {
   }
 
   @Test
-  void addPlayer_shouldAddPlayer() {
+  void addPlayerShouldAddPlayer() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
     lobby.addPlayer("P1");
@@ -34,19 +37,19 @@ class LobbyTest {
   }
 
   @Test
-  void addPlayer_shouldNotExceedMaxPlayers() {
+  void addPlayerShouldNotExceedMaxPlayers() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
     lobby.addPlayer("P1");
     lobby.addPlayer("P2");
     lobby.addPlayer("P3");
-    lobby.addPlayer("P4"); // sollte ignoriert werden
+    lobby.addPlayer("P4");
 
     assertEquals(4, lobby.getPlayerList().size());
   }
 
   @Test
-  void removePlayer_shouldRemovePlayer() {
+  void removePlayerShouldRemovePlayer() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
     lobby.addPlayer("P1");
@@ -56,7 +59,7 @@ class LobbyTest {
   }
 
   @Test
-  void removePlayer_shouldDoNothingIfPlayerNotExists() {
+  void removePlayerShouldDoNothingIfPlayerNotExists() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
     lobby.removePlayer("Ghost");
@@ -80,30 +83,30 @@ class LobbyTest {
   }
 
   @Test
-  void hasPlayer_shouldReturnTrueIfPlayerExists() {
-      Lobby lobby = new Lobby("ABCDE", "Host");
+  void hasPlayerShouldReturnTrueIfPlayerExists() {
+    Lobby lobby = new Lobby("ABCDE", "Host");
 
-      assertTrue(lobby.hasPlayer("Host"));
+    assertTrue(lobby.hasPlayer("Host"));
   }
 
   @Test
-  void hasPlayer_shouldReturnFalseIfPlayerDoesNotExist() {
-      Lobby lobby = new Lobby("ABCDE", "Host");
+  void hasPlayerShouldReturnFalseIfPlayerDoesNotExist() {
+    Lobby lobby = new Lobby("ABCDE", "Host");
 
-      assertFalse(lobby.hasPlayer("Ghost"));
+    assertFalse(lobby.hasPlayer("Ghost"));
   }
 
   @Test
-  void setPlayerTeam_shouldStoreSelectedTeam() {
-      Lobby lobby = new Lobby("ABCDE", "Host");
+  void setPlayerTeamShouldStoreSelectedTeam() {
+    Lobby lobby = new Lobby("ABCDE", "Host");
 
-      lobby.setPlayerTeam("Host", Team.RED);
+    lobby.setPlayerTeam("Host", Team.RED);
 
-      assertEquals(Team.RED, lobby.getPlayerTeam("Host"));
+    assertEquals(Team.RED, lobby.getPlayerTeam("Host"));
   }
 
   @Test
-  void setPlayerRole_shouldStoreSelectedRole() {
+  void setPlayerRoleShouldStoreSelectedRole() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
     lobby.setPlayerRole("Host", Role.SPYMASTER);
@@ -112,7 +115,7 @@ class LobbyTest {
   }
 
   @Test
-  void removePlayer_shouldAlsoRemoveStoredTeamAndRole() {
+  void removePlayerShouldAlsoRemoveStoredTeamAndRole() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
     lobby.setPlayerTeam("Host", Team.BLUE);
@@ -122,5 +125,14 @@ class LobbyTest {
 
     assertNull(lobby.getPlayerTeam("Host"));
     assertNull(lobby.getPlayerRole("Host"));
+  }
+
+  @Test
+  void startingTeamShouldBeEitherRedOrBlue() {
+    Lobby lobby = new Lobby("ABCDE", "Host");
+
+    Team startingTeam = lobby.decideStartingTeam();
+
+    assertTrue(startingTeam == Team.RED || startingTeam == Team.BLUE);
   }
 }
