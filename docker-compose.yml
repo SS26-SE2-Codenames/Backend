@@ -1,0 +1,6 @@
+services:
+  backend:
+    image: ghcr.io/ss26-se2-codenames/backend:latest
+    restart: unless-stopped
+    ports:
+      - "53213:8080"
