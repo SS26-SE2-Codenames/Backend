@@ -249,4 +249,12 @@ class LobbyServiceTest {
 
     assertNotNull(result);
   }
+
+  @Test
+  void decideStartingTeamShouldReturnNullWhenLobbyDoesNotExist() {
+
+    Team result = lobbyService.decideStartingTeam("UNKNOWN");
+
+    assertNull(result);
+  }
 }
