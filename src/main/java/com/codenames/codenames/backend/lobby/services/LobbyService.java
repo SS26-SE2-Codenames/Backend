@@ -184,6 +184,12 @@ public class LobbyService {
     return null;
   }
 
+  /**
+   * Determines the starting team for a lobby.
+   *
+   * @param lobbyCode the lobby code
+   * @return the randomly selected starting team, or null if the lobby does not exist
+   */
   public Team decideStartingTeam(String lobbyCode) {
     Lobby lobby = lobbyList.get(lobbyCode);
 

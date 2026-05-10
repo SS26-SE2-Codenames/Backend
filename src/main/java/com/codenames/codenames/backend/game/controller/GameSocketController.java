@@ -14,6 +14,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
+/**
+ * WebSocket controller for real-time gameplay interactions.
+ *
+ * <p>Handles game-related WebSocket requests such as starting games, submitting clues, and
+ * revealing cards. Broadcasts updated game state information to subscribed clients.
+ */
 public class GameSocketController {
 
   private final LobbyService lobbyService;
@@ -23,6 +29,14 @@ public class GameSocketController {
 
   private final Map<String, GameManager> gameSessions = new ConcurrentHashMap<>();
 
+  /**
+   * Creates a new {@code GameSocketController}.
+   *
+   * @param lobbyService service for lobby management
+   * @param messagingTemplate template used for broadcasting messages
+   * @param cardGenerator utility for generating game cards
+   * @param clueValidationService service for validating clues
+   */
   public GameSocketController(
       LobbyService lobbyService,
       SimpMessagingTemplate messagingTemplate,
@@ -34,6 +48,13 @@ public class GameSocketController {
     this.clueValidationService = clueValidationService;
   }
 
+  /**
+   * Starts a new game session for a lobby.
+   *
+   * <p>Creates a new game manager and broadcasts the initial board state to all subscribed players.
+   *
+   * @param message the start game request
+   */
   @MessageMapping("/start-game")
   public void startGame(StartGameMessage message) {
 
@@ -47,6 +68,13 @@ public class GameSocketController {
         "/topic/game/" + message.getLobbyCode(), gameManager.getCardList());
   }
 
+  /**
+   * Reveals a card on the board.
+   *
+   * <p>Updates the game state and broadcasts the updated board to all subscribed players.
+   *
+   * @param message the reveal card request
+   */
   @MessageMapping("/reveal-card")
   public void revealCard(RevealCardMessage message) {
 
@@ -62,6 +90,13 @@ public class GameSocketController {
         "/topic/game/" + message.getLobbyCode(), gameManager.getCardList());
   }
 
+  /**
+   * Submits a clue for the current turn.
+   *
+   * <p>Updates the current clue and broadcasts the updated game state to all subscribed players.
+   *
+   * @param message the clue submission request
+   */
   @MessageMapping("/submit-clue")
   public void submitClue(ClueMessage message) {
 

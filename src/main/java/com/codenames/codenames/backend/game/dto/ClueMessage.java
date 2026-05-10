@@ -3,6 +3,11 @@ package com.codenames.codenames.backend.game.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * WebSocket message for submitting a clue.
+ *
+ * <p>Contains the clue word and the allowed amount of guesses.
+ */
 @Getter
 @Setter
 public class ClueMessage {
