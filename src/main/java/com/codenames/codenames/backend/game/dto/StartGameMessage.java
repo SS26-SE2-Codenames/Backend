@@ -6,5 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class StartGameMessage {
-    private String lobbyCode;
+  private String lobbyCode;
 }

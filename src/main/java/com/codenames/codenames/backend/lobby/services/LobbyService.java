@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 /**
  * Service responsible for managing lobbies and player interactions.
  *
- * <p>Handles creation of lobbies, player joins/leaves, and retrieval of lobby data.
- * Ensures uniqueness of lobby codes and thread-safe access to lobby storage.
+ * <p>Handles creation of lobbies, player joins/leaves, and retrieval of lobby data. Ensures
+ * uniqueness of lobby codes and thread-safe access to lobby storage.
  */
 @Service
 public class LobbyService {
@@ -50,7 +50,7 @@ public class LobbyService {
   /**
    * Adds a player to an existing lobby.
    *
-   * @param username  the username of the player
+   * @param username the username of the player
    * @param lobbyCode the lobby code identifying the lobby
    * @return {@code true} if the player successfully joined, {@code false} otherwise
    */
@@ -65,7 +65,7 @@ public class LobbyService {
   /**
    * Removes a player from a lobby.
    *
-   * @param username  the username of the player
+   * @param username the username of the player
    * @param lobbyCode the lobby code identifying the lobby
    * @return {@code true} if the player was removed, {@code false} if the lobby does not exist
    */
@@ -81,10 +81,10 @@ public class LobbyService {
   /**
    * Assigns a team and role to a player in a lobby.
    *
-   * @param username  the username of the player
+   * @param username the username of the player
    * @param lobbyCode the lobby code identifying the lobby
-   * @param team      the selected team
-   * @param role      the selected role
+   * @param team the selected team
+   * @param role the selected role
    * @return {@code true} if the position was assigned, {@code false} otherwise
    */
   public boolean selectPosition(String username, String lobbyCode, Team team, Role role) {
@@ -117,9 +117,9 @@ public class LobbyService {
   /**
    * Checks whether a spymaster is already assigned for the given team in the lobby.
    *
-   * @param lobby    the lobby to inspect
+   * @param lobby the lobby to inspect
    * @param username the username requesting the role
-   * @param team     the team to inspect
+   * @param team the team to inspect
    * @return {@code true} if a different player is already the spymaster for that team
    */
   private boolean isSpymasterAlreadyAssigned(Lobby lobby, String username, Team team) {
@@ -182,5 +182,9 @@ public class LobbyService {
       return lobby.getPlayerRole(username);
     }
     return null;
+  }
+
+  public Lobby getLobby(String lobbyCode) {
+    return lobbyList.get(lobbyCode);
   }
 }
