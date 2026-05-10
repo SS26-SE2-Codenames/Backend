@@ -3,7 +3,11 @@ package com.codenames.codenames.backend.game.controller;
 import com.codenames.codenames.backend.clue.ClueValidationService;
 import com.codenames.codenames.backend.lobby.services.LobbyService;
 import com.codenames.codenames.backend.playingfield.CardGenerator;
+import com.codenames.codenames.backend.playingfield.GameManager;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GameSocketController {
 
@@ -11,6 +15,8 @@ public class GameSocketController {
   private final SimpMessagingTemplate messagingTemplate;
   private final CardGenerator cardGenerator;
   private final ClueValidationService clueValidationService;
+
+  private final Map<String, GameManager> gameSessions = new ConcurrentHashMap<>();
 
   public GameSocketController(
       LobbyService lobbyService,
