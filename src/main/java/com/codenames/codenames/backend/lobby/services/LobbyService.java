@@ -184,7 +184,13 @@ public class LobbyService {
     return null;
   }
 
-  public Lobby getLobby(String lobbyCode) {
-    return lobbyList.get(lobbyCode);
+  public Team decideStartingTeam(String lobbyCode) {
+    Lobby lobby = lobbyList.get(lobbyCode);
+
+    if (lobby == null) {
+      return null;
+    }
+
+    return lobby.decideStartingTeam();
   }
 }
