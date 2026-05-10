@@ -1,13 +1,15 @@
 package com.codenames.codenames.backend.game.controller;
 
 import com.codenames.codenames.backend.clue.ClueValidationService;
+import com.codenames.codenames.backend.game.dto.StartGameMessage;
 import com.codenames.codenames.backend.lobby.services.LobbyService;
 import com.codenames.codenames.backend.playingfield.CardGenerator;
 import com.codenames.codenames.backend.playingfield.GameManager;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-
+import com.codenames.codenames.backend.utility.Team;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 public class GameSocketController {
 
@@ -27,5 +29,18 @@ public class GameSocketController {
     this.messagingTemplate = messagingTemplate;
     this.cardGenerator = cardGenerator;
     this.clueValidationService = clueValidationService;
+  }
+
+  @MessageMapping("/start-game")
+  public void startGame(StartGameMessage message) {
+
+    Team startingTeam = lobbyService.decideStartingTeam(message.getLobbyCode());
+
+    GameManager gameManager = new GameManager(startingTeam, cardGenerator, clueValidationService);
+
+    gameSessions.put(message.getLobbyCode(), gameManager);
+
+    messagingTemplate.convertAndSend(
+        "/topic/game/" + message.getLobbyCode(), gameManager.getCardList());
   }
 }
