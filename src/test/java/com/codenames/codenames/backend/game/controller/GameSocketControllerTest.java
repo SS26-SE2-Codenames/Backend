@@ -130,4 +130,18 @@ class GameSocketControllerTest {
 
     verify(messagingTemplate, times(2)).convertAndSend(eq("/topic/game/ABCDE"), any(Object.class));
   }
+
+  @Test
+  void submitClueShouldReturnWhenGameSessionMissing() {
+
+    ClueMessage clueMessage = new ClueMessage();
+
+    clueMessage.setLobbyCode("UNKNOWN");
+    clueMessage.setWord("animal");
+    clueMessage.setGuessAmount(2);
+
+    controller.submitClue(clueMessage);
+
+    verify(messagingTemplate, never()).convertAndSend(anyString(), any(Object.class));
+  }
 }
