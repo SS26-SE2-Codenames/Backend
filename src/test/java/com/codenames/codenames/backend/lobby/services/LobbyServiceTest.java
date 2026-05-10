@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Test;
  *
  * <p>Validates lobby creation, joining, leaving, and player management behavior.
  */
-
 class LobbyServiceTest {
 
   private LobbyService lobbyService;
@@ -87,10 +86,7 @@ class LobbyServiceTest {
 
   @Test
   void createLobbyShouldGenerateNewCodeIfDuplicateExists() {
-    when(generator.generateLobbyCode())
-        .thenReturn("ABCDE")
-        .thenReturn("ABCDE")
-        .thenReturn("FGHIJ");
+    when(generator.generateLobbyCode()).thenReturn("ABCDE").thenReturn("ABCDE").thenReturn("FGHIJ");
 
     lobbyService.createLobby("Host1");
     String code2 = lobbyService.createLobby("Host2");
@@ -179,9 +175,7 @@ class LobbyServiceTest {
 
     List<Player> players = lobbyService.getPlayers("ABCDE");
 
-    long count = players.stream()
-        .filter(p -> p.getUsername().equals("Max"))
-        .count();
+    long count = players.stream().filter(p -> p.getUsername().equals("Max")).count();
 
     assertEquals(1, count);
   }
@@ -244,5 +238,15 @@ class LobbyServiceTest {
     String lobbyCode = lobbyService.createLobby("Host");
 
     assertNull(lobbyService.getPlayerRole("nonExistentPlayer", lobbyCode));
+  }
+
+  @Test
+  void decideStartingTeamShouldReturnTeam() {
+
+    lobbyService.createLobby("Host");
+
+    Team result = lobbyService.decideStartingTeam("ABCDE");
+
+    assertNotNull(result);
   }
 }
