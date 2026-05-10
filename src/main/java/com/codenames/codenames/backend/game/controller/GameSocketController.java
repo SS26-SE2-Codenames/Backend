@@ -1,6 +1,8 @@
 package com.codenames.codenames.backend.game.controller;
 
+import com.codenames.codenames.backend.clue.Clue;
 import com.codenames.codenames.backend.clue.ClueValidationService;
+import com.codenames.codenames.backend.game.dto.ClueMessage;
 import com.codenames.codenames.backend.game.dto.RevealCardMessage;
 import com.codenames.codenames.backend.game.dto.StartGameMessage;
 import com.codenames.codenames.backend.lobby.services.LobbyService;
@@ -58,5 +60,21 @@ public class GameSocketController {
 
     messagingTemplate.convertAndSend(
         "/topic/game/" + message.getLobbyCode(), gameManager.getCardList());
+  }
+
+  @MessageMapping("/submit-clue")
+  public void submitClue(ClueMessage message) {
+
+    GameManager gameManager = gameSessions.get(message.getLobbyCode());
+
+    if (gameManager == null) {
+      return;
+    }
+
+    Clue clue = new Clue(message.getWord(), message.getGuessAmount());
+
+    gameManager.submitClue(clue);
+
+    messagingTemplate.convertAndSend("/topic/game/" + message.getLobbyCode(), gameManager);
   }
 }
