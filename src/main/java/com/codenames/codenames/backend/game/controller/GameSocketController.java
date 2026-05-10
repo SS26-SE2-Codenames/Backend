@@ -1,6 +1,7 @@
 package com.codenames.codenames.backend.game.controller;
 
 import com.codenames.codenames.backend.clue.ClueValidationService;
+import com.codenames.codenames.backend.game.dto.RevealCardMessage;
 import com.codenames.codenames.backend.game.dto.StartGameMessage;
 import com.codenames.codenames.backend.lobby.services.LobbyService;
 import com.codenames.codenames.backend.playingfield.CardGenerator;
@@ -39,6 +40,21 @@ public class GameSocketController {
     GameManager gameManager = new GameManager(startingTeam, cardGenerator, clueValidationService);
 
     gameSessions.put(message.getLobbyCode(), gameManager);
+
+    messagingTemplate.convertAndSend(
+        "/topic/game/" + message.getLobbyCode(), gameManager.getCardList());
+  }
+
+  @MessageMapping("/reveal-card")
+  public void revealCard(RevealCardMessage message) {
+
+    GameManager gameManager = gameSessions.get(message.getLobbyCode());
+
+    if (gameManager == null) {
+      return;
+    }
+
+    gameManager.flipCard(message.getPosition(), message.getCurrentTurn());
 
     messagingTemplate.convertAndSend(
         "/topic/game/" + message.getLobbyCode(), gameManager.getCardList());
