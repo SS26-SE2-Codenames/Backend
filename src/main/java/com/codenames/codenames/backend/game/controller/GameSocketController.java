@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
 
 /**
  * WebSocket controller for real-time gameplay interactions.
@@ -20,6 +21,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
  * <p>Handles game-related WebSocket requests such as starting games, submitting clues, and
  * revealing cards. Broadcasts updated game state information to subscribed clients.
  */
+@Controller
 public class GameSocketController {
 
   private final LobbyService lobbyService;
