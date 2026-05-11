@@ -29,6 +29,8 @@ public class GameSocketController {
 
   private final Map<String, GameManager> gameSessions = new ConcurrentHashMap<>();
 
+  private static final String GAME_TOPIC_PREFIX = "/topic/game/";
+
   /**
    * Creates a new {@code GameSocketController}.
    *
@@ -65,7 +67,7 @@ public class GameSocketController {
     gameSessions.put(message.getLobbyCode(), gameManager);
 
     messagingTemplate.convertAndSend(
-        "/topic/game/" + message.getLobbyCode(), gameManager.getCardList());
+        GAME_TOPIC_PREFIX + message.getLobbyCode(), gameManager.getCardList());
   }
 
   /**
@@ -87,7 +89,7 @@ public class GameSocketController {
     gameManager.flipCard(message.getPosition(), message.getCurrentTurn());
 
     messagingTemplate.convertAndSend(
-        "/topic/game/" + message.getLobbyCode(), gameManager.getCardList());
+        GAME_TOPIC_PREFIX + message.getLobbyCode(), gameManager.getCardList());
   }
 
   /**
@@ -110,6 +112,6 @@ public class GameSocketController {
 
     gameManager.submitClue(clue);
 
-    messagingTemplate.convertAndSend("/topic/game/" + message.getLobbyCode(), gameManager);
+    messagingTemplate.convertAndSend(GAME_TOPIC_PREFIX + message.getLobbyCode(), gameManager);
   }
 }
