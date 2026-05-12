@@ -9,6 +9,7 @@ import com.codenames.codenames.backend.playingfield.Card;
 import com.codenames.codenames.backend.playingfield.GameManager;
 import com.codenames.codenames.backend.utility.Color;
 import com.codenames.codenames.backend.utility.Role;
+import com.codenames.codenames.backend.utility.Team;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,8 @@ class DataTransferObjectServiceTest {
   GameManager mockGameManager;
   DataTransferObjectService service;
   GameStateDataTransferObject gameStateDto;
+  private static final Team redTeam = Team.RED;
+  // private static final Team blueTeam = Team.BLUE;
 
   @BeforeEach
   void setUp() {
@@ -29,36 +32,33 @@ class DataTransferObjectServiceTest {
     mockGameManager = mock(GameManager.class);
     service = new DataTransferObjectService();
     when(mockGameManager.getCardList()).thenReturn(List.of(cardHidden, cardGuessed));
-    when(mockGameManager.getWinner()).thenReturn(Color.RED);
+    when(mockGameManager.getWinner()).thenReturn(Team.RED);
     when(mockGameManager.getCurrentRedFound()).thenReturn(0);
     when(mockGameManager.getCurrentBlueFound()).thenReturn(0);
+
+    gameStateDto =
+        service.createGameStateDataTransferObject(mockGameManager, Role.OPERATIVE, redTeam);
   }
 
   @Test
   void testSpymasterVisibility() {
     gameStateDto =
-        service.createGameStateDataTransferObject(mockGameManager, Role.SPYMASTER, "RED");
+        service.createGameStateDataTransferObject(mockGameManager, Role.SPYMASTER, redTeam);
     assertEquals("RED", gameStateDto.cardList().get(0).color());
   }
 
   @Test
   void testOperatorVisibility_hidden() {
-    gameStateDto =
-        service.createGameStateDataTransferObject(mockGameManager, Role.OPERATIVE, "RED");
     assertEquals("HIDDEN", gameStateDto.cardList().get(0).color());
   }
 
   @Test
   void testOperatorVisibility_isGuessed() {
-    gameStateDto =
-        service.createGameStateDataTransferObject(mockGameManager, Role.OPERATIVE, "RED");
     assertEquals("RED", gameStateDto.cardList().get(1).color());
   }
 
   @Test
   void testGetWinner_exists() {
-    gameStateDto =
-        service.createGameStateDataTransferObject(mockGameManager, Role.OPERATIVE, "RED");
     assertEquals("RED", gameStateDto.winner());
   }
 
@@ -66,7 +66,7 @@ class DataTransferObjectServiceTest {
   void testGetWinner_null() {
     when(mockGameManager.getWinner()).thenReturn(null);
     gameStateDto =
-        service.createGameStateDataTransferObject(mockGameManager, Role.OPERATIVE, "RED");
+        service.createGameStateDataTransferObject(mockGameManager, Role.OPERATIVE, redTeam);
     assertNull(gameStateDto.winner());
   }
 }
