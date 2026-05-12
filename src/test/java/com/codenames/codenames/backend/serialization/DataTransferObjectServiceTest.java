@@ -21,7 +21,6 @@ class DataTransferObjectServiceTest {
   DataTransferObjectService service;
   GameStateDataTransferObject gameStateDto;
   private static final Team redTeam = Team.RED;
-  // private static final Team blueTeam = Team.BLUE;
 
   @BeforeEach
   void setUp() {
