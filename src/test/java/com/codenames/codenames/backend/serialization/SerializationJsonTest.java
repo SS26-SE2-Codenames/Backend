@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.playingfield.Card;
 import com.codenames.codenames.backend.utility.Color;
+import com.codenames.codenames.backend.utility.Team;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
@@ -28,7 +29,8 @@ class SerializationJsonTest {
     serializer = new SerializationJson(mapper);
 
     dummyList = List.of(new CardDataTransferObject("TEST", "HIDDEN", false));
-    dummyGameState = new GameStateDataTransferObject("RED", "RED", 0, 0, "Test", 1, dummyList);
+    dummyGameState =
+        new GameStateDataTransferObject(Team.RED, Team.RED, 0, 0, "Test", 1, dummyList);
   }
 
   @Test
