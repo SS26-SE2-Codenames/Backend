@@ -77,9 +77,11 @@ public class LobbyController {
    */
   @PostMapping("/{lobbyCode}/leave")
   public ResponseEntity<LobbyResponse> leaveLobby(
-      @RequestParam String username,
-      @PathVariable String lobbyCode) {
+          @PathVariable String lobbyCode,
+          @RequestParam String username) {
     boolean left = service.leaveLobby(username, lobbyCode);
+    System.out.println("LobbyCode: " + lobbyCode);
+    System.out.println("Username: " + username);
     if (left) {
       return ResponseEntity.ok(new LobbyResponse("Left lobby successfully.", lobbyCode, service.getPlayersDto(lobbyCode)));
     } else {
