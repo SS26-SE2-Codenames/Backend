@@ -83,7 +83,9 @@ public class LobbyController {
     System.out.println("LobbyCode: " + lobbyCode);
     System.out.println("Username: " + username);
     if (left) {
-      return ResponseEntity.ok(new LobbyResponse("Left lobby successfully.", lobbyCode, service.getPlayersDto(lobbyCode)));
+      ResponseEntity<LobbyResponse> response = ResponseEntity.ok(new LobbyResponse("Left lobby successfully.", lobbyCode, service.getPlayersDto(lobbyCode)));
+      service.checkLobbyStillHasPlayers(lobbyCode);
+      return response;
     } else {
       return ResponseEntity.badRequest()
           .body(new LobbyResponse("Could not find lobby.", lobbyCode, null));

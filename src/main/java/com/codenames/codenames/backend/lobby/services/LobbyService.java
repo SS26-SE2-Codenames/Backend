@@ -103,6 +103,17 @@ public class LobbyService {
     lobby.setPlayerRole(username, role);
     return true;
   }
+  /**
+    * Checks if the lobby still has players after a player leaves and removes the lobby if it is empty.
+   *
+   * @param lobbyCode the lobby code identifying the lobby
+   */
+  public void checkLobbyStillHasPlayers(String lobbyCode){
+    Lobby lobby = lobbyList.get(lobbyCode);
+    if(lobby.getPlayerList().isEmpty()){
+      lobbyList.remove(lobbyCode);
+    }
+  }
 
   /**
    * Retrieves all playerList in the specified lobby.
