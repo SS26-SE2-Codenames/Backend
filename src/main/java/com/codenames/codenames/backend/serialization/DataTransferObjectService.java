@@ -46,15 +46,15 @@ public class DataTransferObjectService {
     for (Card card : cardList) {
       cardDataTransferObject.add(createCardDataTransferObject(card, role));
     }
-    String winner;
+    Team winner;
     if (gameManager.getWinner() == null) {
       winner = null;
     } else {
-      winner = gameManager.getWinner().toString();
+      winner = gameManager.getWinner();
     }
     return new GameStateDataTransferObject(
         winner,
-        currentTurn.toString(),
+        currentTurn,
         gameManager.getCurrentRedFound(),
         gameManager.getCurrentBlueFound(),
         gameManager.getCurrentClueWord(),
