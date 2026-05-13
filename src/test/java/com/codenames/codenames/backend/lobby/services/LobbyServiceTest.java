@@ -41,7 +41,7 @@ class LobbyServiceTest {
     assertTrue(result);
 
     List<Player> players = lobbyService.getPlayers("ABCDE");
-    assertTrue(players.stream().anyMatch(p -> p.getUsername().equals("TestUser")));
+    assertTrue(players.stream().anyMatch(p -> p.username().equals("TestUser")));
   }
 
   @Test
@@ -76,7 +76,7 @@ class LobbyServiceTest {
 
     List<Player> players = lobbyService.getPlayers("ABCDE");
 
-    assertFalse(players.stream().anyMatch(p -> p.getUsername().equals("Host")));
+    assertFalse(players.stream().anyMatch(p -> p.username().equals("Host")));
   }
 
   @Test
@@ -180,7 +180,7 @@ class LobbyServiceTest {
     List<Player> players = lobbyService.getPlayers("ABCDE");
 
     long count = players.stream()
-        .filter(p -> p.getUsername().equals("Max"))
+        .filter(p -> p.username().equals("Max"))
         .count();
 
     assertEquals(1, count);

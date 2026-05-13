@@ -11,9 +11,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.Getter;
 
 /**
- * Represents a game lobby containing a limited number of players.
+ * Represents a game lobby containing a limited number of playerList.
  *
- * <p>Supports adding and removing players while enforcing constraints such as maximum player count
+ * <p>Supports adding and removing playerList while enforcing constraints such as maximum player count
  * and unique usernames.
  */
 @Getter
@@ -44,24 +44,36 @@ public class Lobby {
     this.lobbyCode = lobbyCode;
     this.playerTeams = new HashMap<>();
     this.playerRoles = new HashMap<>();
-    this.addPlayer(username);
+    this.addPlayer(username, true);
   }
 
   /**
    * Adds a player to the lobby if capacity allows and the username is unique.
    *
    * @param username the username of the player
+   * @param isHost   whether the player is the host of the lobby
    * @return {@code true} if the player was added, {@code false} otherwise
    */
-  public boolean addPlayer(String username) {
-    boolean alreadyExists = playerList.stream().anyMatch(p -> p.getUsername().equals(username));
+  public boolean addPlayer(String username, boolean isHost) {
+    boolean alreadyExists = playerList.stream().anyMatch(p -> p.username().equals(username));
 
     if (alreadyExists || playerList.size() >= MAX_PLAYERS) {
       return false;
     }
 
-    playerList.add(new Player(username));
+    playerList.add(new Player(username, isHost));
     return true;
+  }
+
+  /**
+   * Adds a player to the lobby if capacity allows and the username is unique.
+   *
+   * @param username the username of the player
+   * @calls {@link #addPlayer(String, boolean)} with {@code false} as the second argument
+   * @return {@code true} if the player was added, {@code false} otherwise
+   */
+  public boolean addPlayer(String username) {
+    return addPlayer(username, false);
   }
 
   /**
@@ -70,7 +82,7 @@ public class Lobby {
    * @param username the username of the player to remove
    */
   public void removePlayer(String username) {
-    playerList.removeIf(p -> p.getUsername().equals(username));
+    playerList.removeIf(p -> p.username().equals(username));
     this.playerTeams.remove(username);
     this.playerRoles.remove(username);
   }
@@ -82,7 +94,7 @@ public class Lobby {
    * @return {@code true} if the player exists in the lobby, {@code false} otherwise
    */
   public boolean hasPlayer(String username) {
-    return playerList.stream().anyMatch(p -> p.getUsername().equals(username));
+    return playerList.stream().anyMatch(p -> p.username().equals(username));
   }
 
   /**

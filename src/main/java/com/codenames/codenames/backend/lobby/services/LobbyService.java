@@ -4,6 +4,7 @@ import com.codenames.codenames.backend.lobby.Lobby;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import com.codenames.codenames.backend.websocket.Player;
+
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,7 +42,6 @@ public class LobbyService {
     if (lobbyCode == null || lobbyCode.isBlank()) {
       return null;
     }
-
     Lobby lobby = new Lobby(lobbyCode, username);
     lobbyList.put(lobbyCode, lobby);
     return lobbyCode;
@@ -104,10 +104,10 @@ public class LobbyService {
   }
 
   /**
-   * Retrieves all players in the specified lobby.
+   * Retrieves all playerList in the specified lobby.
    *
    * @param lobbyCode the lobby code identifying the lobby
-   * @return a list of players, or an empty list if the lobby does not exist
+   * @return a list of playerList, or an empty list if the lobby does not exist
    */
   public List<Player> getPlayers(String lobbyCode) {
     Lobby lobby = lobbyList.get(lobbyCode);
@@ -124,9 +124,9 @@ public class LobbyService {
    */
   private boolean isSpymasterAlreadyAssigned(Lobby lobby, String username, Team team) {
     for (Player player : lobby.getPlayerList()) {
-      if (!player.getUsername().equals(username)
-          && lobby.getPlayerTeam(player.getUsername()) == team
-          && lobby.getPlayerRole(player.getUsername()) == Role.SPYMASTER) {
+      if (!player.username().equals(username)
+          && lobby.getPlayerTeam(player.username()) == team
+          && lobby.getPlayerRole(player.username()) == Role.SPYMASTER) {
         return true;
       }
     }
