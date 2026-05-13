@@ -130,10 +130,9 @@ public class GameManager {
    * Changes the guessed state of a card and updates the score if necessary.
    *
    * @param position the position of the card that is selected by the player
-   * @param currentTurn the team whose turn it currently is
    * @throws IllegalStateException if game over, card already flipped, no more guesses
    */
-  public void flipCard(int position, Team currentTurn) {
+  public void flipCard(int position) {
     if (getWinner() != null) {
       throw new IllegalStateException("Winner is already set");
     }
@@ -144,6 +143,7 @@ public class GameManager {
       clearClue();
       throw new IllegalStateException("No more guesses.");
     }
+    checkCorrectTurn(currentTurn, currentPhase);
     this.remainingGuesses--;
     this.board.setGuessed(position);
     Color currentColor = this.board.checkColor(position);
@@ -157,6 +157,7 @@ public class GameManager {
    * @throws IllegalArgumentException if clue is: null, empty, spaces, or word is on the board
    */
   public void submitClue(Clue clue) {
+    checkCorrectTurn(currentTurn, currentPhase);
     if (clueValidationService.validateWord(this.board, clue.word())) {
       this.currentClue = clue;
       this.remainingGuesses = clue.guessAmount();
@@ -200,6 +201,12 @@ public class GameManager {
       currentPhase = Role.SPYMASTER;
       currentTurn = nextTeamColor(currentTurn);
       clearClue();
+    }
+  }
+
+  private void checkCorrectTurn(Team team, Role role) {
+    if (team != currentTurn || role != currentPhase) {
+      throw new IllegalStateException("Not your turn/ role");
     }
   }
 }
