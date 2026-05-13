@@ -9,6 +9,8 @@ import com.codenames.codenames.backend.websocket.Player;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class LobbyService {
 
+  @Getter
   private final Map<String, Lobby> lobbyList = new ConcurrentHashMap<>();
   private final LobbyCodeGenerator generator;
 

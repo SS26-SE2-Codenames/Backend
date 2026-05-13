@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.codenames.codenames.backend.lobby.dto.PlayerDto;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import com.codenames.codenames.backend.websocket.Player;
@@ -244,5 +245,38 @@ class LobbyServiceTest {
     String lobbyCode = lobbyService.createLobby("Host");
 
     assertNull(lobbyService.getPlayerRole("nonExistentPlayer", lobbyCode));
+  }
+
+  @Test
+  void testLobbyIsRemovedWhenItIsEmpty() {
+    lobbyService.createLobby("Host");
+    lobbyService.leaveLobby("Host", "ABCDE");
+    lobbyService.checkLobbyStillHasPlayers("ABCDE");
+    assertFalse(lobbyService.getLobbyList().containsKey("ABCDE"));
+  }
+
+  @Test
+  void testLobbyIsNotRemovedWhenItHasPlayers() {
+    lobbyService.createLobby("Host");
+    lobbyService.joinLobby("Player1", "ABCDE");
+    lobbyService.checkLobbyStillHasPlayers("ABCDE");
+    assertTrue(lobbyService.getLobbyList().containsKey("ABCDE"));
+  }
+
+  @Test
+  void testGetPlayersDto(){
+    lobbyService.createLobby("Host");
+
+    List<PlayerDto> players = lobbyService.getPlayersDto("ABCDE");
+    PlayerDto player = players.get(0);
+    assertEquals("Host", player.username());
+    assertTrue(player.isHost());
+  }
+
+  @Test
+  void testGetPlayersDto_lobbyNotExists(){
+    List<PlayerDto> players = lobbyService.getPlayersDto("UNKNOWN");
+    assertNotNull(players);
+    assertTrue(players.isEmpty());
   }
 }

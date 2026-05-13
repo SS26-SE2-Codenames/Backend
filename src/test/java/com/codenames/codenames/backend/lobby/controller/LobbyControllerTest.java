@@ -1,10 +1,12 @@
 package com.codenames.codenames.backend.lobby.controller;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.codenames.codenames.backend.lobby.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.services.LobbyService;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
@@ -14,6 +16,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
 
 @WebMvcTest(LobbyController.class)
 class LobbyControllerTest {
@@ -71,10 +75,9 @@ class LobbyControllerTest {
   @Test
   void leaveLobbyShouldReturn200_whenSuccess() throws Exception {
     when(service.leaveLobby("TestUser", "ABCDE")).thenReturn(true);
-
-    mockMvc.perform(post("/lobby/leave")
-            .param("username", "TestUser")
-            .param("lobbyCode", "ABCDE"))
+    String url = "/lobby/ABCDE/leave";
+    mockMvc.perform(post(url)
+            .param("username", "TestUser"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message").value("Left lobby successfully."));
   }
@@ -82,10 +85,9 @@ class LobbyControllerTest {
   @Test
   void leaveLobbyNoSuccess() throws Exception {
     when(service.leaveLobby("TestUser", "ABCDE")).thenReturn(false);
-
-    mockMvc.perform(post("/lobby/leave")
-            .param("username", "TestUser")
-            .param("lobbyCode", "ABCDE"))
+    String url = "/lobby/ABCDE/leave";
+    mockMvc.perform(post(url)
+            .param("username", "TestUser"))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.message").value("Could not find lobby."));
   }
@@ -93,8 +95,8 @@ class LobbyControllerTest {
   @Test
   void selectPositionShouldReturn200whenSuccess() throws Exception {
     when(service.selectPosition("TestUser", "ABCDE", Team.RED, Role.SPYMASTER)).thenReturn(true);
-
-    mockMvc.perform(post("/lobby/select-position")
+    String url = "/lobby/ABCDE/select-position";
+    mockMvc.perform(post(url)
             .contentType(MediaType.APPLICATION_JSON)
             .content(
                 """
@@ -113,8 +115,8 @@ class LobbyControllerTest {
   @Test
   void selectPositionShouldReturn400whenAssignmentFails() throws Exception {
     when(service.selectPosition("TestUser", "ABCDE", Team.RED, Role.SPYMASTER)).thenReturn(false);
-
-    mockMvc.perform(post("/lobby/select-position")
+    String url = "/lobby/ABCDE/select-position";
+    mockMvc.perform(post(url)
             .contentType(MediaType.APPLICATION_JSON)
             .content(
                 """
@@ -128,5 +130,21 @@ class LobbyControllerTest {
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.message").value("Could not assign selected team/role."))
         .andExpect(jsonPath("$.lobbyCode").value("ABCDE"));
+  }
+
+  @Test
+  void getLobbyInfoShouldReturn200() throws Exception {
+    when(service.getPlayersDto("ABCDE")).thenReturn(List.of(new PlayerDto("test", null, null, true)));
+    String url = "/lobby/ABCDE";
+    mockMvc.perform(get(url))
+        .andExpect(status().isOk());
+  }
+
+  @Test
+  void getLobbyInfoShouldReturn404() throws Exception {
+    when(service.getPlayersDto("XXXXX")).thenReturn(null);
+    String url = "/lobby/XXXXX";
+    mockMvc.perform(get(url))
+        .andExpect(status().isBadRequest());
   }
 }
