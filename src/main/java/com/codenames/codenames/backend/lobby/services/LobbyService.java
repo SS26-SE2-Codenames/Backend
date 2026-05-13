@@ -1,6 +1,7 @@
 package com.codenames.codenames.backend.lobby.services;
 
 import com.codenames.codenames.backend.lobby.Lobby;
+import com.codenames.codenames.backend.lobby.dto.PlayerDto;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import com.codenames.codenames.backend.websocket.Player;
@@ -112,6 +113,27 @@ public class LobbyService {
   public List<Player> getPlayers(String lobbyCode) {
     Lobby lobby = lobbyList.get(lobbyCode);
     return lobby != null ? lobby.getPlayerList() : List.of();
+  }
+
+  /**
+   * Retrieves all playerList in the specified lobby as PlayerDto objects.
+   *
+   * @param lobbyCode the lobby code identifying the lobby
+   * @return a list of PlayerDto objects, or an empty list if the lobby does not exist
+   */
+
+  public List<PlayerDto> getPlayersDto(String lobbyCode) {
+    Lobby lobby = lobbyList.get(lobbyCode);
+    if (lobby != null) {
+      return lobby.getPlayerList().stream()
+          .map(player -> new PlayerDto(
+              player.username(),
+              lobby.getPlayerTeam(player.username()) != null ? lobby.getPlayerTeam(player.username()) : null,
+              lobby.getPlayerRole(player.username()) != null ? lobby.getPlayerRole(player.username()) : null,
+              player.isHost()))
+          .toList();
+    }
+    return List.of();
   }
 
   /**

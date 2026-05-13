@@ -1,7 +1,5 @@
 package com.codenames.codenames.backend.lobby.dto;
 
-import com.codenames.codenames.backend.websocket.Player;
-
 import java.util.List;
 
 /**
@@ -9,7 +7,7 @@ import java.util.List;
  *
  * <p>Contains a message describing the outcome and the associated lobby code.
  */
-public record LobbyResponse(String message, String lobbyCode, List<Player> playerList) {
+public record LobbyResponse(String message, String lobbyCode, List<PlayerDto> playerList) {
   /**
    * Creates a new lobby response.
    *

@@ -1,15 +1,10 @@
 package com.codenames.codenames.backend.lobby.controller;
 
 import com.codenames.codenames.backend.lobby.dto.LobbyResponse;
-import com.codenames.codenames.backend.lobby.dto.PositionSelectMessage;
+import com.codenames.codenames.backend.lobby.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.services.LobbyService;
-import com.codenames.codenames.backend.websocket.Player;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -49,7 +44,7 @@ public class LobbyController {
       return ResponseEntity.internalServerError()
           .body(new LobbyResponse("Error while creating lobby.", "", null));
     } else {
-      List<Player> players = service.getPlayers(lobbyCode);
+      List<PlayerDto> players = service.getPlayersDto(lobbyCode);
       return ResponseEntity.ok(new LobbyResponse("Successfully created Lobby.", lobbyCode, players));
     }
   }
@@ -66,7 +61,7 @@ public class LobbyController {
       @RequestParam String username, @RequestParam String lobbyCode) {
     boolean joined = service.joinLobby(username, lobbyCode);
     if (joined) {
-      return ResponseEntity.ok(new LobbyResponse("Joined Lobby successfully.", lobbyCode, service.getPlayers(lobbyCode)));
+      return ResponseEntity.ok(new LobbyResponse("Joined Lobby successfully.", lobbyCode, service.getPlayersDto(lobbyCode)));
     } else {
       return ResponseEntity.badRequest()
           .body(new LobbyResponse("Could not find lobby.", lobbyCode, null));
@@ -80,12 +75,26 @@ public class LobbyController {
    * @param lobbyCode the lobby code identifying the lobby
    * @return a response indicating whether the operation was successful
    */
-  @PostMapping("/leave")
+  @PostMapping("/{lobbyCode}/leave")
   public ResponseEntity<LobbyResponse> leaveLobby(
-      @RequestParam String username, @RequestParam String lobbyCode) {
+      @RequestParam String username,
+      @PathVariable String lobbyCode) {
     boolean left = service.leaveLobby(username, lobbyCode);
     if (left) {
-      return ResponseEntity.ok(new LobbyResponse("Left lobby successfully.", lobbyCode, service.getPlayers(lobbyCode)));
+      return ResponseEntity.ok(new LobbyResponse("Left lobby successfully.", lobbyCode, service.getPlayersDto(lobbyCode)));
+    } else {
+      return ResponseEntity.badRequest()
+          .body(new LobbyResponse("Could not find lobby.", lobbyCode, null));
+    }
+  }
+
+  @GetMapping("/{lobbyCode}")
+  public ResponseEntity<LobbyResponse> getLobbyInfo(
+          @PathVariable String lobbyCode
+  ) {
+    List<PlayerDto> players = service.getPlayersDto(lobbyCode);
+    if (players != null) {
+      return ResponseEntity.ok(new LobbyResponse("Lobby info retrieved successfully.", lobbyCode, players));
     } else {
       return ResponseEntity.badRequest()
           .body(new LobbyResponse("Could not find lobby.", lobbyCode, null));
@@ -98,24 +107,24 @@ public class LobbyController {
    * @param request the position selection request containing username, lobby code, team, and role
    * @return a response indicating whether the selection was successful
    */
-  @PostMapping("/select-position")
+  @PostMapping("/{lobbyCode}/select-position")
   public ResponseEntity<LobbyResponse> selectPosition(
-      @RequestBody PositionSelectMessage request
+          @PathVariable String lobbyCode, @RequestBody PlayerDto request
   ) {
     boolean updated = service.selectPosition(
-        request.getUsername(),
-        request.getLobbyCode(),
-        request.getTeam(),
-        request.getRole()
+        request.username(),
+        lobbyCode,
+        request.team(),
+        request.role()
     );
 
     if (updated) {
       return ResponseEntity.ok(
-          new LobbyResponse("Position selected successfully.", request.getLobbyCode(), service.getPlayers(request.getLobbyCode()))
+          new LobbyResponse("Position selected successfully.", lobbyCode, service.getPlayersDto(lobbyCode))
       );
     } else {
       return ResponseEntity.badRequest().body(
-          new LobbyResponse("Could not assign selected team/role.", request.getLobbyCode(), service.getPlayers(request.getLobbyCode()))
+          new LobbyResponse("Could not assign selected team/role.", lobbyCode, service.getPlayersDto(lobbyCode))
       );
     }
   }
