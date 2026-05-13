@@ -3,6 +3,7 @@ package com.codenames.codenames.backend.serialization;
 import com.codenames.codenames.backend.playingfield.Card;
 import com.codenames.codenames.backend.playingfield.GameManager;
 import com.codenames.codenames.backend.utility.Role;
+import com.codenames.codenames.backend.utility.Team;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -38,18 +39,18 @@ public class DataTransferObjectService {
    * @return a DTO of the current game state
    */
   public GameStateDataTransferObject createGameStateDataTransferObject(
-      GameManager gameManager, Role role, String currentTurn) {
+      GameManager gameManager, Role role, Team currentTurn) {
 
     List<Card> cardList = gameManager.getCardList();
     List<CardDataTransferObject> cardDataTransferObject = new ArrayList<>();
     for (Card card : cardList) {
       cardDataTransferObject.add(createCardDataTransferObject(card, role));
     }
-    String winner;
+    Team winner;
     if (gameManager.getWinner() == null) {
       winner = null;
     } else {
-      winner = gameManager.getWinner().toString();
+      winner = gameManager.getWinner();
     }
     return new GameStateDataTransferObject(
         winner,
