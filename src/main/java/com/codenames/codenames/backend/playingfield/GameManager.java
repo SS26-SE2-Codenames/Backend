@@ -3,6 +3,7 @@ package com.codenames.codenames.backend.playingfield;
 import com.codenames.codenames.backend.clue.Clue;
 import com.codenames.codenames.backend.clue.ClueValidationService;
 import com.codenames.codenames.backend.utility.Color;
+import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import java.util.List;
 import lombok.Getter;
@@ -30,6 +31,9 @@ public class GameManager {
   @Getter private Clue currentClue;
   @Getter private int remainingGuesses;
 
+  @Getter private Team currentTurn;
+  @Getter private Role currentPhase;
+
   /**
    * Constructor for a new GameManager and initializes the playing board.
    *
@@ -42,7 +46,11 @@ public class GameManager {
     if (startingTeam == null) {
       throw new IllegalArgumentException("startingTeam cannot be null");
     }
+    this.currentTurn = startingTeam;
+    this.currentPhase = Role.SPYMASTER; // we hard code spymaster since game has to start with them
+
     this.clueValidationService = clueValidationService;
+
     if (startingTeam == Team.RED) {
       this.redCards = 9;
       this.blueCards = 8;
@@ -50,6 +58,7 @@ public class GameManager {
       this.redCards = 8;
       this.blueCards = 9;
     }
+
     this.board =
         new Board(cardGenerator, TOTAL_CARDS, redCards, blueCards, WHITE_CARDS, BLACK_CARDS);
   }
@@ -172,5 +181,25 @@ public class GameManager {
       return null;
     }
     return currentClue.word();
+  }
+
+  public Team nextTeamColor(Team current) {
+    if (current == Team.RED) {
+      return Team.BLUE;
+    } else {
+      return Team.RED;
+    }
+  }
+
+  // we do not change the team color when we advance after being spymaster as the same team
+  // operatives are now at turn, only after operatives are done we clear clue and change team color.
+  public void advanceTurn() {
+    if (currentPhase == Role.SPYMASTER) {
+      currentPhase = Role.OPERATIVE;
+    } else {
+      currentPhase = Role.SPYMASTER;
+      currentTurn = nextTeamColor(currentTurn);
+      clearClue();
+    }
   }
 }
