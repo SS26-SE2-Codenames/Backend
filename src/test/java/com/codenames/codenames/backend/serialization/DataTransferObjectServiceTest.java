@@ -58,7 +58,7 @@ class DataTransferObjectServiceTest {
 
   @Test
   void testGetWinner_exists() {
-    assertEquals("RED", gameStateDto.winner());
+    assertEquals(redTeam, gameStateDto.winner());
   }
 
   @Test
