@@ -148,6 +148,13 @@ public class GameManager {
     this.board.setGuessed(position);
     Color currentColor = this.board.checkColor(position);
     updateScore(currentColor, currentTurn);
+    boolean opponentOrWhiteCard =
+        (currentTurn == Team.RED && currentColor != Color.RED)
+            || (currentTurn == Team.BLUE && currentColor != Color.BLUE);
+
+    if (opponentOrWhiteCard || this.remainingGuesses == 0) {
+      advanceTurn();
+    }
   }
 
   /**
