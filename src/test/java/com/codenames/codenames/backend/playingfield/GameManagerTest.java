@@ -285,4 +285,18 @@ class GameManagerTest {
     assertNull(gameManager.getCurrentClue());
   }
 
+  @Test
+  void testPassTurn_correctTeam() {
+    gameManager.advanceTurn();
+    gameManager.passTurn(redTeam);
+    assertEquals(blueTeam, gameManager.getCurrentTurn());
+  }
+
+  @Test
+  void testPassTurn_correctPhase() {
+    gameManager.advanceTurn();
+    gameManager.passTurn(redTeam);
+    assertEquals(Role.SPYMASTER, gameManager.getCurrentPhase());
+  }
+
 }
