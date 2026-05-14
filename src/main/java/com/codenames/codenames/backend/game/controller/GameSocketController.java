@@ -79,7 +79,7 @@ public class GameSocketController {
     gameSessions.put(message.getLobbyCode(), gameManager);
 
     messagingTemplate.convertAndSend(
-        GAME_TOPIC_PREFIX + message.getLobbyCode(), gameManager.getCardList());
+        GAME_TOPIC_PREFIX + message.getLobbyCode(), mapGameState(gameManager));
   }
 
   /**
@@ -101,7 +101,7 @@ public class GameSocketController {
     gameManager.flipCard(message.getPosition(), message.getCurrentTurn());
 
     messagingTemplate.convertAndSend(
-        GAME_TOPIC_PREFIX + message.getLobbyCode(), gameManager.getCardList());
+        GAME_TOPIC_PREFIX + message.getLobbyCode(), mapGameState(gameManager));
   }
 
   /**
@@ -124,6 +124,6 @@ public class GameSocketController {
 
     gameManager.submitClue(clue);
 
-    messagingTemplate.convertAndSend(GAME_TOPIC_PREFIX + message.getLobbyCode(), gameManager);
+    messagingTemplate.convertAndSend(GAME_TOPIC_PREFIX + message.getLobbyCode(), mapGameState(gameManager));
   }
 }
