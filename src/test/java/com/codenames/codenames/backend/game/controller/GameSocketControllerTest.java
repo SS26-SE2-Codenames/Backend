@@ -87,7 +87,7 @@ class GameSocketControllerTest {
 
     revealMessage.setLobbyCode("ABCDE");
     revealMessage.setPosition(0);
-    revealMessage.setCurrentTurn(Color.RED);
+    revealMessage.setCurrentTurn(Team.RED);
 
     controller.revealCard(revealMessage);
 
