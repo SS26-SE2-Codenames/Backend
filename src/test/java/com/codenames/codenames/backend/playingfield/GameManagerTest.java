@@ -58,8 +58,7 @@ class GameManagerTest {
   }
 
   // Helper method for testing permutation of getWinner()
-  private GameManager helperMethodGenerateFullCardList(
-      Color cardColor, Team startingTeam) {
+  private GameManager helperMethodGenerateFullCardList(Color cardColor, Team startingTeam) {
     List<Card> cardList = new ArrayList<>();
     for (int i = 0; i < TOTAL_CARDS; i++) {
       cardList.add(new Card("Test" + i, cardColor));
@@ -69,6 +68,12 @@ class GameManagerTest {
         new GameManager(startingTeam, mockCardGenerator, mockClueValidationService);
     helperMethodSubmitClue(fullListGameManager, STARTING_TEAM_CARDS, startingTeam);
     return fullListGameManager;
+  }
+
+  private void helperMethodAdvanceTurns(int advanceAmount) {
+    for (int i = 0; i < advanceAmount; i++) {
+      gameManager.advanceTurn();
+    }
   }
 
   @Test
@@ -112,7 +117,7 @@ class GameManagerTest {
   void testGetWinner_redStartsRedWins() {
     gameManager = helperMethodGenerateFullCardList(redColor, redTeam);
 
-    gameManager.advanceTurn();
+    helperMethodAdvanceTurns(1);
     for (int i = 0; i < STARTING_TEAM_CARDS; i++) {
       gameManager.flipCard(i, redTeam);
     }
@@ -123,10 +128,9 @@ class GameManagerTest {
   void testGetWinner_redStartsBlueWins() {
     gameManager = helperMethodGenerateFullCardList(blueColor, redTeam);
 
-    gameManager.advanceTurn(); // red operative
-    gameManager.advanceTurn(); // blue spymaster
+    helperMethodAdvanceTurns(2); // blue spymaster
     helperMethodSubmitClue(gameManager, SECOND_TEAM_CARDS, blueTeam);
-    gameManager.advanceTurn(); // blue operative
+    helperMethodAdvanceTurns(1); // blue operative
 
     for (int i = 0; i < SECOND_TEAM_CARDS; i++) {
       gameManager.flipCard(i, blueTeam);
@@ -137,10 +141,9 @@ class GameManagerTest {
   @Test
   void testGetWinner_blueStartsRedWins() {
     gameManager = helperMethodGenerateFullCardList(redColor, blueTeam);
-    gameManager.advanceTurn(); // blue operative
-    gameManager.advanceTurn(); // red spymaster
+    helperMethodAdvanceTurns(2); // red spymaster
     helperMethodSubmitClue(gameManager, 8, redTeam);
-    gameManager.advanceTurn(); // red operative
+    helperMethodAdvanceTurns(1); // red operative
 
     for (int i = 0; i < SECOND_TEAM_CARDS; i++) {
       gameManager.flipCard(i, redTeam);
@@ -152,7 +155,7 @@ class GameManagerTest {
   void testGetWinner_blueStartsBlueWins() {
     gameManager = helperMethodGenerateFullCardList(blueColor, blueTeam);
 
-    gameManager.advanceTurn();
+    helperMethodAdvanceTurns(1);
     for (int i = 0; i < STARTING_TEAM_CARDS; i++) {
       gameManager.flipCard(i, blueTeam);
     }
@@ -164,10 +167,9 @@ class GameManagerTest {
     mockCardGeneration(List.of(new Card("Test", Color.BLACK)));
     gameManager = new GameManager(blueTeam, mockCardGenerator, mockClueValidationService);
     helperMethodSubmitClue(gameManager, 1, blueTeam);
-    gameManager.advanceTurn(); // blue operative
-    gameManager.advanceTurn(); // red spymaster
+    helperMethodAdvanceTurns(2); // red spymaster
     helperMethodSubmitClue(gameManager, 1, redTeam);
-    gameManager.advanceTurn(); // red operative
+    helperMethodAdvanceTurns(1); // red operative
 
     gameManager.flipCard(0, redTeam);
     assertEquals(blueTeam, gameManager.getWinner());
@@ -177,10 +179,9 @@ class GameManagerTest {
   void testGetWinner_blueFoundBlackCardFound() {
     mockCardGeneration(List.of(new Card("Test", Color.BLACK)));
     gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
-    gameManager.advanceTurn();
-    gameManager.advanceTurn();
+    helperMethodAdvanceTurns(2); // blue spymaster
     helperMethodSubmitClue(gameManager, 1, blueTeam);
-    gameManager.advanceTurn();
+    helperMethodAdvanceTurns(1); // blue operative
     gameManager.flipCard(0, blueTeam);
     assertEquals(redTeam, gameManager.getWinner());
   }
@@ -190,7 +191,7 @@ class GameManagerTest {
     mockCardGeneration(List.of(new Card("Test", Color.WHITE)));
     gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
     helperMethodSubmitClue(gameManager, 1, redTeam);
-    gameManager.advanceTurn();
+    helperMethodAdvanceTurns(1);
     gameManager.flipCard(0, redTeam);
     assertNull(gameManager.getWinner());
   }
@@ -198,7 +199,7 @@ class GameManagerTest {
   @Test
   void testFlipCard_cardAlreadyFlipped() {
     helperMethodSubmitClue(gameManager, 1, redTeam);
-    gameManager.advanceTurn();
+    helperMethodAdvanceTurns(1);
     gameManager.flipCard(0, redTeam);
     assertThrows(IllegalStateException.class, () -> gameManager.flipCard(0, redTeam));
   }
@@ -208,7 +209,7 @@ class GameManagerTest {
     mockCardGeneration(List.of(new Card("Test", Color.BLACK)));
     gameManager = new GameManager(blueTeam, mockCardGenerator, mockClueValidationService);
     helperMethodSubmitClue(gameManager, 1, blueTeam);
-    gameManager.advanceTurn(); // red operative
+    helperMethodAdvanceTurns(1); // red operative
     gameManager.flipCard(0, blueTeam);
     assertThrows(IllegalStateException.class, () -> gameManager.flipCard(0, blueTeam));
   }
@@ -237,7 +238,7 @@ class GameManagerTest {
     mockCardGeneration(List.of(new Card("Test", redColor), new Card("Test2", redColor)));
     gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
     helperMethodSubmitClue(gameManager, 0, redTeam);
-    gameManager.advanceTurn();
+    helperMethodAdvanceTurns(1);
     gameManager.flipCard(0, redTeam);
     assertThrows(IllegalStateException.class, () -> gameManager.flipCard(1, redTeam));
   }
@@ -280,47 +281,44 @@ class GameManagerTest {
 
   @Test
   void testAdvanceTurn_spymasterToOperative() {
-    gameManager.advanceTurn();
+    helperMethodAdvanceTurns(1);
     assertEquals(Role.OPERATIVE, gameManager.getCurrentPhase());
   }
 
   @Test
   void testAdvanceTurn_spymasterToOperative_sameTeam() {
-    gameManager.advanceTurn();
+    helperMethodAdvanceTurns(1);
     assertEquals(redTeam, gameManager.getCurrentTurn());
   }
 
   @Test
   void testAdvanceTurnTwice_operativeToSpymaster() {
-    gameManager.advanceTurn();
-    gameManager.advanceTurn();
+    helperMethodAdvanceTurns(2);
     assertEquals(Role.SPYMASTER, gameManager.getCurrentPhase());
   }
 
   @Test
   void testAdvanceTurnTwice_redTeamToBlueTeam() {
-    gameManager.advanceTurn();
-    gameManager.advanceTurn();
+    helperMethodAdvanceTurns(2);
     assertEquals(blueTeam, gameManager.getCurrentTurn());
   }
 
   @Test
   void testAdvanceTurnTwice_wipeClue() {
-    gameManager.advanceTurn();
-    gameManager.advanceTurn();
+    helperMethodAdvanceTurns(2);
     assertNull(gameManager.getCurrentClue());
   }
 
   @Test
   void testPassTurn_correctTeam() {
-    gameManager.advanceTurn();
+    helperMethodAdvanceTurns(1);
     gameManager.passTurn(redTeam);
     assertEquals(blueTeam, gameManager.getCurrentTurn());
   }
 
   @Test
   void testPassTurn_correctPhase() {
-    gameManager.advanceTurn();
+    helperMethodAdvanceTurns(1);
     gameManager.passTurn(redTeam);
     assertEquals(Role.SPYMASTER, gameManager.getCurrentPhase());
   }
