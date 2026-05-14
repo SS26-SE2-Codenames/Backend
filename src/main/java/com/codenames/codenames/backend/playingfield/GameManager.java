@@ -24,7 +24,7 @@ public class GameManager {
   private final Board board;
   @Getter private int currentRedFound = 0;
   @Getter private int currentBlueFound = 0;
-  private Color winner;
+  private Team winner;
 
   private final ClueValidationService clueValidationService;
   @Getter private Clue currentClue;
@@ -79,7 +79,7 @@ public class GameManager {
    * @param cardColor the color of the card
    * @param currentTurn the current team's turn
    */
-  private void updateScore(Color cardColor, Color currentTurn) {
+  private void updateScore(Color cardColor, Team currentTurn) {
     switch (cardColor) {
       case RED:
         currentRedFound++;
@@ -88,10 +88,10 @@ public class GameManager {
         currentBlueFound++;
         break;
       case BLACK:
-        if (currentTurn == Color.RED) {
-          this.winner = Color.BLUE;
+        if (currentTurn == Team.RED) {
+          this.winner = Team.BLUE;
         } else {
-          this.winner = Color.RED;
+          this.winner = Team.RED;
         }
         break;
       default:
@@ -104,15 +104,15 @@ public class GameManager {
    *
    * @return the winning color is returned or null if no team has won
    */
-  public Color getWinner() {
+  public Team getWinner() {
     if (this.winner != null) {
       return this.winner;
     }
     if (currentRedFound >= redCards) {
-      return Color.RED;
+      return Team.RED;
     }
     if (currentBlueFound >= blueCards) {
-      return Color.BLUE;
+      return Team.BLUE;
     }
     return null;
   }
@@ -124,7 +124,7 @@ public class GameManager {
    * @param currentTurn the team whose turn it currently is
    * @throws IllegalStateException if game over, card already flipped, no more guesses
    */
-  public void flipCard(int position, Color currentTurn) {
+  public void flipCard(int position, Team currentTurn) {
     if (getWinner() != null) {
       throw new IllegalStateException("Winner is already set");
     }

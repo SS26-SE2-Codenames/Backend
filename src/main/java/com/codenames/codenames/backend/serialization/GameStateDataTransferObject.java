@@ -1,5 +1,6 @@
 package com.codenames.codenames.backend.serialization;
 
+import com.codenames.codenames.backend.utility.Team;
 import java.util.List;
 
 /**
@@ -14,8 +15,8 @@ import java.util.List;
  * @param cardList the cards on the board
  */
 public record GameStateDataTransferObject(
-    String winner,
-    String currentTurn,
+    Team winner,
+    Team currentTurn,
     int currentRedFound,
     int currentBlueFound,
     String currentClue,
