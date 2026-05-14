@@ -1,6 +1,6 @@
 package com.codenames.codenames.backend.game.dto;
 
-import com.codenames.codenames.backend.utility.Color;
+import com.codenames.codenames.backend.utility.Team;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,5 +14,5 @@ import lombok.Setter;
 public class RevealCardMessage {
   private String lobbyCode;
   private int position;
-  private Color currentTurn;
+  private Team currentTurn;
 }
