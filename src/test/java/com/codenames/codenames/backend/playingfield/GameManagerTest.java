@@ -252,4 +252,16 @@ class GameManagerTest {
     assertEquals(Role.SPYMASTER, gameManager.getCurrentPhase());
   }
 
+  @Test
+  void testAdvanceTurn_spymasterToOperative() {
+    gameManager.advanceTurn();
+    assertEquals(Role.OPERATIVE, gameManager.getCurrentPhase());
+  }
+
+  @Test
+  void testAdvanceTurn_spymasterToOperative_sameTeam() {
+    gameManager.advanceTurn();
+    assertEquals(redTeam, gameManager.getCurrentTurn());
+  }
+
 }
