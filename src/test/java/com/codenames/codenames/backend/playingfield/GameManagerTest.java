@@ -14,6 +14,7 @@ import static org.mockito.Mockito.when;
 import com.codenames.codenames.backend.clue.Clue;
 import com.codenames.codenames.backend.clue.ClueValidationService;
 import com.codenames.codenames.backend.utility.Color;
+import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import java.util.ArrayList;
 import java.util.List;
@@ -234,7 +235,8 @@ class GameManagerTest {
   void testSubmitClue_invalidClue() {
     when(mockClueValidationService.validateWord(any(), anyString())).thenReturn(false);
     Clue invalidClue = new Clue("InvalidClue", 1);
-    assertThrows(IllegalArgumentException.class, () -> gameManager.submitClue((invalidClue), redTeam));
+    assertThrows(
+        IllegalArgumentException.class, () -> gameManager.submitClue((invalidClue), redTeam));
   }
 
   @Test
@@ -299,4 +301,19 @@ class GameManagerTest {
     assertEquals(Role.SPYMASTER, gameManager.getCurrentPhase());
   }
 
+  @Test
+  void testCheckCorrectTurn_throwsWhenWrongRole() {
+    assertThrows(IllegalStateException.class, () -> gameManager.flipCard(0, redTeam));
+  }
+
+  @Test
+  void testCheckCorrectTurn_throwsWhenWrongTeam() {
+    Clue clue = new Clue("Test", 1);
+    assertThrows(IllegalStateException.class, () -> gameManager.submitClue(clue, blueTeam));
+  }
+
+  @Test
+  void testPassTurn_throwsWhenSpymaster() {
+    assertThrows(IllegalStateException.class, () -> gameManager.passTurn(redTeam));
+  }
 }
