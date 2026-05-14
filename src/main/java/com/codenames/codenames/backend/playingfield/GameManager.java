@@ -86,9 +86,8 @@ public class GameManager {
    * Updates the score based on the color passed. If black card is found, opposing team wins.
    *
    * @param cardColor the color of the card
-   * @param currentTurn the current team's turn
    */
-  private void updateScore(Color cardColor, Team currentTurn) {
+  private void updateScore(Color cardColor) {
     switch (cardColor) {
       case RED:
         currentRedFound++;
@@ -97,7 +96,7 @@ public class GameManager {
         currentBlueFound++;
         break;
       case BLACK:
-        if (currentTurn == Team.RED) {
+        if (this.currentTurn == Team.RED) {
           this.winner = Team.BLUE;
         } else {
           this.winner = Team.RED;
