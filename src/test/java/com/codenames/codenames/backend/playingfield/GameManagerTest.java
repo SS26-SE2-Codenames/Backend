@@ -51,6 +51,24 @@ class GameManagerTest {
         .thenReturn(cardList);
   }
 
+  private void helperMethodSubmitClue(GameManager gameManager, int guessAmount, Team callingTeam) {
+    gameManager.submitClue(new Clue("Test", guessAmount), callingTeam);
+  }
+
+  // Helper method for testing permutation of getWinner()
+  private @NonNull GameManager helperMethodGenerateFullCardList(
+      Color cardColor, Team startingTeam) {
+    List<Card> cardList = new ArrayList<>();
+    for (int i = 0; i < 25; i++) {
+      cardList.add(new Card("Test" + i, cardColor));
+    }
+    mockCardGeneration(cardList);
+    GameManager fullListGameManager =
+        new GameManager(startingTeam, mockCardGenerator, mockClueValidationService);
+    helperMethodSubmitClue(fullListGameManager, 9, startingTeam);
+    return fullListGameManager;
+  }
+
   @Test
   void testConstructorRedStarts() {
     verify(mockCardGenerator, times(1))
@@ -86,24 +104,6 @@ class GameManagerTest {
   @Test
   void testGetWinner_null() {
     assertNull(gameManager.getWinner());
-  }
-
-  private void helperMethodSubmitClue(GameManager gameManager, int guessAmount) {
-    gameManager.submitClue(new Clue("Test", guessAmount));
-  }
-
-  // Helper method for testing permutation of getWinner()
-  private @NonNull GameManager helperMethodGenerateFullCardList(
-      Color cardColor, Team startingTeam) {
-    List<Card> cardList = new ArrayList<>();
-    for (int i = 0; i < 25; i++) {
-      cardList.add(new Card("Test" + i, cardColor));
-    }
-    mockCardGeneration(cardList);
-    GameManager fullListGameManager =
-        new GameManager(startingTeam, mockCardGenerator, mockClueValidationService);
-    helperMethodSubmitClue(fullListGameManager, 9);
-    return fullListGameManager;
   }
 
   @Test
@@ -150,7 +150,7 @@ class GameManagerTest {
   void testGetWinner_redFoundBlackCardFound() {
     mockCardGeneration(List.of(new Card("Test", Color.BLACK)));
     gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
-    helperMethodSubmitClue(gameManager, 1);
+    helperMethodSubmitClue(gameManager, 1, blueTeam);
     gameManager.flipCard(0, redTeam);
     assertEquals(blueTeam, gameManager.getWinner());
   }
@@ -159,7 +159,7 @@ class GameManagerTest {
   void testGetWinner_blueFoundBlackCardFound() {
     mockCardGeneration(List.of(new Card("Test", Color.BLACK)));
     gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
-    helperMethodSubmitClue(gameManager, 1);
+    helperMethodSubmitClue(gameManager, 1, blueTeam);
     gameManager.flipCard(0, blueTeam);
     assertEquals(redTeam, gameManager.getWinner());
   }
@@ -168,14 +168,14 @@ class GameManagerTest {
   void testFlipWhiteCard() {
     mockCardGeneration(List.of(new Card("Test", Color.WHITE)));
     gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
-    helperMethodSubmitClue(gameManager, 1);
-    gameManager.flipCard(0, blueTeam);
+    helperMethodSubmitClue(gameManager, 1, redTeam);
+    gameManager.flipCard(0, redTeam);
     assertNull(gameManager.getWinner());
   }
 
   @Test
   void testFlipCard_cardAlreadyFlipped() {
-    helperMethodSubmitClue(gameManager, 1);
+    helperMethodSubmitClue(gameManager, 1, redTeam);
     gameManager.flipCard(0, redTeam);
     assertThrows(IllegalStateException.class, () -> gameManager.flipCard(0, redTeam));
   }
@@ -184,7 +184,7 @@ class GameManagerTest {
   void testFlipCard_winnerAlreadyDetermined() {
     mockCardGeneration(List.of(new Card("Test", Color.BLACK)));
     gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
-    helperMethodSubmitClue(gameManager, 1);
+    helperMethodSubmitClue(gameManager, 1, blueTeam);
     gameManager.flipCard(0, blueTeam);
     assertThrows(IllegalStateException.class, () -> gameManager.flipCard(0, redTeam));
   }
@@ -204,7 +204,7 @@ class GameManagerTest {
   @Test
   void testSubmitClue() {
     Clue validClue = new Clue("Test", 2);
-    gameManager.submitClue(validClue);
+    gameManager.submitClue(validClue, redTeam);
     assertEquals(validClue, gameManager.getCurrentClue());
     assertEquals(3, gameManager.getRemainingGuesses());
   }
@@ -213,20 +213,20 @@ class GameManagerTest {
   void testOutOfGuesses() {
     mockCardGeneration(List.of(new Card("Test", Color.RED), new Card("Test2", Color.RED)));
     gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
-    helperMethodSubmitClue(gameManager, 0);
+    helperMethodSubmitClue(gameManager, 0, redTeam);
     gameManager.flipCard(0, redTeam);
     assertThrows(IllegalStateException.class, () -> gameManager.flipCard(1, redTeam));
   }
 
   @Test
   void testGetCurrentClueWord() {
-    helperMethodSubmitClue(gameManager, 1);
+    helperMethodSubmitClue(gameManager, 1, redTeam);
     assertEquals("Test", gameManager.getCurrentClueWord());
   }
 
   @Test
   void testGetRemainingGuesses() {
-    helperMethodSubmitClue(gameManager, 1);
+    helperMethodSubmitClue(gameManager, 1, redTeam);
     assertEquals(2, gameManager.getRemainingGuesses());
   }
 
@@ -234,7 +234,7 @@ class GameManagerTest {
   void testSubmitClue_invalidClue() {
     when(mockClueValidationService.validateWord(any(), anyString())).thenReturn(false);
     Clue invalidClue = new Clue("InvalidClue", 1);
-    assertThrows(IllegalArgumentException.class, () -> gameManager.submitClue((invalidClue)));
+    assertThrows(IllegalArgumentException.class, () -> gameManager.submitClue((invalidClue), redTeam));
   }
 
   @Test
