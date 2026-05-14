@@ -17,6 +17,7 @@ class GameServiceTest {
   private GameManagerFactory mockGameManagerFactory;
 
   private final String lobbyCode = "ABCDE";
+  private final Team redTeam = Team.RED;
 
   @BeforeEach
   void setup() {
@@ -24,50 +25,51 @@ class GameServiceTest {
     mockGameManager = mock(GameManager.class);
 
     gameService = new GameService(mockGameManagerFactory);
-    when(mockGameManagerFactory.create(Team.RED)).thenReturn(mockGameManager);
+    when(mockGameManagerFactory.create(redTeam)).thenReturn(mockGameManager);
 
-    gameService.createGameManager(lobbyCode, Team.RED);
+    gameService.createGameManager(lobbyCode, redTeam);
   }
 
   @Test
   void testCreateGameManager_oneInvocation() {
-    verify(mockGameManagerFactory, times(1)).create(Team.RED);
+    verify(mockGameManagerFactory, times(1)).create(redTeam);
   }
 
   @Test
   void testCreateGameManager_twoInvocations_noDuplicates() {
-    gameService.createGameManager(lobbyCode, Team.RED);
-    gameService.createGameManager(lobbyCode, Team.RED);
-    verify(mockGameManagerFactory, times(1)).create(Team.RED);
+    gameService.createGameManager(lobbyCode, redTeam);
+    gameService.createGameManager(lobbyCode, redTeam);
+    verify(mockGameManagerFactory, times(1)).create(redTeam);
   }
 
   @Test
   void testRemoveGame() {
     gameService.removeGame(lobbyCode);
 
-    assertThrows(IllegalStateException.class, () -> gameService.flipCard(lobbyCode, 0, Team.RED));
+    assertThrows(IllegalStateException.class, () -> gameService.flipCard(lobbyCode, 0, redTeam));
   }
 
   @Test
   void testSubmitClue() {
     Clue mockClue = mock(Clue.class);
 
-    gameService.submitClue(lobbyCode, mockClue, Team.RED);
-    verify(mockGameManager, times(1)).submitClue(mockClue, Team.RED);
+    gameService.submitClue(lobbyCode, mockClue, redTeam);
+    verify(mockGameManager, times(1)).submitClue(mockClue, redTeam);
     verify(mockGameManager, times(1)).advanceTurn();
   }
 
   @Test
   void testFlipCard() {
-    gameService.flipCard(lobbyCode, 0, Team.RED);
+    int firstCard = 0;
+    gameService.flipCard(lobbyCode, firstCard, redTeam);
 
-    verify(mockGameManager, times(1)).flipCard(0, Team.RED);
+    verify(mockGameManager, times(1)).flipCard(firstCard, redTeam);
   }
 
   @Test
   void testPassTurn() {
-    gameService.passTurn(lobbyCode, Team.RED);
+    gameService.passTurn(lobbyCode, redTeam);
 
-    verify(mockGameManager, times(1)).passTurn(Team.RED);
+    verify(mockGameManager, times(1)).passTurn(redTeam);
   }
 }
