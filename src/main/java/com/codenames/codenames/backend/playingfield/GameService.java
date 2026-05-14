@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class GameService {
 
-  public void submitClue(GameManager gm, Clue clue, Team callingTeam) {
+  private final Map<String, GameManager> games = new ConcurrentHashMap<>();
   private final CardGenerator cardGenerator;
   private final ClueValidationService clueValidationService;
 
@@ -34,15 +34,20 @@ public class GameService {
     }
     return games.get(lobbyCode);
   }
+
+  public void submitClue(String lobbyCode, Clue clue, Team callingTeam) {
+    GameManager gm = getGame(lobbyCode);
     gm.submitClue(clue, callingTeam);
     gm.advanceTurn();
   }
 
-  public void flipCard(GameManager gm, int position, Team callingTeam) {
+  public void flipCard(String lobbyCode, int position, Team callingTeam) {
+    GameManager gm = getGame(lobbyCode);
     gm.flipCard(position, callingTeam);
   }
 
-  public void passTurn(GameManager gm, Team callingTeam){
+  public void passTurn(String lobbyCode, Team callingTeam) {
+    GameManager gm = getGame(lobbyCode);
     gm.passTurn(callingTeam);
   }
 }
