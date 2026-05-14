@@ -44,13 +44,21 @@ public class LobbyService {
     if (lobbyCode == null || lobbyCode.isBlank()) {
       return null;
     }
-
     Lobby lobby = new Lobby(lobbyCode, username);
     lobbyList.put(lobbyCode, lobby);
+    addGameManagerForLobby(lobby, lobbyCode);
+    return lobbyCode;
+  }
 
+  /**
+   * Helper method to add the GameManager once a lobby is created.
+   *
+   * @param lobby the lobby object to determine the starting team
+   * @param lobbyCode the ID for the lobby which the GameManager is responsible for
+   */
+  private void addGameManagerForLobby(Lobby lobby, String lobbyCode) {
     Team start = lobby.decideStartingTeam();
     gameService.createGameManager(lobbyCode, start);
-    return lobbyCode;
   }
 
   /**
