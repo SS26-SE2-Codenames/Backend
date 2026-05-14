@@ -9,10 +9,9 @@ import java.util.List;
 import lombok.Getter;
 
 /**
- * Manages state and initialization of a game.
- *
- * <p>This class handles the setup of the board and interaction, by providing methods to interact
- * with the game's state.
+ * This class handles the setup of the board and interaction, by providing methods to interact with
+ * the game's state. Additionally, it keeps track of the points, turn and handles the early
+ * determining the winner
  */
 public class GameManager {
 
@@ -193,7 +192,8 @@ public class GameManager {
     return currentClue.word();
   }
 
-  public void nextTeamColor() {
+  /** Changes the color of what team is at turn. */
+  private void nextTeamColor() {
     if (currentTurn == Team.RED) {
       currentTurn = Team.BLUE;
     } else {
@@ -201,8 +201,13 @@ public class GameManager {
     }
   }
 
-  // we do not change the team color when we advance after being spymaster as the same team
-  // operatives are now at turn, only after operatives are done we clear clue and change team color.
+  /**
+   * Is called by relevant turn based methods. Class holds the current Team and Phase, when we call
+   * this method, based on the current turn, we swap to the opposite turn/ phase. Since after
+   * spymaster is done, the same team color is still at turn, and we can simply switch to the
+   * operative phase. If we are Operative, we have to additionally switch the next team color and
+   * clear the clue from our spymaster.
+   */
   public void advanceTurn() {
     if (currentPhase == Role.SPYMASTER) {
       currentPhase = Role.OPERATIVE;
@@ -213,11 +218,22 @@ public class GameManager {
     }
   }
 
-  public void passTurn(Team callingTeam){
+  /**
+   * Voluntarily pass turn early before all guesses are used up.
+   *
+   * @param callingTeam the current team calling the method.
+   */
+  public void passTurn(Team callingTeam) {
     checkCorrectTurn(callingTeam, Role.OPERATIVE);
     advanceTurn();
   }
 
+  /***
+   * Helper method to check if the current team calling a method is allowed to do so.
+   *
+   * @param team the team of who is calling the method
+   * @param role the role of who is calling the method
+   */
   private void checkCorrectTurn(Team team, Role role) {
     if (team != currentTurn || role != currentPhase) {
       throw new IllegalStateException("Not your turn/ role");
