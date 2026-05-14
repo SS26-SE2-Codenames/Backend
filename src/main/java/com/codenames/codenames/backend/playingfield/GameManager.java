@@ -39,6 +39,7 @@ public class GameManager {
    *
    * @param startingTeam the team that goes first will get an extra card
    * @param cardGenerator the utility used to generate the cards for the game
+   * @param clueValidationService the utility used to validate clues
    * @throws IllegalArgumentException if team is null, white or black
    */
   public GameManager(
@@ -129,6 +130,7 @@ public class GameManager {
    * Changes the guessed state of a card and updates the score if necessary.
    *
    * @param position the position of the card that is selected by the player
+   * @param callingTeam the team that called this method
    * @throws IllegalStateException if game over, card already flipped, no more guesses
    */
   public void flipCard(int position, Team callingTeam) {
@@ -163,6 +165,7 @@ public class GameManager {
    * Submits a clue and updates remaining guesses.
    *
    * @param clue the clue object containing word and guess amount
+   * @param callingTeam the team that called this method
    * @throws IllegalArgumentException if clue is: null, empty, spaces, or word is on the board
    */
   public void submitClue(Clue clue, Team callingTeam) {
