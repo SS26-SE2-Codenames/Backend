@@ -65,7 +65,7 @@ public class GameService {
   }
 
   /**
-   * The exposed clue submission method from GM that is accessed by frontend via websockets
+   * The exposed clue submission method from GM that is accessed by frontend via websockets.
    *
    * @param lobbyCode the lobbyID that serves as a key to identify which GM to access
    * @param clue the clue object that needs to be validated and added to GM
@@ -78,7 +78,7 @@ public class GameService {
   }
 
   /**
-   * The exposed card flipping method from GM that is accessed by frontend via websockets
+   * The exposed card flipping method from GM that is accessed by frontend via websockets.
    *
    * @param lobbyCode the lobbyID that serves as a key to identify which GM to access
    * @param position the position of which card is supposed to flipped on the board
@@ -90,7 +90,7 @@ public class GameService {
   }
 
   /**
-   * The exposed early turn ending method from GM that is accessed by frontend via websockets
+   * The exposed early turn ending method from GM that is accessed by frontend via websockets.
    *
    * @param lobbyCode the lobbyID that serves as a key to identify which GM to access
    * @param callingTeam the team who called to ensure the calling team is at turn
