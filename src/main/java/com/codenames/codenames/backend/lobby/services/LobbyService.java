@@ -1,6 +1,7 @@
 package com.codenames.codenames.backend.lobby.services;
 
 import com.codenames.codenames.backend.lobby.Lobby;
+import com.codenames.codenames.backend.playingfield.GameService;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import com.codenames.codenames.backend.websocket.Player;
@@ -20,14 +21,16 @@ public class LobbyService {
 
   private final Map<String, Lobby> lobbyList = new ConcurrentHashMap<>();
   private final LobbyCodeGenerator generator;
+  private final GameService gameService;
 
   /**
    * Creates a new {@code LobbyService}.
    *
    * @param generator the lobby code generator used to create unique lobby codes
    */
-  public LobbyService(LobbyCodeGenerator generator) {
+  public LobbyService(LobbyCodeGenerator generator, GameService gameService) {
     this.generator = generator;
+    this.gameService = gameService;
   }
 
   /**
@@ -44,6 +47,9 @@ public class LobbyService {
 
     Lobby lobby = new Lobby(lobbyCode, username);
     lobbyList.put(lobbyCode, lobby);
+
+    Team start = lobby.decideStartingTeam();
+    gameService.createGameManager(lobbyCode, start);
     return lobbyCode;
   }
 
