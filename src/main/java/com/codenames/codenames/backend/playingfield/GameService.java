@@ -1,7 +1,6 @@
 package com.codenames.codenames.backend.playingfield;
 
 import com.codenames.codenames.backend.clue.Clue;
-import com.codenames.codenames.backend.clue.ClueValidationService;
 import com.codenames.codenames.backend.utility.Team;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
