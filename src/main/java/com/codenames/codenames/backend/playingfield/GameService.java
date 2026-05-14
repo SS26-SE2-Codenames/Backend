@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Service;
 
 /**
- * Service class for the game. The class handles the creation and storing of a GameManager for each
+ * Service class for the game. The class stores an instance of GameManager for each
  * lobby. This also exposes the methods of the GameManager, so that the websocket controllers can
  * have message mappings to allow frontend to interact with the backend.
  */
@@ -16,18 +16,15 @@ import org.springframework.stereotype.Service;
 public class GameService {
 
   private final Map<String, GameManager> games = new ConcurrentHashMap<>();
-  private final CardGenerator cardGenerator;
-  private final ClueValidationService clueValidationService;
+  private final GameManagerFactory gameManagerFactory;
 
   /**
    * Constructor for a GameService object.
    *
-   * @param cardGenerator the card generator required for creating the cards in the manager class
-   * @param clueValidationService the service required for validating clues in the manager class
+   * @param gameManagerFactory the factory responsible for generating GameManagers
    */
-  public GameService(CardGenerator cardGenerator, ClueValidationService clueValidationService) {
-    this.cardGenerator = cardGenerator;
-    this.clueValidationService = clueValidationService;
+  public GameService(GameManagerFactory gameManagerFactory) {
+    this.gameManagerFactory = gameManagerFactory;
   }
 
   /**
@@ -39,7 +36,7 @@ public class GameService {
    */
   public void createGameManager(String lobbyCode, Team startingTeam) {
     games.computeIfAbsent(
-        lobbyCode, game -> new GameManager(startingTeam, cardGenerator, clueValidationService));
+        lobbyCode, key -> gameManagerFactory.create(startingTeam));
   }
 
   /**
