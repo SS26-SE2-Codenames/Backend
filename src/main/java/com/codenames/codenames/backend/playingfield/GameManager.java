@@ -184,11 +184,11 @@ public class GameManager {
     return currentClue.word();
   }
 
-  public Team nextTeamColor(Team current) {
-    if (current == Team.RED) {
-      return Team.BLUE;
+  public void nextTeamColor() {
+    if (currentTurn == Team.RED) {
+      currentTurn = Team.BLUE;
     } else {
-      return Team.RED;
+      currentTurn = Team.RED;
     }
   }
 
@@ -199,7 +199,7 @@ public class GameManager {
       currentPhase = Role.OPERATIVE;
     } else {
       currentPhase = Role.SPYMASTER;
-      currentTurn = nextTeamColor(currentTurn);
+      nextTeamColor();
       clearClue();
     }
   }
