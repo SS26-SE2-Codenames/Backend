@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.codenames.codenames.backend.playingfield.GameService;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import com.codenames.codenames.backend.websocket.Player;
@@ -25,11 +26,13 @@ class LobbyServiceTest {
 
   private LobbyService lobbyService;
   private LobbyCodeGenerator generator;
+  private GameService gameService;
 
   @BeforeEach
   void setup() {
     generator = mock(LobbyCodeGenerator.class);
-    lobbyService = new LobbyService(generator);
+    gameService = mock(GameService.class);
+    lobbyService = new LobbyService(generator, gameService);
     when(generator.generateLobbyCode()).thenReturn("ABCDE");
   }
 
