@@ -204,6 +204,11 @@ public class GameManager {
     }
   }
 
+  public void passTurn(Team callingTeam){
+    checkCorrectTurn(callingTeam, Role.OPERATIVE);
+    advanceTurn();
+  }
+
   private void checkCorrectTurn(Team team, Role role) {
     if (team != currentTurn || role != currentPhase) {
       throw new IllegalStateException("Not your turn/ role");
