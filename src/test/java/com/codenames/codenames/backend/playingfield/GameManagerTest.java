@@ -241,4 +241,15 @@ class GameManagerTest {
   void testGetCurrentClueWordNullUponInitialization() {
     assertNull(gameManager.getCurrentClueWord());
   }
+
+  @Test
+  void testCorrectStart_redTeam() {
+    assertEquals(redTeam, gameManager.getCurrentTurn());
+  }
+
+  @Test
+  void testCorrectStart_spymaster() {
+    assertEquals(Role.SPYMASTER, gameManager.getCurrentPhase());
+  }
+
 }
