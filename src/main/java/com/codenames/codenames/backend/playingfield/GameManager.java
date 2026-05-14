@@ -10,8 +10,9 @@ import lombok.Getter;
 
 /**
  * This class handles the setup of the board and interaction, by providing methods to interact with
- * the game's state. Additionally, it keeps track of the points, turn and handles the early
- * determining the winner
+ * the game's state.
+ *
+ * <p>Additionally, it keeps track of the points, turn and handles the early determining the winner
  */
 public class GameManager {
 
@@ -228,7 +229,7 @@ public class GameManager {
     advanceTurn();
   }
 
-  /***
+  /**
    * Helper method to check if the current team calling a method is allowed to do so.
    *
    * @param team the team of who is calling the method
