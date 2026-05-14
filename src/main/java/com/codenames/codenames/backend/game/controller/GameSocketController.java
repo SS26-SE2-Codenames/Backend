@@ -3,6 +3,7 @@ package com.codenames.codenames.backend.game.controller;
 import com.codenames.codenames.backend.clue.Clue;
 import com.codenames.codenames.backend.clue.ClueValidationService;
 import com.codenames.codenames.backend.game.dto.ClueMessage;
+import com.codenames.codenames.backend.game.dto.GameStateDto;
 import com.codenames.codenames.backend.game.dto.RevealCardMessage;
 import com.codenames.codenames.backend.game.dto.StartGameMessage;
 import com.codenames.codenames.backend.lobby.services.LobbyService;
@@ -32,6 +33,15 @@ public class GameSocketController {
   private final Map<String, GameManager> gameSessions = new ConcurrentHashMap<>();
 
   private static final String GAME_TOPIC_PREFIX = "/topic/game/";
+
+  private GameStateDto mapGameState(GameManager gameManager) {
+
+    return new GameStateDto(
+        gameManager.getCardList(),
+        gameManager.getCurrentClue(),
+        gameManager.getRemainingGuesses(),
+        gameManager.getWinner());
+  }
 
   /**
    * Creates a new {@code GameSocketController}.
