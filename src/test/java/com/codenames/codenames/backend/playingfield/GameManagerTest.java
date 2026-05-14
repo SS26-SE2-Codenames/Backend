@@ -264,4 +264,25 @@ class GameManagerTest {
     assertEquals(redTeam, gameManager.getCurrentTurn());
   }
 
+  @Test
+  void testAdvanceTurnTwice_operativeToSpymaster() {
+    gameManager.advanceTurn();
+    gameManager.advanceTurn();
+    assertEquals(Role.SPYMASTER, gameManager.getCurrentPhase());
+  }
+
+  @Test
+  void testAdvanceTurnTwice_redTeamToBlueTeam() {
+    gameManager.advanceTurn();
+    gameManager.advanceTurn();
+    assertEquals(blueTeam, gameManager.getCurrentTurn());
+  }
+
+  @Test
+  void testAdvanceTurnTwice_wipeClue() {
+    gameManager.advanceTurn();
+    gameManager.advanceTurn();
+    assertNull(gameManager.getCurrentClue());
+  }
+
 }
