@@ -18,7 +18,6 @@ import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import java.util.ArrayList;
 import java.util.List;
-import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -57,7 +56,7 @@ class GameManagerTest {
   }
 
   // Helper method for testing permutation of getWinner()
-  private @NonNull GameManager helperMethodGenerateFullCardList(
+  private GameManager helperMethodGenerateFullCardList(
       Color cardColor, Team startingTeam) {
     List<Card> cardList = new ArrayList<>();
     for (int i = 0; i < 25; i++) {
@@ -111,6 +110,7 @@ class GameManagerTest {
   void testGetWinner_redStartsRedWins() {
     gameManager = helperMethodGenerateFullCardList(Color.RED, redTeam);
 
+    gameManager.advanceTurn();
     for (int i = 0; i < 9; i++) {
       gameManager.flipCard(i, redTeam);
     }
@@ -121,6 +121,11 @@ class GameManagerTest {
   void testGetWinner_redStartsBlueWins() {
     gameManager = helperMethodGenerateFullCardList(Color.BLUE, redTeam);
 
+    gameManager.advanceTurn(); // red operative
+    gameManager.advanceTurn(); // blue spymaster
+    helperMethodSubmitClue(gameManager, 8, blueTeam);
+    gameManager.advanceTurn(); // blue operative
+
     for (int i = 0; i < 8; i++) {
       gameManager.flipCard(i, blueTeam);
     }
@@ -130,6 +135,10 @@ class GameManagerTest {
   @Test
   void testGetWinner_blueStartsRedWins() {
     gameManager = helperMethodGenerateFullCardList(Color.RED, blueTeam);
+    gameManager.advanceTurn(); // blue operative
+    gameManager.advanceTurn(); // red spymaster
+    helperMethodSubmitClue(gameManager, 8, redTeam);
+    gameManager.advanceTurn(); // red operative
 
     for (int i = 0; i < 8; i++) {
       gameManager.flipCard(i, redTeam);
@@ -141,6 +150,7 @@ class GameManagerTest {
   void testGetWinner_blueStartsBlueWins() {
     gameManager = helperMethodGenerateFullCardList(Color.BLUE, blueTeam);
 
+    gameManager.advanceTurn();
     for (int i = 0; i < 9; i++) {
       gameManager.flipCard(i, blueTeam);
     }
@@ -150,8 +160,13 @@ class GameManagerTest {
   @Test
   void testGetWinner_redFoundBlackCardFound() {
     mockCardGeneration(List.of(new Card("Test", Color.BLACK)));
-    gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
+    gameManager = new GameManager(blueTeam, mockCardGenerator, mockClueValidationService);
     helperMethodSubmitClue(gameManager, 1, blueTeam);
+    gameManager.advanceTurn(); // blue operative
+    gameManager.advanceTurn(); // red spymaster
+    helperMethodSubmitClue(gameManager, 1, redTeam);
+    gameManager.advanceTurn(); // red operative
+
     gameManager.flipCard(0, redTeam);
     assertEquals(blueTeam, gameManager.getWinner());
   }
@@ -160,7 +175,10 @@ class GameManagerTest {
   void testGetWinner_blueFoundBlackCardFound() {
     mockCardGeneration(List.of(new Card("Test", Color.BLACK)));
     gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
+    gameManager.advanceTurn();
+    gameManager.advanceTurn();
     helperMethodSubmitClue(gameManager, 1, blueTeam);
+    gameManager.advanceTurn();
     gameManager.flipCard(0, blueTeam);
     assertEquals(redTeam, gameManager.getWinner());
   }
@@ -170,6 +188,7 @@ class GameManagerTest {
     mockCardGeneration(List.of(new Card("Test", Color.WHITE)));
     gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
     helperMethodSubmitClue(gameManager, 1, redTeam);
+    gameManager.advanceTurn();
     gameManager.flipCard(0, redTeam);
     assertNull(gameManager.getWinner());
   }
@@ -177,6 +196,7 @@ class GameManagerTest {
   @Test
   void testFlipCard_cardAlreadyFlipped() {
     helperMethodSubmitClue(gameManager, 1, redTeam);
+    gameManager.advanceTurn();
     gameManager.flipCard(0, redTeam);
     assertThrows(IllegalStateException.class, () -> gameManager.flipCard(0, redTeam));
   }
@@ -184,10 +204,11 @@ class GameManagerTest {
   @Test
   void testFlipCard_winnerAlreadyDetermined() {
     mockCardGeneration(List.of(new Card("Test", Color.BLACK)));
-    gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
+    gameManager = new GameManager(blueTeam, mockCardGenerator, mockClueValidationService);
     helperMethodSubmitClue(gameManager, 1, blueTeam);
+    gameManager.advanceTurn(); // red operative
     gameManager.flipCard(0, blueTeam);
-    assertThrows(IllegalStateException.class, () -> gameManager.flipCard(0, redTeam));
+    assertThrows(IllegalStateException.class, () -> gameManager.flipCard(0, blueTeam));
   }
 
   @Test
@@ -215,6 +236,7 @@ class GameManagerTest {
     mockCardGeneration(List.of(new Card("Test", Color.RED), new Card("Test2", Color.RED)));
     gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
     helperMethodSubmitClue(gameManager, 0, redTeam);
+    gameManager.advanceTurn();
     gameManager.flipCard(0, redTeam);
     assertThrows(IllegalStateException.class, () -> gameManager.flipCard(1, redTeam));
   }
