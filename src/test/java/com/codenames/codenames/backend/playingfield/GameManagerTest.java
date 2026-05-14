@@ -30,6 +30,8 @@ class GameManagerTest {
   private static final int BLACK_CARDS = 1;
   private static final Team redTeam = Team.RED;
   private static final Team blueTeam = Team.BLUE;
+  private static final Color redColor = Color.RED;
+  private static final Color blueColor = Color.BLUE;
   private GameManager gameManager;
   private CardGenerator mockCardGenerator;
   private ClueValidationService mockClueValidationService;
@@ -40,7 +42,7 @@ class GameManagerTest {
   void setUp() {
     mockCardGenerator = mock(CardGenerator.class);
     mockClueValidationService = mock(ClueValidationService.class);
-    mockCardGeneration(List.of(new Card("Test", Color.RED)));
+    mockCardGeneration(List.of(new Card("Test", redColor)));
     gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
     when(mockClueValidationService.validateWord(any(), anyString())).thenReturn(true);
   }
@@ -59,13 +61,13 @@ class GameManagerTest {
   private GameManager helperMethodGenerateFullCardList(
       Color cardColor, Team startingTeam) {
     List<Card> cardList = new ArrayList<>();
-    for (int i = 0; i < 25; i++) {
+    for (int i = 0; i < TOTAL_CARDS; i++) {
       cardList.add(new Card("Test" + i, cardColor));
     }
     mockCardGeneration(cardList);
     GameManager fullListGameManager =
         new GameManager(startingTeam, mockCardGenerator, mockClueValidationService);
-    helperMethodSubmitClue(fullListGameManager, 9, startingTeam);
+    helperMethodSubmitClue(fullListGameManager, STARTING_TEAM_CARDS, startingTeam);
     return fullListGameManager;
   }
 
@@ -98,7 +100,7 @@ class GameManagerTest {
 
   @Test
   void testCheckColor() {
-    assertEquals(Color.RED, gameManager.checkColor(0));
+    assertEquals(redColor, gameManager.checkColor(0));
   }
 
   @Test
@@ -108,10 +110,10 @@ class GameManagerTest {
 
   @Test
   void testGetWinner_redStartsRedWins() {
-    gameManager = helperMethodGenerateFullCardList(Color.RED, redTeam);
+    gameManager = helperMethodGenerateFullCardList(redColor, redTeam);
 
     gameManager.advanceTurn();
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < STARTING_TEAM_CARDS; i++) {
       gameManager.flipCard(i, redTeam);
     }
     assertEquals(redTeam, gameManager.getWinner());
@@ -119,14 +121,14 @@ class GameManagerTest {
 
   @Test
   void testGetWinner_redStartsBlueWins() {
-    gameManager = helperMethodGenerateFullCardList(Color.BLUE, redTeam);
+    gameManager = helperMethodGenerateFullCardList(blueColor, redTeam);
 
     gameManager.advanceTurn(); // red operative
     gameManager.advanceTurn(); // blue spymaster
-    helperMethodSubmitClue(gameManager, 8, blueTeam);
+    helperMethodSubmitClue(gameManager, SECOND_TEAM_CARDS, blueTeam);
     gameManager.advanceTurn(); // blue operative
 
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < SECOND_TEAM_CARDS; i++) {
       gameManager.flipCard(i, blueTeam);
     }
     assertEquals(blueTeam, gameManager.getWinner());
@@ -134,13 +136,13 @@ class GameManagerTest {
 
   @Test
   void testGetWinner_blueStartsRedWins() {
-    gameManager = helperMethodGenerateFullCardList(Color.RED, blueTeam);
+    gameManager = helperMethodGenerateFullCardList(redColor, blueTeam);
     gameManager.advanceTurn(); // blue operative
     gameManager.advanceTurn(); // red spymaster
     helperMethodSubmitClue(gameManager, 8, redTeam);
     gameManager.advanceTurn(); // red operative
 
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < SECOND_TEAM_CARDS; i++) {
       gameManager.flipCard(i, redTeam);
     }
     assertEquals(redTeam, gameManager.getWinner());
@@ -148,10 +150,10 @@ class GameManagerTest {
 
   @Test
   void testGetWinner_blueStartsBlueWins() {
-    gameManager = helperMethodGenerateFullCardList(Color.BLUE, blueTeam);
+    gameManager = helperMethodGenerateFullCardList(blueColor, blueTeam);
 
     gameManager.advanceTurn();
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < STARTING_TEAM_CARDS; i++) {
       gameManager.flipCard(i, blueTeam);
     }
     assertEquals(blueTeam, gameManager.getWinner());
@@ -225,15 +227,14 @@ class GameManagerTest {
 
   @Test
   void testSubmitClue() {
-    Clue validClue = new Clue("Test", 2);
+    Clue validClue = new Clue("Test", 1);
     gameManager.submitClue(validClue, redTeam);
     assertEquals(validClue, gameManager.getCurrentClue());
-    assertEquals(3, gameManager.getRemainingGuesses());
   }
 
   @Test
   void testOutOfGuesses() {
-    mockCardGeneration(List.of(new Card("Test", Color.RED), new Card("Test2", Color.RED)));
+    mockCardGeneration(List.of(new Card("Test", redColor), new Card("Test2", redColor)));
     gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
     helperMethodSubmitClue(gameManager, 0, redTeam);
     gameManager.advanceTurn();
@@ -249,8 +250,9 @@ class GameManagerTest {
 
   @Test
   void testGetRemainingGuesses() {
-    helperMethodSubmitClue(gameManager, 1, redTeam);
-    assertEquals(2, gameManager.getRemainingGuesses());
+    int guessAmount = 2; // According to game rules, players have guessAmount + 1
+    helperMethodSubmitClue(gameManager, guessAmount, redTeam);
+    assertEquals(guessAmount + 1, gameManager.getRemainingGuesses());
   }
 
   @Test
