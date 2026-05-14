@@ -124,6 +124,7 @@ public class GameSocketController {
 
     gameManager.submitClue(clue);
 
-    messagingTemplate.convertAndSend(GAME_TOPIC_PREFIX + message.getLobbyCode(), mapGameState(gameManager));
+    messagingTemplate.convertAndSend(
+        GAME_TOPIC_PREFIX + message.getLobbyCode(), mapGameState(gameManager));
   }
 }
