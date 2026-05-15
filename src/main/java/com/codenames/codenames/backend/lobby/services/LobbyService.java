@@ -5,13 +5,13 @@ import com.codenames.codenames.backend.lobby.dto.PlayerDto;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import com.codenames.codenames.backend.websocket.Player;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import lombok.Getter;
-import org.springframework.stereotype.Service;
 
 /**
  * Service responsible for managing lobbies and player interactions.
@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
  * <p>Handles creation of lobbies, player joins/leaves, and retrieval of lobby data.
  * Ensures uniqueness of lobby codes and thread-safe access to lobby storage.
  */
+
+@Slf4j
 @Service
 public class LobbyService {
 
@@ -44,10 +46,12 @@ public class LobbyService {
   public String createLobby(String username) {
     String lobbyCode = generateLobbyCode();
     if (lobbyCode == null || lobbyCode.isBlank()) {
+      log.error("ERROR: there was an error when generating a lobby code");
       return null;
     }
     Lobby lobby = new Lobby(lobbyCode, username);
     lobbyList.put(lobbyCode, lobby);
+    log.info("{}: a lobby has been created", lobbyCode);
     return lobbyCode;
   }
 
@@ -61,8 +65,10 @@ public class LobbyService {
   public boolean joinLobby(String username, String lobbyCode) {
     Lobby lobby = lobbyList.get(lobbyCode);
     if (lobby != null) {
+      log.info("{}: a player has joined", lobbyCode);
       return lobby.addPlayer(username);
     }
+    log.error("{}: an error occurred when joining lobby", lobbyCode);
     return false;
   }
 
@@ -77,8 +83,10 @@ public class LobbyService {
     Lobby lobby = lobbyList.get(lobbyCode);
     if (lobby != null) {
       lobby.removePlayer(username);
+      log.info("{}: a player left", lobbyCode);
       return true;
     }
+    log.error("{}: an error occurred when leaving", lobbyCode);
     return false;
   }
 
@@ -95,15 +103,18 @@ public class LobbyService {
     Lobby lobby = lobbyList.get(lobbyCode);
 
     if (lobby == null || !lobby.hasPlayer(username) || team == null || role == null) {
+      log.error("{}: position selection error occurred", lobbyCode);
       return false;
     }
 
     if (role == Role.SPYMASTER && isSpymasterAlreadyAssigned(lobby, username, team)) {
+      log.error("{}: position selection error occurred, spymaster is already assigned.", lobbyCode);
       return false;
     }
 
     lobby.setPlayerTeam(username, team);
     lobby.setPlayerRole(username, role);
+    log.info("{}: new role was assigned to player", lobbyCode);
     return true;
   }
   /**
@@ -140,12 +151,12 @@ public class LobbyService {
     Lobby lobby = lobbyList.get(lobbyCode);
     if (lobby != null) {
       return lobby.getPlayerList().stream()
-          .map(player -> new PlayerDto(
-              player.username(),
-              lobby.getPlayerTeam(player.username()) != null ? lobby.getPlayerTeam(player.username()) : null,
-              lobby.getPlayerRole(player.username()) != null ? lobby.getPlayerRole(player.username()) : null,
-              player.isHost()))
-          .toList();
+              .map(player -> new PlayerDto(
+                      player.username(),
+                      lobby.getPlayerTeam(player.username()),
+                      lobby.getPlayerRole(player.username()),
+                      player.isHost()))
+              .toList();
     }
     return List.of();
   }
@@ -161,8 +172,8 @@ public class LobbyService {
   private boolean isSpymasterAlreadyAssigned(Lobby lobby, String username, Team team) {
     for (Player player : lobby.getPlayerList()) {
       if (!player.username().equals(username)
-          && lobby.getPlayerTeam(player.username()) == team
-          && lobby.getPlayerRole(player.username()) == Role.SPYMASTER) {
+              && lobby.getPlayerTeam(player.username()) == team
+              && lobby.getPlayerRole(player.username()) == Role.SPYMASTER) {
         return true;
       }
     }

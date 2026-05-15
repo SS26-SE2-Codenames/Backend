@@ -3,17 +3,19 @@ package com.codenames.codenames.backend.lobby;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import com.codenames.codenames.backend.websocket.Player;
+import lombok.Getter;
+
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
-import lombok.Getter;
 
 /**
  * Represents a game lobby containing a limited number of playerList.
  *
- * <p>Supports adding and removing playerList while enforcing constraints such as maximum player count
+ * <p>Supports adding and removing playerList
+ * while enforcing constraints such as maximum player count
  * and unique usernames.
  */
 @Getter
@@ -67,9 +69,9 @@ public class Lobby {
 
   /**
    * Adds a player to the lobby if capacity allows and the username is unique.
+   * Calls {@link #addPlayer(String, boolean)} with {@code false} as the second argument
    *
    * @param username the username of the player
-   * @calls {@link #addPlayer(String, boolean)} with {@code false} as the second argument
    * @return {@code true} if the player was added, {@code false} otherwise
    */
   public boolean addPlayer(String username) {
@@ -101,7 +103,7 @@ public class Lobby {
    * Sets the team for a player.
    *
    * @param username the username of the player
-   * @param team the team to assign
+   * @param team     the team to assign
    */
   public void setPlayerTeam(String username, Team team) {
     playerTeams.put(username, team);
@@ -111,7 +113,7 @@ public class Lobby {
    * Sets the role for a player.
    *
    * @param username the username of the player
-   * @param role the role to assign
+   * @param role     the role to assign
    */
   public void setPlayerRole(String username, Role role) {
     playerRoles.put(username, role);

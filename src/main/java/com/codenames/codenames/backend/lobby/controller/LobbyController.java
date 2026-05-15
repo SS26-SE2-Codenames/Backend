@@ -20,6 +20,7 @@ import java.util.List;
 public class LobbyController {
 
   private final LobbyService service;
+  private static final String LOBBY_NOT_FOUND = "Could not find lobby.";
 
   /**
    * Creates a new {@code LobbyController}.
@@ -37,15 +38,17 @@ public class LobbyController {
    * @return a response containing the result and the generated lobby code
    */
 
-  @PostMapping("/create")
+  @GetMapping("/create")
   public ResponseEntity<LobbyResponse> createLobby(@RequestParam String username) {
     String lobbyCode = service.createLobby(username);
     if (lobbyCode == null || lobbyCode.isBlank()) {
       return ResponseEntity.internalServerError()
-          .body(new LobbyResponse("Error while creating lobby.", "", null));
+              .body(new LobbyResponse("Error while creating lobby.", "", null));
     } else {
       List<PlayerDto> players = service.getPlayersDto(lobbyCode);
-      return ResponseEntity.ok(new LobbyResponse("Successfully created Lobby.", lobbyCode, players));
+      return ResponseEntity.ok(
+              new LobbyResponse("Successfully created Lobby.", lobbyCode, players)
+      );
     }
   }
 
@@ -56,15 +59,21 @@ public class LobbyController {
    * @param lobbyCode the lobby code identifying the lobby
    * @return a response indicating whether the join was successful
    */
-  @PostMapping("/join")
+  @GetMapping("/{lobbyCode}/join")
   public ResponseEntity<LobbyResponse> joinLobby(
-      @RequestParam String username, @RequestParam String lobbyCode) {
+          @RequestParam String username, @PathVariable String lobbyCode) {
     boolean joined = service.joinLobby(username, lobbyCode);
     if (joined) {
-      return ResponseEntity.ok(new LobbyResponse("Joined Lobby successfully.", lobbyCode, service.getPlayersDto(lobbyCode)));
+      return ResponseEntity.ok(
+              new LobbyResponse(
+                      "Joined Lobby successfully.",
+                      lobbyCode,
+                      service.getPlayersDto(lobbyCode)
+              )
+      );
     } else {
       return ResponseEntity.badRequest()
-          .body(new LobbyResponse("Could not find lobby.", lobbyCode, null));
+              .body(new LobbyResponse(LOBBY_NOT_FOUND, lobbyCode, null));
     }
   }
 
@@ -75,22 +84,33 @@ public class LobbyController {
    * @param lobbyCode the lobby code identifying the lobby
    * @return a response indicating whether the operation was successful
    */
-  @PostMapping("/{lobbyCode}/leave")
+  @GetMapping("/{lobbyCode}/leave")
   public ResponseEntity<LobbyResponse> leaveLobby(
           @PathVariable String lobbyCode,
           @RequestParam String username) {
     boolean left = service.leaveLobby(username, lobbyCode);
-    System.out.println("LobbyCode: " + lobbyCode);
-    System.out.println("Username: " + username);
     if (left) {
-      ResponseEntity<LobbyResponse> response = ResponseEntity.ok(new LobbyResponse("Left lobby successfully.", lobbyCode, service.getPlayersDto(lobbyCode)));
+      ResponseEntity<LobbyResponse> response = ResponseEntity.ok(
+              new LobbyResponse(
+                      "Left lobby successfully.",
+                      lobbyCode,
+                      service.getPlayersDto(lobbyCode)
+              )
+      );
       service.checkLobbyStillHasPlayers(lobbyCode);
       return response;
     } else {
       return ResponseEntity.badRequest()
-          .body(new LobbyResponse("Could not find lobby.", lobbyCode, null));
+              .body(new LobbyResponse(LOBBY_NOT_FOUND, lobbyCode, null));
     }
   }
+
+  /**
+   * An endpoint for retrieving all lobby-specific info used during polling in lobby-state.
+   *
+   * @param lobbyCode unique lobby code
+   * @return a response entity with the http code 200 for ok and 400 for bad request, if an error occurred
+   */
 
   @GetMapping("/{lobbyCode}")
   public ResponseEntity<LobbyResponse> getLobbyInfo(
@@ -98,10 +118,12 @@ public class LobbyController {
   ) {
     List<PlayerDto> players = service.getPlayersDto(lobbyCode);
     if (players != null) {
-      return ResponseEntity.ok(new LobbyResponse("Lobby info retrieved successfully.", lobbyCode, players));
+      return ResponseEntity.ok(
+              new LobbyResponse("Lobby info retrieved successfully.", lobbyCode, players)
+      );
     } else {
       return ResponseEntity.badRequest()
-          .body(new LobbyResponse("Could not find lobby.", lobbyCode, null));
+              .body(new LobbyResponse(LOBBY_NOT_FOUND, lobbyCode, null));
     }
   }
 
@@ -116,19 +138,27 @@ public class LobbyController {
           @PathVariable String lobbyCode, @RequestBody PlayerDto request
   ) {
     boolean updated = service.selectPosition(
-        request.username(),
-        lobbyCode,
-        request.team(),
-        request.role()
+            request.username(),
+            lobbyCode,
+            request.team(),
+            request.role()
     );
 
     if (updated) {
       return ResponseEntity.ok(
-          new LobbyResponse("Position selected successfully.", lobbyCode, service.getPlayersDto(lobbyCode))
+              new LobbyResponse(
+                      "Position selected successfully.",
+                      lobbyCode,
+                      service.getPlayersDto(lobbyCode)
+              )
       );
     } else {
       return ResponseEntity.badRequest().body(
-          new LobbyResponse("Could not assign selected team/role.", lobbyCode, service.getPlayersDto(lobbyCode))
+              new LobbyResponse(
+                      "Could not assign selected team/role.",
+                      lobbyCode,
+                      service.getPlayersDto(lobbyCode)
+              )
       );
     }
   }

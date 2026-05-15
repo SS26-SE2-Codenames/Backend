@@ -1,7 +1,8 @@
 package com.codenames.codenames.backend.lobby.services;
 
-import java.security.SecureRandom;
 import org.springframework.stereotype.Service;
+
+import java.security.SecureRandom;
 
 /**
  * Utility service for generating unique lobby codes.
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class LobbyCodeGenerator {
 
-  @SuppressWarnings("SpellCheckingInspection")
   private static final String CHARACTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
   private static final int CODE_LENGTH = 5;
