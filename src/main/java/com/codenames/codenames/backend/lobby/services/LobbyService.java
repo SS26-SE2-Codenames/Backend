@@ -1,5 +1,6 @@
 package com.codenames.codenames.backend.lobby.services;
 
+import com.codenames.codenames.backend.chat.ChatService;
 import com.codenames.codenames.backend.lobby.Lobby;
 import com.codenames.codenames.backend.lobby.dto.PlayerDto;
 import com.codenames.codenames.backend.utility.Role;
@@ -27,14 +28,16 @@ public class LobbyService {
   @Getter
   private final Map<String, Lobby> lobbyList = new ConcurrentHashMap<>();
   private final LobbyCodeGenerator generator;
+  private final ChatService chatService;
 
   /**
    * Creates a new {@code LobbyService}.
    *
    * @param generator the lobby code generator used to create unique lobby codes
    */
-  public LobbyService(LobbyCodeGenerator generator) {
+  public LobbyService(LobbyCodeGenerator generator, ChatService chatService) {
     this.generator = generator;
+    this.chatService = chatService;
   }
 
   /**
@@ -128,6 +131,7 @@ public class LobbyService {
     Lobby lobby = lobbyList.get(lobbyCode);
     if (lobby.getPlayerList().isEmpty()) {
       lobbyList.remove(lobbyCode);
+      chatService.clearLobbyHistory(lobbyCode);
     }
   }
 
