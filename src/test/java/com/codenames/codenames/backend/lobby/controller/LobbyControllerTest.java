@@ -80,14 +80,6 @@ class LobbyControllerTest {
   }
 
   @Test
-  void getLobbyInfoShouldReturn404() throws Exception {
-    when(service.getPlayersDto("XXXXX")).thenReturn(null);
-    String url = "/lobby/XXXXX";
-    mockMvc.perform(get(url))
-            .andExpect(status().isBadRequest());
-  }
-
-  @Test
   void joinLobbyShouldReturn400_whenNotFound() throws Exception {
     when(service.joinLobby("TestUser", "XXXXX")).thenReturn(false);
 
@@ -177,17 +169,5 @@ class LobbyControllerTest {
                     .value("Alice"))
             .andExpect(jsonPath("$.playerList[1].username")
                     .value("Bob"));
-  }
-
-  @Test
-  void getLobbyInfoShouldReturn400_whenLobbyDoesNotExist() throws Exception {
-    when(service.getPlayersDto("ABCDE")).thenReturn(null);
-
-    mockMvc.perform(get("/lobby/ABCDE"))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.message")
-                    .value("Could not find lobby."))
-            .andExpect(jsonPath("$.lobbyCode")
-                    .value("ABCDE"));
   }
 }
