@@ -109,7 +109,8 @@ public class LobbyController {
    * An endpoint for retrieving all lobby-specific info used during polling in lobby-state.
    *
    * @param lobbyCode unique lobby code
-   * @return a response entity with the http code 200 for ok and 400 for bad request, if an error occurred
+   * @return a response entity with the http code 200 for ok and
+   * 400 for bad request, if an error occurred
    */
 
   @GetMapping("/{lobbyCode}")
