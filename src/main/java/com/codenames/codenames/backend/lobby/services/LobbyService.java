@@ -7,13 +7,12 @@ import com.codenames.codenames.backend.playingfield.GameService;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import com.codenames.codenames.backend.websocket.Player;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 /**
  * Service responsible for managing lobbies and player interactions.

@@ -1,8 +1,7 @@
 package com.codenames.codenames.backend.lobby.services;
 
-import org.springframework.stereotype.Service;
-
 import java.security.SecureRandom;
+import org.springframework.stereotype.Service;
 
 /**
  * Utility service for generating unique lobby codes.

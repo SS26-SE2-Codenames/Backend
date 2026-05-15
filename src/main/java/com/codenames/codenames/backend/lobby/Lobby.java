@@ -3,13 +3,12 @@ package com.codenames.codenames.backend.lobby;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import com.codenames.codenames.backend.websocket.Player;
-import lombok.Getter;
-
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import lombok.Getter;
 
 /**
  * Represents a game lobby containing a limited number of playerList.

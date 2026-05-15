@@ -3,10 +3,15 @@ package com.codenames.codenames.backend.lobby.controller;
 import com.codenames.codenames.backend.lobby.dto.LobbyResponse;
 import com.codenames.codenames.backend.lobby.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.services.LobbyService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * REST controller for handling lobby management operations.
@@ -110,7 +115,7 @@ public class LobbyController {
    *
    * @param lobbyCode unique lobby code
    * @return a response entity with the http code 200 for ok and
-   * 400 for bad request, if an error occurred
+   *         400 for bad request, if an error occurred
    */
 
   @GetMapping("/{lobbyCode}")
