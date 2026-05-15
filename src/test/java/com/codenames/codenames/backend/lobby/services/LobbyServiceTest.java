@@ -1,6 +1,8 @@
 package com.codenames.codenames.backend.lobby.services;
 
+import com.codenames.codenames.backend.chat.ChatService;
 import com.codenames.codenames.backend.lobby.dto.PlayerDto;
+import com.codenames.codenames.backend.playingfield.GameService;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import com.codenames.codenames.backend.websocket.Player;
@@ -10,8 +12,9 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests for {@link LobbyService}.
@@ -23,11 +26,15 @@ class LobbyServiceTest {
 
   private LobbyService lobbyService;
   private LobbyCodeGenerator generator;
+  private GameService gameService;
 
   @BeforeEach
   void setup() {
     generator = mock(LobbyCodeGenerator.class);
-    lobbyService = new LobbyService(generator);
+    gameService = mock(GameService.class);
+    ChatService chatService = mock(ChatService.class);
+
+    lobbyService = new LobbyService(generator, chatService, gameService);
     when(generator.generateLobbyCode()).thenReturn("ABCDE");
   }
 
@@ -300,5 +307,11 @@ class LobbyServiceTest {
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void testAddGameManagerForLobby() {
+    lobbyService.createLobby("Host");
+    verify(gameService, times(1)).createGameManager(eq("ABCDE"), any(Team.class));
   }
 }

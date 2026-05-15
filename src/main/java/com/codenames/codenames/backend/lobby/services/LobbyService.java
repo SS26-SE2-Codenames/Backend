@@ -3,6 +3,7 @@ package com.codenames.codenames.backend.lobby.services;
 import com.codenames.codenames.backend.chat.ChatService;
 import com.codenames.codenames.backend.lobby.Lobby;
 import com.codenames.codenames.backend.lobby.dto.PlayerDto;
+import com.codenames.codenames.backend.playingfield.GameService;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import com.codenames.codenames.backend.websocket.Player;
@@ -28,6 +29,7 @@ public class LobbyService {
   @Getter
   private final Map<String, Lobby> lobbyList = new ConcurrentHashMap<>();
   private final LobbyCodeGenerator generator;
+  private final GameService gameService;
   private final ChatService chatService;
 
   /**
@@ -35,9 +37,13 @@ public class LobbyService {
    *
    * @param generator the lobby code generator used to create unique lobby codes
    */
-  public LobbyService(LobbyCodeGenerator generator, ChatService chatService) {
+  public LobbyService(
+          LobbyCodeGenerator generator,
+          ChatService chatService,
+          GameService gameService) {
     this.generator = generator;
     this.chatService = chatService;
+    this.gameService = gameService;
   }
 
   /**
@@ -52,10 +58,23 @@ public class LobbyService {
       log.error("ERROR: there was an error when generating a lobby code");
       return null;
     }
+
     Lobby lobby = new Lobby(lobbyCode, username);
     lobbyList.put(lobbyCode, lobby);
+    addGameManagerForLobby(lobby, lobbyCode);
     log.info("{}: a lobby has been created", lobbyCode);
     return lobbyCode;
+  }
+
+  /**
+   * Helper method to add the GameManager once a lobby is created.
+   *
+   * @param lobby     the lobby object to determine the starting team
+   * @param lobbyCode the ID for the lobby which the GameManager is responsible for
+   */
+  private void addGameManagerForLobby(Lobby lobby, String lobbyCode) {
+    Team start = lobby.decideStartingTeam();
+    gameService.createGameManager(lobbyCode, start);
   }
 
   /**
@@ -139,7 +158,7 @@ public class LobbyService {
    * Retrieves all playerList in the specified lobby.
    *
    * @param lobbyCode the lobby code identifying the lobby
-   * @return a list of playerList, or an empty list if the lobby does not exist
+   * @return a list of players, or an empty list if the lobby does not exist
    */
   public List<Player> getPlayers(String lobbyCode) {
     Lobby lobby = lobbyList.get(lobbyCode);
