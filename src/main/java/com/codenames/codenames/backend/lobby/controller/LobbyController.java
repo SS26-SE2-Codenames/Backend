@@ -118,14 +118,9 @@ public class LobbyController {
           @PathVariable String lobbyCode
   ) {
     List<PlayerDto> players = service.getPlayersDto(lobbyCode);
-    if (players != null) {
-      return ResponseEntity.ok(
-              new LobbyResponse("Lobby info retrieved successfully.", lobbyCode, players)
-      );
-    } else {
-      return ResponseEntity.badRequest()
-              .body(new LobbyResponse(LOBBY_NOT_FOUND, lobbyCode, null));
-    }
+    return ResponseEntity.ok(
+            new LobbyResponse("Lobby info retrieved successfully.", lobbyCode, players)
+    );
   }
 
   /**
