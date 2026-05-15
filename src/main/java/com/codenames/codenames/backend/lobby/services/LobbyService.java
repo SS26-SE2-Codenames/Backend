@@ -140,8 +140,8 @@ public class LobbyService {
             return lobby.getPlayerList().stream()
                     .map(player -> new PlayerDto(
                             player.username(),
-                            lobby.getPlayerTeam(player.username()) != null ? lobby.getPlayerTeam(player.username()) : null,
-                            lobby.getPlayerRole(player.username()) != null ? lobby.getPlayerRole(player.username()) : null,
+                            lobby.getPlayerTeam(player.username()),
+                            lobby.getPlayerRole(player.username()),
                             player.isHost()))
                     .toList();
         }

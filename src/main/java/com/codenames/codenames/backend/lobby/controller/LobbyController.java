@@ -20,7 +20,7 @@ import java.util.List;
 public class LobbyController {
 
     private final LobbyService service;
-    private static final String LOBBY_NOT_FOUND = "Could not find lobby";
+    private static final String LOBBY_NOT_FOUND = "Could not find lobby.";
 
     /**
      * Creates a new {@code LobbyController}.
