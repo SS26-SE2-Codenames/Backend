@@ -151,6 +151,7 @@ public class LobbyService {
     if (lobby.getPlayerList().isEmpty()) {
       lobbyList.remove(lobbyCode);
       chatService.clearLobbyHistory(lobbyCode);
+      gameService.removeGame(lobbyCode);
     }
   }
 
