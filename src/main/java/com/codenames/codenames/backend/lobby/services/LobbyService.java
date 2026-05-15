@@ -1,6 +1,7 @@
 package com.codenames.codenames.backend.lobby.services;
 
 import com.codenames.codenames.backend.lobby.Lobby;
+import com.codenames.codenames.backend.playingfield.GameService;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import com.codenames.codenames.backend.websocket.Player;
@@ -12,22 +13,25 @@ import org.springframework.stereotype.Service;
 /**
  * Service responsible for managing lobbies and player interactions.
  *
- * <p>Handles creation of lobbies, player joins/leaves, and retrieval of lobby data.
- * Ensures uniqueness of lobby codes and thread-safe access to lobby storage.
+ * <p>Handles creation of lobbies, player joins/leaves, and retrieval of lobby data. Ensures
+ * uniqueness of lobby codes and thread-safe access to lobby storage.
  */
 @Service
 public class LobbyService {
 
   private final Map<String, Lobby> lobbyList = new ConcurrentHashMap<>();
   private final LobbyCodeGenerator generator;
+  private final GameService gameService;
 
   /**
    * Creates a new {@code LobbyService}.
    *
    * @param generator the lobby code generator used to create unique lobby codes
+   * @param gameService the service used for creating a GameManager for each lobby
    */
-  public LobbyService(LobbyCodeGenerator generator) {
+  public LobbyService(LobbyCodeGenerator generator, GameService gameService) {
     this.generator = generator;
+    this.gameService = gameService;
   }
 
   /**
@@ -41,16 +45,27 @@ public class LobbyService {
     if (lobbyCode == null || lobbyCode.isBlank()) {
       return null;
     }
-
     Lobby lobby = new Lobby(lobbyCode, username);
     lobbyList.put(lobbyCode, lobby);
+    addGameManagerForLobby(lobby, lobbyCode);
     return lobbyCode;
+  }
+
+  /**
+   * Helper method to add the GameManager once a lobby is created.
+   *
+   * @param lobby the lobby object to determine the starting team
+   * @param lobbyCode the ID for the lobby which the GameManager is responsible for
+   */
+  private void addGameManagerForLobby(Lobby lobby, String lobbyCode) {
+    Team start = lobby.decideStartingTeam();
+    gameService.createGameManager(lobbyCode, start);
   }
 
   /**
    * Adds a player to an existing lobby.
    *
-   * @param username  the username of the player
+   * @param username the username of the player
    * @param lobbyCode the lobby code identifying the lobby
    * @return {@code true} if the player successfully joined, {@code false} otherwise
    */
@@ -65,7 +80,7 @@ public class LobbyService {
   /**
    * Removes a player from a lobby.
    *
-   * @param username  the username of the player
+   * @param username the username of the player
    * @param lobbyCode the lobby code identifying the lobby
    * @return {@code true} if the player was removed, {@code false} if the lobby does not exist
    */
@@ -81,10 +96,10 @@ public class LobbyService {
   /**
    * Assigns a team and role to a player in a lobby.
    *
-   * @param username  the username of the player
+   * @param username the username of the player
    * @param lobbyCode the lobby code identifying the lobby
-   * @param team      the selected team
-   * @param role      the selected role
+   * @param team the selected team
+   * @param role the selected role
    * @return {@code true} if the position was assigned, {@code false} otherwise
    */
   public boolean selectPosition(String username, String lobbyCode, Team team, Role role) {
@@ -117,9 +132,9 @@ public class LobbyService {
   /**
    * Checks whether a spymaster is already assigned for the given team in the lobby.
    *
-   * @param lobby    the lobby to inspect
+   * @param lobby the lobby to inspect
    * @param username the username requesting the role
-   * @param team     the team to inspect
+   * @param team the team to inspect
    * @return {@code true} if a different player is already the spymaster for that team
    */
   private boolean isSpymasterAlreadyAssigned(Lobby lobby, String username, Team team) {
