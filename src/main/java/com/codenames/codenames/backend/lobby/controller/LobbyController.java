@@ -20,6 +20,7 @@ import java.util.List;
 public class LobbyController {
 
     private final LobbyService service;
+    private static final String LOBBY_NOT_FOUND = "Could not find lobby";
 
     /**
      * Creates a new {@code LobbyController}.
@@ -64,7 +65,7 @@ public class LobbyController {
             return ResponseEntity.ok(new LobbyResponse("Joined Lobby successfully.", lobbyCode, service.getPlayersDto(lobbyCode)));
         } else {
             return ResponseEntity.badRequest()
-                    .body(new LobbyResponse("Could not find lobby.", lobbyCode, null));
+                    .body(new LobbyResponse(LOBBY_NOT_FOUND, lobbyCode, null));
         }
     }
 
@@ -80,13 +81,11 @@ public class LobbyController {
             @PathVariable String lobbyCode,
             @RequestParam String username) {
         boolean left = service.leaveLobby(username, lobbyCode);
-        System.out.println("LobbyCode: " + lobbyCode);
-        System.out.println("Username: " + username);
         if (left) {
             return ResponseEntity.ok(new LobbyResponse("Left lobby successfully.", lobbyCode, service.getPlayersDto(lobbyCode)));
         } else {
             return ResponseEntity.badRequest()
-                    .body(new LobbyResponse("Could not find lobby.", lobbyCode, null));
+                    .body(new LobbyResponse(LOBBY_NOT_FOUND, lobbyCode, null));
         }
     }
 
@@ -99,7 +98,7 @@ public class LobbyController {
             return ResponseEntity.ok(new LobbyResponse("Lobby info retrieved successfully.", lobbyCode, players));
         } else {
             return ResponseEntity.badRequest()
-                    .body(new LobbyResponse("Could not find lobby.", lobbyCode, null));
+                    .body(new LobbyResponse(LOBBY_NOT_FOUND, lobbyCode, null));
         }
     }
 
