@@ -152,6 +152,7 @@ public class LobbyService {
       lobbyList.remove(lobbyCode);
       chatService.clearLobbyHistory(lobbyCode);
       gameService.removeGame(lobbyCode);
+      log.info("{}: Lobby is empty, was removed from list.", lobbyCode);
     }
   }
 
