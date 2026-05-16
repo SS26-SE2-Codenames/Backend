@@ -1,5 +1,6 @@
 package com.codenames.codenames.backend.playingfield;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -71,5 +72,13 @@ class GameServiceTest {
     gameService.passTurn(lobbyCode, redTeam);
 
     verify(mockGameManager, times(1)).passTurn(redTeam);
+  }
+
+  @Test
+  void testGetGameState() {
+
+    GameManager result = gameService.getGameState(lobbyCode);
+
+    assertEquals(mockGameManager, result);
   }
 }
