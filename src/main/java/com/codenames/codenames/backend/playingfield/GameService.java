@@ -1,6 +1,7 @@
 package com.codenames.codenames.backend.playingfield;
 
 import com.codenames.codenames.backend.clue.Clue;
+import com.codenames.codenames.backend.game.dto.GameStateDto;
 import com.codenames.codenames.backend.utility.Team;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -97,5 +98,13 @@ public class GameService {
   public void passTurn(String lobbyCode, Team callingTeam) {
     GameManager gm = getGame(lobbyCode);
     gm.passTurn(callingTeam);
+  }
+
+  public GameStateDto createGameStateDto(String lobbyCode) {
+
+    GameManager gm = getGame(lobbyCode);
+
+    return new GameStateDto(
+        gm.getCardList(), gm.getCurrentClue(), gm.getRemainingGuesses(), gm.getWinner());
   }
 }
