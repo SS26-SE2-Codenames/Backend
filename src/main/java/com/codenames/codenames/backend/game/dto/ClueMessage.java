@@ -1,5 +1,6 @@
 package com.codenames.codenames.backend.game.dto;
 
+import com.codenames.codenames.backend.utility.Team;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,4 +15,5 @@ public class ClueMessage {
   private String lobbyCode;
   private String word;
   private int guessAmount;
+  private Team currentTurn;
 }
