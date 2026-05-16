@@ -1,6 +1,7 @@
 package com.codenames.codenames.backend.playingfield;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -8,9 +9,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.clue.Clue;
+import com.codenames.codenames.backend.game.dto.GameStateDto;
 import com.codenames.codenames.backend.utility.Team;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 class GameServiceTest {
   private GameService gameService;
@@ -80,5 +84,15 @@ class GameServiceTest {
     GameManager result = gameService.getGameState(lobbyCode);
 
     assertEquals(mockGameManager, result);
+  }
+
+  @Test
+  void testCreateGameStateDto() {
+
+    when(mockGameManager.getCardList()).thenReturn(List.of());
+
+    GameStateDto dto = gameService.createGameStateDto(lobbyCode);
+
+    assertNotNull(dto);
   }
 }
