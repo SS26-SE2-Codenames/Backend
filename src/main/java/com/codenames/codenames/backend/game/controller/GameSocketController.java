@@ -54,8 +54,6 @@ public class GameSocketController {
   @MessageMapping("/start-game")
   public void startGame(StartGameMessage message) {
 
-    GameManager game = gameService.getGameState(message.getLobbyCode());
-
     messagingTemplate.convertAndSend(
         GAME_TOPIC_PREFIX + message.getLobbyCode(),
         gameService.createGameStateDto(message.getLobbyCode()));
