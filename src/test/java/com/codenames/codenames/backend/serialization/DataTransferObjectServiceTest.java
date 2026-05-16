@@ -3,7 +3,6 @@ package com.codenames.codenames.backend.serialization;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.playingfield.Card;
