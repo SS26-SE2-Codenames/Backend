@@ -2,6 +2,7 @@ package com.codenames.codenames.backend.game.controller;
 
 import com.codenames.codenames.backend.clue.Clue;
 import com.codenames.codenames.backend.game.dto.ClueMessage;
+import com.codenames.codenames.backend.game.dto.PassTurnMessage;
 import com.codenames.codenames.backend.game.dto.RevealCardMessage;
 import com.codenames.codenames.backend.game.dto.StartGameMessage;
 import com.codenames.codenames.backend.playingfield.GameService;
@@ -80,6 +81,16 @@ public class GameSocketController {
         message.getLobbyCode(),
         new Clue(message.getWord(), message.getGuessAmount()),
         message.getCurrentTurn());
+
+    messagingTemplate.convertAndSend(
+        GAME_TOPIC_PREFIX + message.getLobbyCode(),
+        gameService.createGameStateDto(message.getLobbyCode()));
+  }
+
+  @MessageMapping("/pass-turn")
+  public void passTurn(PassTurnMessage message) {
+
+    gameService.passTurn(message.getLobbyCode(), message.getCurrentTurn());
 
     messagingTemplate.convertAndSend(
         GAME_TOPIC_PREFIX + message.getLobbyCode(),
