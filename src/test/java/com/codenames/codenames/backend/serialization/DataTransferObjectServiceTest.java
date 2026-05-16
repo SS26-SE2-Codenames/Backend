@@ -68,7 +68,7 @@ class DataTransferObjectServiceTest {
   void testGetWinner_null() {
     when(mockGameManager.getWinner()).thenReturn(null);
     gameStateDto =
-        service.createGameStateDataTransferObject(mockGameManager, operative, redTeam, spymaster);
+        service.createGameStateDataTransferObject(mockGameManager, operative, redTeam, operative);
     assertNull(gameStateDto.winner());
   }
 }
