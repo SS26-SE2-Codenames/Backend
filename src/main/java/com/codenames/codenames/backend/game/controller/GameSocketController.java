@@ -27,10 +27,8 @@ public class GameSocketController {
   /**
    * Creates a new {@code GameSocketController}.
    *
-   * @param lobbyService service for lobby management
-   * @param messagingTemplate template used for broadcasting messages
-   * @param cardGenerator utility for generating game cards
-   * @param clueValidationService service for validating clues
+   * @param gameService service responsible for gameplay logic
+   * @param messagingTemplate template used for broadcasting websocket messages
    */
   public GameSocketController(GameService gameService, SimpMessagingTemplate messagingTemplate) {
 
@@ -39,11 +37,9 @@ public class GameSocketController {
   }
 
   /**
-   * Starts a new game session for a lobby.
+   * Sends the current game state to subscribed players.
    *
-   * <p>Creates a new game manager and broadcasts the initial board state to all subscribed players.
-   *
-   * @param message the start game request
+   * @param message contains the lobby code
    */
   @MessageMapping("/start-game")
   public void startGame(StartGameMessage message) {

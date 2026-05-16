@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
+/** Tests websocket gameplay controller interactions. */
 @ExtendWith(MockitoExtension.class)
 class GameSocketControllerTest {
 

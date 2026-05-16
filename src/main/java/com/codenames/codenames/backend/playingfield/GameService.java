@@ -60,6 +60,12 @@ public class GameService {
     return games.get(lobbyCode);
   }
 
+  /**
+   * Retrieves the current GameManager for a lobby.
+   *
+   * @param lobbyCode lobby identifier
+   * @return the active GameManager
+   */
   public GameManager getGameState(String lobbyCode) {
     return getGame(lobbyCode);
   }
@@ -100,6 +106,12 @@ public class GameService {
     gm.passTurn(callingTeam);
   }
 
+  /**
+   * Creates a DTO representing the current game state.
+   *
+   * @param lobbyCode lobby identifier
+   * @return DTO containing board and turn information
+   */
   public GameStateDto createGameStateDto(String lobbyCode) {
 
     GameManager gm = getGame(lobbyCode);

@@ -11,11 +11,11 @@ import static org.mockito.Mockito.when;
 import com.codenames.codenames.backend.clue.Clue;
 import com.codenames.codenames.backend.game.dto.GameStateDto;
 import com.codenames.codenames.backend.utility.Team;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
+/** Tests the functionality of GameService. */
 class GameServiceTest {
   private GameService gameService;
   private GameManager mockGameManager;
