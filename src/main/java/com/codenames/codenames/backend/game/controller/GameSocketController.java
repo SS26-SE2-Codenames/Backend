@@ -87,6 +87,11 @@ public class GameSocketController {
         gameService.createGameStateDto(message.getLobbyCode()));
   }
 
+  /**
+   * Ends the current turn early and broadcasts the updated game state.
+   *
+   * @param message contains lobby and team information
+   */
   @MessageMapping("/pass-turn")
   public void passTurn(PassTurnMessage message) {
 
