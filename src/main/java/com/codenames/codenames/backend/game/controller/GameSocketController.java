@@ -9,9 +9,8 @@ import com.codenames.codenames.backend.game.dto.StartGameMessage;
 import com.codenames.codenames.backend.lobby.services.LobbyService;
 import com.codenames.codenames.backend.playingfield.CardGenerator;
 import com.codenames.codenames.backend.playingfield.GameManager;
+import com.codenames.codenames.backend.playingfield.GameService;
 import com.codenames.codenames.backend.utility.Team;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -25,12 +24,9 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class GameSocketController {
 
-  private final LobbyService lobbyService;
-  private final SimpMessagingTemplate messagingTemplate;
-  private final CardGenerator cardGenerator;
-  private final ClueValidationService clueValidationService;
+  private final GameService gameService;
 
-  private final Map<String, GameManager> gameSessions = new ConcurrentHashMap<>();
+  private final SimpMessagingTemplate messagingTemplate;
 
   private static final String GAME_TOPIC_PREFIX = "/topic/game/";
 
