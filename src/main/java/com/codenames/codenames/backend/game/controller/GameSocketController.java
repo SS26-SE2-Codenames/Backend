@@ -63,14 +63,10 @@ public class GameSocketController {
   @MessageMapping("/start-game")
   public void startGame(StartGameMessage message) {
 
-    Team startingTeam = lobbyService.decideStartingTeam(message.getLobbyCode());
-
-    GameManager gameManager = new GameManager(startingTeam, cardGenerator, clueValidationService);
-
-    gameSessions.put(message.getLobbyCode(), gameManager);
+    GameManager game = gameService.getGameState(message.getLobbyCode());
 
     messagingTemplate.convertAndSend(
-        GAME_TOPIC_PREFIX + message.getLobbyCode(), mapGameState(gameManager));
+        GAME_TOPIC_PREFIX + message.getLobbyCode(), mapGameState(game));
   }
 
   /**
