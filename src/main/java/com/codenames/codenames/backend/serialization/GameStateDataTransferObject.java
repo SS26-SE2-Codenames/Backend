@@ -1,5 +1,6 @@
 package com.codenames.codenames.backend.serialization;
 
+import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import java.util.List;
 public record GameStateDataTransferObject(
     Team winner,
     Team currentTurn,
+    Role currentPhase,
     int currentRedFound,
     int currentBlueFound,
     String currentClue,
