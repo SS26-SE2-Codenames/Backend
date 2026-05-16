@@ -57,7 +57,8 @@ public class GameSocketController {
     GameManager game = gameService.getGameState(message.getLobbyCode());
 
     messagingTemplate.convertAndSend(
-        GAME_TOPIC_PREFIX + message.getLobbyCode(), mapGameState(game));
+        GAME_TOPIC_PREFIX + message.getLobbyCode(),
+        gameService.createGameStateDto(message.getLobbyCode()));
   }
 
   /**
@@ -74,7 +75,7 @@ public class GameSocketController {
 
     messagingTemplate.convertAndSend(
         GAME_TOPIC_PREFIX + message.getLobbyCode(),
-        mapGameState(gameService.getGameState(message.getLobbyCode())));
+        gameService.createGameStateDto(message.getLobbyCode()));
   }
 
   /**
@@ -94,6 +95,6 @@ public class GameSocketController {
 
     messagingTemplate.convertAndSend(
         GAME_TOPIC_PREFIX + message.getLobbyCode(),
-        mapGameState(gameService.getGameState(message.getLobbyCode())));
+        gameService.createGameStateDto(message.getLobbyCode()));
   }
 }
