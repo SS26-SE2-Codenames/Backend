@@ -79,16 +79,11 @@ public class GameSocketController {
   @MessageMapping("/reveal-card")
   public void revealCard(RevealCardMessage message) {
 
-    GameManager gameManager = gameSessions.get(message.getLobbyCode());
-
-    if (gameManager == null) {
-      return;
-    }
-
-    gameManager.flipCard(message.getPosition(), message.getCurrentTurn());
+    gameService.flipCard(message.getLobbyCode(), message.getPosition(), message.getCurrentTurn());
 
     messagingTemplate.convertAndSend(
-        GAME_TOPIC_PREFIX + message.getLobbyCode(), mapGameState(gameManager));
+        GAME_TOPIC_PREFIX + message.getLobbyCode(),
+        mapGameState(gameService.getGameState(message.getLobbyCode())));
   }
 
   /**
