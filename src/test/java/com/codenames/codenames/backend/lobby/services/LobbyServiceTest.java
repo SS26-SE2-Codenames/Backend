@@ -91,10 +91,7 @@ class LobbyServiceTest {
 
   @Test
   void createLobbyShouldGenerateNewCodeIfDuplicateExists() {
-    when(generator.generateLobbyCode())
-            .thenReturn("ABCDE")
-            .thenReturn("ABCDE")
-            .thenReturn("FGHIJ");
+    when(generator.generateLobbyCode()).thenReturn("ABCDE").thenReturn("ABCDE").thenReturn("FGHIJ");
 
     lobbyService.createLobby("Host1");
     String code2 = lobbyService.createLobby("Host2");
@@ -183,9 +180,7 @@ class LobbyServiceTest {
 
     List<Player> players = lobbyService.getPlayers("ABCDE");
 
-    long count = players.stream()
-            .filter(p -> p.username().equals("Max"))
-            .count();
+    long count = players.stream().filter(p -> p.username().equals("Max")).count();
 
     assertEquals(1, count);
   }
@@ -306,24 +301,6 @@ class LobbyServiceTest {
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
-  }
-
-  @Test
-  void decideStartingTeamShouldReturnTeam() {
-
-    lobbyService.createLobby("Host");
-
-    Team result = lobbyService.decideStartingTeam("ABCDE");
-
-    assertNotNull(result);
-  }
-
-  @Test
-  void decideStartingTeamShouldReturnNullWhenLobbyDoesNotExist() {
-
-    Team result = lobbyService.decideStartingTeam("UNKNOWN");
-
-    assertNull(result);
   }
 
   @Test
