@@ -24,7 +24,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class LobbyService {
 
-  @Getter private final Map<String, Lobby> lobbyList = new ConcurrentHashMap<>();
+  @Getter
+  private final Map<String, Lobby> lobbyList = new ConcurrentHashMap<>();
   private final LobbyCodeGenerator generator;
   private final GameService gameService;
   private final ChatService chatService;
