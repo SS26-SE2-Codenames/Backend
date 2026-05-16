@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.game.dto.ClueMessage;
 import com.codenames.codenames.backend.game.dto.GameStateDto;
+import com.codenames.codenames.backend.game.dto.PassTurnMessage;
 import com.codenames.codenames.backend.game.dto.RevealCardMessage;
 import com.codenames.codenames.backend.game.dto.StartGameMessage;
 import com.codenames.codenames.backend.playingfield.GameService;
@@ -82,6 +83,23 @@ class GameSocketControllerTest {
     controller.submitClue(message);
 
     verify(gameService).submitClue(anyString(), any(), any());
+
+    verify(messagingTemplate).convertAndSend(anyString(), any(Object.class));
+  }
+
+  @Test
+  void passTurnShouldBroadcastUpdatedState() {
+
+    PassTurnMessage message = new PassTurnMessage();
+
+    message.setLobbyCode("ABCDE");
+    message.setCurrentTurn(Team.RED);
+
+    when(gameService.createGameStateDto("ABCDE")).thenReturn(mock(GameStateDto.class));
+
+    controller.passTurn(message);
+
+    verify(gameService).passTurn("ABCDE", Team.RED);
 
     verify(messagingTemplate).convertAndSend(anyString(), any(Object.class));
   }
