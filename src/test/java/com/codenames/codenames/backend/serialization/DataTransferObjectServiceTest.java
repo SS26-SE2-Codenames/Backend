@@ -3,6 +3,7 @@ package com.codenames.codenames.backend.serialization;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.playingfield.Card;
@@ -21,6 +22,8 @@ class DataTransferObjectServiceTest {
   DataTransferObjectService service;
   GameStateDataTransferObject gameStateDto;
   private static final Team redTeam = Team.RED;
+  private static final Role spymaster = Role.SPYMASTER;
+  private static final Role operative = Role.OPERATIVE;
 
   @BeforeEach
   void setUp() {
@@ -36,13 +39,13 @@ class DataTransferObjectServiceTest {
     when(mockGameManager.getCurrentBlueFound()).thenReturn(0);
 
     gameStateDto =
-        service.createGameStateDataTransferObject(mockGameManager, Role.OPERATIVE, redTeam);
+        service.createGameStateDataTransferObject(mockGameManager, operative, redTeam, spymaster);
   }
 
   @Test
   void testSpymasterVisibility() {
     gameStateDto =
-        service.createGameStateDataTransferObject(mockGameManager, Role.SPYMASTER, redTeam);
+        service.createGameStateDataTransferObject(mockGameManager, spymaster, redTeam, spymaster);
     assertEquals("RED", gameStateDto.cardList().get(0).color());
   }
 
@@ -65,7 +68,7 @@ class DataTransferObjectServiceTest {
   void testGetWinner_null() {
     when(mockGameManager.getWinner()).thenReturn(null);
     gameStateDto =
-        service.createGameStateDataTransferObject(mockGameManager, Role.OPERATIVE, redTeam);
+        service.createGameStateDataTransferObject(mockGameManager, operative, redTeam, spymaster);
     assertNull(gameStateDto.winner());
   }
 }
