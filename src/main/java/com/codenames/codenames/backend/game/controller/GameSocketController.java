@@ -96,17 +96,13 @@ public class GameSocketController {
   @MessageMapping("/submit-clue")
   public void submitClue(ClueMessage message) {
 
-    GameManager gameManager = gameSessions.get(message.getLobbyCode());
-
-    if (gameManager == null) {
-      return;
-    }
-
-    Clue clue = new Clue(message.getWord(), message.getGuessAmount());
-
-    gameManager.submitClue(clue);
+    gameService.submitClue(
+        message.getLobbyCode(),
+        new Clue(message.getWord(), message.getGuessAmount()),
+        message.getCurrentTurn());
 
     messagingTemplate.convertAndSend(
-        GAME_TOPIC_PREFIX + message.getLobbyCode(), mapGameState(gameManager));
+        GAME_TOPIC_PREFIX + message.getLobbyCode(),
+        mapGameState(gameService.getGameState(message.getLobbyCode())));
   }
 }
