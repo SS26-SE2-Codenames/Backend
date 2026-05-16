@@ -23,7 +23,7 @@ class LobbyTest {
 
     assertEquals("ABCDE", lobby.getLobbyCode());
     assertEquals(1, lobby.getPlayerList().size());
-    assertTrue(lobby.getPlayerList().stream().anyMatch(p -> p.getUsername().equals("Host")));
+    assertTrue(lobby.getPlayerList().stream().anyMatch(p -> p.username().equals("Host")));
   }
 
   @Test
@@ -33,7 +33,7 @@ class LobbyTest {
     lobby.addPlayer("P1");
 
     assertEquals(2, lobby.getPlayerList().size());
-    assertTrue(lobby.getPlayerList().stream().anyMatch(p -> p.getUsername().equals("P1")));
+    assertTrue(lobby.getPlayerList().stream().anyMatch(p -> p.username().equals("P1")));
   }
 
   @Test
@@ -55,7 +55,7 @@ class LobbyTest {
     lobby.addPlayer("P1");
     lobby.removePlayer("P1");
 
-    assertFalse(lobby.getPlayerList().stream().anyMatch(p -> p.getUsername().equals("P1")));
+    assertFalse(lobby.getPlayerList().stream().anyMatch(p -> p.username().equals("P1")));
   }
 
   @Test
@@ -77,7 +77,7 @@ class LobbyTest {
     assertTrue(first);
     assertFalse(second);
 
-    long count = lobby.getPlayerList().stream().filter(p -> p.getUsername().equals("Max")).count();
+    long count = lobby.getPlayerList().stream().filter(p -> p.username().equals("Max")).count();
 
     assertEquals(1, count);
   }

@@ -53,7 +53,7 @@ class GameControllerTest {
 
     when(lobbyService.joinLobby("Max", "ABCDE")).thenReturn(true);
 
-    when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max")));
+    when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max", true)));
 
     controller.join(msg, accessor);
 
@@ -116,7 +116,7 @@ class GameControllerTest {
     accessor.setSessionAttributes(attrs);
 
     when(lobbyService.joinLobby("Max", "ABCDE")).thenReturn(true);
-    when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max")));
+    when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max", true)));
 
     controller.join(msg, accessor);
 
