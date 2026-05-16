@@ -285,7 +285,7 @@ class LobbyServiceTest {
   }
 
   @Test
-  void getPlayersDtoShouldReturnPlayerDTOs_whenLobbyExists() {
+  void getPlayersDtoShouldReturnPlayerDtos_whenLobbyExists() {
     lobbyService.createLobby("Host");
 
     List<PlayerDto> result = lobbyService.getPlayersDto("ABCDE");
