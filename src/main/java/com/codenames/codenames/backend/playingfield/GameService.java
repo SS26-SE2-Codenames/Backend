@@ -117,6 +117,11 @@ public class GameService {
     GameManager gm = getGame(lobbyCode);
 
     return new GameStateDto(
-        gm.getCardList(), gm.getCurrentClue(), gm.getRemainingGuesses(), gm.getWinner());
+        gm.getCardList(),
+        gm.getCurrentClue(),
+        gm.getRemainingGuesses(),
+        gm.getWinner(),
+        gm.getCurrentTurn(),
+        gm.getCurrentPhase());
   }
 }
