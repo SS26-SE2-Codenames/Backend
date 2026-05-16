@@ -47,15 +47,10 @@ public class GameSocketController {
    * @param cardGenerator utility for generating game cards
    * @param clueValidationService service for validating clues
    */
-  public GameSocketController(
-      LobbyService lobbyService,
-      SimpMessagingTemplate messagingTemplate,
-      CardGenerator cardGenerator,
-      ClueValidationService clueValidationService) {
-    this.lobbyService = lobbyService;
+  public GameSocketController(GameService gameService, SimpMessagingTemplate messagingTemplate) {
+
+    this.gameService = gameService;
     this.messagingTemplate = messagingTemplate;
-    this.cardGenerator = cardGenerator;
-    this.clueValidationService = clueValidationService;
   }
 
   /**
