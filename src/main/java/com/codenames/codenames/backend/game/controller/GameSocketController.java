@@ -30,15 +30,6 @@ public class GameSocketController {
 
   private static final String GAME_TOPIC_PREFIX = "/topic/game/";
 
-  private GameStateDto mapGameState(GameManager gameManager) {
-
-    return new GameStateDto(
-        gameManager.getCardList(),
-        gameManager.getCurrentClue(),
-        gameManager.getRemainingGuesses(),
-        gameManager.getWinner());
-  }
-
   /**
    * Creates a new {@code GameSocketController}.
    *
