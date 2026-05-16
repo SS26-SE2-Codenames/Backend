@@ -7,9 +7,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Service;
 
 /**
- * Service class for the game. The class stores an instance of GameManager for each
- * lobby. This also exposes the methods of the GameManager, so that the websocket controllers can
- * have message mappings to allow frontend to interact with the backend.
+ * Service class for the game. The class stores an instance of GameManager for each lobby. This also
+ * exposes the methods of the GameManager, so that the websocket controllers can have message
+ * mappings to allow frontend to interact with the backend.
  */
 @Service
 public class GameService {
@@ -34,8 +34,7 @@ public class GameService {
    * @param startingTeam the starting team required to initialize a GM
    */
   public void createGameManager(String lobbyCode, Team startingTeam) {
-    games.computeIfAbsent(
-        lobbyCode, key -> gameManagerFactory.create(startingTeam));
+    games.computeIfAbsent(lobbyCode, key -> gameManagerFactory.create(startingTeam));
   }
 
   /**
@@ -58,6 +57,10 @@ public class GameService {
       throw new IllegalStateException("GameManager does not exist for lobby: " + lobbyCode);
     }
     return games.get(lobbyCode);
+  }
+
+  public GameManager getGameState(String lobbyCode) {
+    return getGame(lobbyCode);
   }
 
   /**
