@@ -5,9 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.codenames.codenames.backend.playingfield.GameService;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import com.codenames.codenames.backend.websocket.Player;
@@ -24,11 +29,13 @@ class LobbyServiceTest {
 
   private LobbyService lobbyService;
   private LobbyCodeGenerator generator;
+  private GameService gameService;
 
   @BeforeEach
   void setup() {
     generator = mock(LobbyCodeGenerator.class);
-    lobbyService = new LobbyService(generator);
+    gameService = mock(GameService.class);
+    lobbyService = new LobbyService(generator, gameService);
     when(generator.generateLobbyCode()).thenReturn("ABCDE");
   }
 
@@ -209,12 +216,12 @@ class LobbyServiceTest {
   }
 
   @Test
-  void getPlayerTeam_wrongCode() {
+  void testGetPlayerTeam_wrongCode() {
     assertNull(lobbyService.getPlayerTeam("Host", "invalidCode"));
   }
 
   @Test
-  void getPlayerTeam_nonExistentPlayer() {
+  void testGetPlayerTeam_nonExistentPlayer() {
     String lobbyCode = lobbyService.createLobby("Host");
 
     assertNull(lobbyService.getPlayerTeam("nonExistentPlayer", lobbyCode));
@@ -229,12 +236,12 @@ class LobbyServiceTest {
   }
 
   @Test
-  void getPlayerRole_wrongCode() {
+  void testGetPlayerRole_wrongCode() {
     assertNull(lobbyService.getPlayerRole("Host", "test"));
   }
 
   @Test
-  void getPlayerRole_nonExistentPlayer() {
+  void testGetPlayerRole_nonExistentPlayer() {
     String lobbyCode = lobbyService.createLobby("Host");
 
     assertNull(lobbyService.getPlayerRole("nonExistentPlayer", lobbyCode));
@@ -256,5 +263,11 @@ class LobbyServiceTest {
     Team result = lobbyService.decideStartingTeam("UNKNOWN");
 
     assertNull(result);
+  }
+
+  @Test
+  void testAddGameManagerForLobby() {
+    lobbyService.createLobby("Host");
+    verify(gameService, times(1)).createGameManager(eq("ABCDE"), any(Team.class));
   }
 }
