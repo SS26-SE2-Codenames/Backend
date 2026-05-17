@@ -260,7 +260,7 @@ public class LobbyService {
     Lobby lobby = lobbyList.get(lobbyCode);
     addGameManagerForLobby(lobby, lobbyCode);
 
-    log.info("{}: Game start requested", lobbyCode);
+    log.info("{}: Game start requested, returning: {}", lobbyCode, isStarted);
     return isStarted;
   }
 
@@ -272,5 +272,9 @@ public class LobbyService {
       }
     }
     return "";
+  }
+
+  public boolean getIsStarted(String lobbyCode) {
+    return gameService.isGameStarted(lobbyCode);
   }
 }

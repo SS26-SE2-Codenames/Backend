@@ -2,7 +2,13 @@ package com.codenames.codenames.backend.playingfield;
 
 import com.codenames.codenames.backend.clue.Clue;
 import com.codenames.codenames.backend.game.dto.GameStateDto;
+import com.codenames.codenames.backend.serialization.CardDataTransferObject;
+import com.codenames.codenames.backend.serialization.DataTransferObjectService;
+import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import com.codenames.codenames.backend.utility.Team;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Service;
@@ -17,14 +23,16 @@ public class GameService {
 
   private final Map<String, GameManager> games = new ConcurrentHashMap<>();
   private final GameManagerFactory gameManagerFactory;
+  private final DataTransferObjectService dtoService;
 
   /**
    * Constructor for a GameService object.
    *
    * @param gameManagerFactory the factory responsible for generating GameManagers
    */
-  public GameService(GameManagerFactory gameManagerFactory) {
+  public GameService(GameManagerFactory gameManagerFactory, DataTransferObjectService dtoService) {
     this.gameManagerFactory = gameManagerFactory;
+    this.dtoService = dtoService;
   }
 
   /**
@@ -123,5 +131,32 @@ public class GameService {
         gm.getWinner(),
         gm.getCurrentTurn(),
         gm.getCurrentPhase());
+  }
+
+  /**
+   * Maps current game State into a @link GameStateTransferObject.
+   *
+   * @param lobbyCode
+   * @return
+   */
+  public GameStateDataTransferObject getCurrentGameState(String lobbyCode) {
+    GameManager gm = getGame(lobbyCode);
+    return dtoService.createGameStateDataTransferObject(gm, gm.getCurrentTurn());
+  }
+
+  /**
+   * This method uses the private method getGame to check if a game is already started
+   *      via the existence of a game manager.
+   *
+   * @param lobbyCode the lobbyCode of the lobby
+   * @return if the game manager for the lobby already exists aka the game is started
+   */
+  public boolean isGameStarted(String lobbyCode) {
+    try {
+      getGame(lobbyCode);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
   }
 }

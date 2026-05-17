@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 import com.codenames.codenames.backend.playingfield.Card;
 import com.codenames.codenames.backend.playingfield.GameManager;
 import com.codenames.codenames.backend.utility.Color;
-import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,13 +35,13 @@ class DataTransferObjectServiceTest {
     when(mockGameManager.getCurrentBlueFound()).thenReturn(0);
 
     gameStateDto =
-        service.createGameStateDataTransferObject(mockGameManager, Role.OPERATIVE, redTeam);
+        service.createGameStateDataTransferObject(mockGameManager, redTeam);
   }
 
   @Test
   void testSpymasterVisibility() {
     gameStateDto =
-        service.createGameStateDataTransferObject(mockGameManager, Role.SPYMASTER, redTeam);
+        service.createGameStateDataTransferObject(mockGameManager, redTeam);
     assertEquals("RED", gameStateDto.cardList().get(0).color());
   }
 
@@ -65,7 +64,7 @@ class DataTransferObjectServiceTest {
   void testGetWinner_null() {
     when(mockGameManager.getWinner()).thenReturn(null);
     gameStateDto =
-        service.createGameStateDataTransferObject(mockGameManager, Role.OPERATIVE, redTeam);
+        service.createGameStateDataTransferObject(mockGameManager, redTeam);
     assertNull(gameStateDto.winner());
   }
 }

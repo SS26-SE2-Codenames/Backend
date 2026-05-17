@@ -28,7 +28,7 @@ class SerializationJsonTest {
     card = new Card("TEST", Color.RED);
     serializer = new SerializationJson(mapper);
 
-    dummyList = List.of(new CardDataTransferObject("TEST", "HIDDEN", false));
+    dummyList = List.of(new CardDataTransferObject("TEST", null, false));
     dummyGameState =
         new GameStateDataTransferObject(Team.RED, Team.RED, 0, 0, "Test", 1, dummyList);
   }

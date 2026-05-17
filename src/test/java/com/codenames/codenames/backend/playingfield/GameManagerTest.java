@@ -164,7 +164,7 @@ class GameManagerTest {
 
   @Test
   void testGetWinner_redFoundBlackCardFound() {
-    mockCardGeneration(List.of(new Card("Test", Color.BLACK)));
+    mockCardGeneration(List.of(new Card("Test", Color.ASSASSIN)));
     gameManager = new GameManager(blueTeam, mockCardGenerator, mockClueValidationService);
     helperMethodSubmitClue(gameManager, 1, blueTeam);
     helperMethodAdvanceTurns(2); // red spymaster
@@ -177,7 +177,7 @@ class GameManagerTest {
 
   @Test
   void testGetWinner_blueFoundBlackCardFound() {
-    mockCardGeneration(List.of(new Card("Test", Color.BLACK)));
+    mockCardGeneration(List.of(new Card("Test", Color.ASSASSIN)));
     gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
     helperMethodAdvanceTurns(2); // blue spymaster
     helperMethodSubmitClue(gameManager, 1, blueTeam);
@@ -188,7 +188,7 @@ class GameManagerTest {
 
   @Test
   void testFlipWhiteCard() {
-    mockCardGeneration(List.of(new Card("Test", Color.WHITE)));
+    mockCardGeneration(List.of(new Card("Test", Color.NEUTRAL)));
     gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
     helperMethodSubmitClue(gameManager, 1, redTeam);
     helperMethodAdvanceTurns(1);
@@ -206,7 +206,7 @@ class GameManagerTest {
 
   @Test
   void testFlipCard_winnerAlreadyDetermined() {
-    mockCardGeneration(List.of(new Card("Test", Color.BLACK)));
+    mockCardGeneration(List.of(new Card("Test", Color.ASSASSIN)));
     gameManager = new GameManager(blueTeam, mockCardGenerator, mockClueValidationService);
     helperMethodSubmitClue(gameManager, 1, blueTeam);
     helperMethodAdvanceTurns(1); // red operative
