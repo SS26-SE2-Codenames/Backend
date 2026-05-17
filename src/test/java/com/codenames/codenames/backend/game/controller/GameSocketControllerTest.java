@@ -8,7 +8,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.game.dto.ClueMessage;
-import com.codenames.codenames.backend.game.dto.GameStateDto;
 import com.codenames.codenames.backend.game.dto.PassTurnMessage;
 import com.codenames.codenames.backend.game.dto.RevealCardMessage;
 import com.codenames.codenames.backend.game.dto.StartGameMessage;

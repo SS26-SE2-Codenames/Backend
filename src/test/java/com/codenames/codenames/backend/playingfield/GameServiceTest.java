@@ -21,7 +21,6 @@ class GameServiceTest {
   private GameService gameService;
   private GameManager mockGameManager;
   private GameManagerFactory mockGameManagerFactory;
-  private DataTransferObjectService mockDtoService;
 
   private final String lobbyCode = "ABCDE";
   private final Team redTeam = Team.RED;
@@ -30,7 +29,7 @@ class GameServiceTest {
   void setup() {
     mockGameManagerFactory = mock(GameManagerFactory.class);
     mockGameManager = mock(GameManager.class);
-    mockDtoService = mock(DataTransferObjectService.class);
+    DataTransferObjectService mockDtoService = mock(DataTransferObjectService.class);
 
     gameService = new GameService(mockGameManagerFactory, mockDtoService);
     when(mockGameManagerFactory.create(redTeam)).thenReturn(mockGameManager);

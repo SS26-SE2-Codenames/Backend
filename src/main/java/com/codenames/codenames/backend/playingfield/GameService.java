@@ -2,13 +2,9 @@ package com.codenames.codenames.backend.playingfield;
 
 import com.codenames.codenames.backend.clue.Clue;
 import com.codenames.codenames.backend.game.dto.GameStateDto;
-import com.codenames.codenames.backend.serialization.CardDataTransferObject;
 import com.codenames.codenames.backend.serialization.DataTransferObjectService;
 import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import com.codenames.codenames.backend.utility.Team;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Service;
@@ -136,8 +132,8 @@ public class GameService {
   /**
    * Maps current game State into a @link GameStateTransferObject.
    *
-   * @param lobbyCode
-   * @return
+   * @param lobbyCode the unique lobby code
+   * @return the mapped game state transfer object
    */
   public GameStateDataTransferObject getCurrentGameState(String lobbyCode) {
     GameManager gm = getGame(lobbyCode);

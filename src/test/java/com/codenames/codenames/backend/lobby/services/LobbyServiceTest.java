@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -285,7 +288,7 @@ class LobbyServiceTest {
   }
 
   @Test
-  void getPlayersDtoShouldReturnPlayerDtos_whenLobbyExists() {
+  void getPlayersDtoShouldReturnPlayerDTOs_whenLobbyExists() {
     lobbyService.createLobby("Host");
 
     List<PlayerDto> result = lobbyService.getPlayersDto("ABCDE");
@@ -336,7 +339,7 @@ class LobbyServiceTest {
   void testGetHost_Works() {
     lobbyService.createLobby("Alice");
     lobbyService.joinLobby("Bob", "ABCDE");
-    lobbyService.joinLobby("Ceasar", "ABCDE");
+    lobbyService.joinLobby("Caesar", "ABCDE");
 
     String expected = "Alice";
     String result = lobbyService.getHost("ABCDE");
@@ -344,27 +347,12 @@ class LobbyServiceTest {
     assertEquals(expected, result);
   }
 
-  @Test
-  void testGetHost_NullCode() {
-    String result = lobbyService.getHost(null);
-    String expected = "";
+  @ParameterizedTest
+  @NullAndEmptySource
+  @ValueSource(strings = {"ABCDE"})
+  void testGetHost_ReturnsEmptyString(String lobbyCode) {
+    String result = lobbyService.getHost(lobbyCode);
 
-    assertEquals(expected, result);
-  }
-
-  @Test
-  void testGetHost_EmptyCode() {
-    String result = lobbyService.getHost("");
-    String expected = "";
-
-    assertEquals(expected, result);
-  }
-
-  @Test
-  void testGetHost_EmptyPlayers() {
-    String result = lobbyService.getHost("ABCDE");
-    String expected = "";
-
-    assertEquals(expected, result);
+    assertEquals("", result);
   }
 }

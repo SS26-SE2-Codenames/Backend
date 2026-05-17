@@ -169,20 +169,31 @@ public class LobbyController {
     }
   }
 
+  /**
+   * Endpoint for starting a game, this is the last http-request only the host can make.
+   *
+   * @param lobbyCode the unique lobby code
+   * @param username the name of the requesting user
+   * @return a response entity of a lobby response, with isStarted @code true or @code false,
+   *      whether the starting was successful or not
+   */
+
   @GetMapping("/{lobbyCode}/start-game")
   public ResponseEntity<LobbyResponse> startGame(
           @PathVariable String lobbyCode, @RequestParam String username
   ) {
     boolean isStarted = service.startGame(lobbyCode, username);
 
-    if(isStarted) return ResponseEntity.ok(
-            new LobbyResponse(
-                    "Game is starting now.",
-                    lobbyCode,
-                    service.getPlayersDto(lobbyCode),
-                    true
-            )
-    );
+    if (isStarted) {
+      return ResponseEntity.ok(
+              new LobbyResponse(
+                      "Game is starting now.",
+                      lobbyCode,
+                      service.getPlayersDto(lobbyCode),
+                      true
+              )
+      );
+    }
     return ResponseEntity.badRequest().body(
             new LobbyResponse(
                     "Could not start the game.",

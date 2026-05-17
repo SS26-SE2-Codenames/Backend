@@ -2,6 +2,7 @@ package com.codenames.codenames.backend.websocket;
 
 import com.codenames.codenames.backend.lobby.services.LobbyService;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
  * <p>Processes client messages (e.g. join requests), coordinates with {@link LobbyService}, and
  * broadcasts updates to subscribed clients.
  */
+@Slf4j
 @Controller
 public class GameController {
 
@@ -49,13 +51,16 @@ public class GameController {
   public void join(JoinMessage message, SimpMessageHeaderAccessor headerAccessor) {
 
     String sessionId = headerAccessor.getSessionId();
+    try {
+      if (sessionId == null && headerAccessor.getSessionAttributes() != null) {
+        sessionId = (String) headerAccessor.getSessionAttributes().get("sessionId");
+      }
 
-    if (sessionId == null && headerAccessor.getSessionAttributes() != null) {
-      sessionId = (String) headerAccessor.getSessionAttributes().get("sessionId");
-    }
-
-    if (sessionId == null) {
-      return;
+      if (sessionId == null) {
+        return;
+      }
+    } catch (NullPointerException e) {
+      log.error(e.getMessage());
     }
 
     boolean joined = lobbyService.joinLobby(message.getName(), message.getCode());
