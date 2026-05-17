@@ -12,6 +12,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 /** Unit tests for {@link WebSocketEventListener}. */
 class WebSocketEventListenerTest {
+  private static final String TEST_SESSION_ID = "123";
   private SessionRegistry registry;
   private WebSocketEventListener listener;
 
@@ -24,22 +25,22 @@ class WebSocketEventListenerTest {
   @Test
   void shouldHandleDisconnectAndRemoveSessionMapping() {
 
-    registry.register("123", "Max", "ABCDE");
+    registry.register(TEST_SESSION_ID, "Max", "ABCDE");
 
     SessionDisconnectEvent event = org.mockito.Mockito.mock(SessionDisconnectEvent.class);
-    when(event.getSessionId()).thenReturn("123");
+    when(event.getSessionId()).thenReturn(TEST_SESSION_ID);
 
     listener.handleDisconnect(event);
 
-    assertNull(registry.getUser("123"));
-    assertNull(registry.getLobby("123"));
+    assertNull(registry.getUser(TEST_SESSION_ID));
+    assertNull(registry.getLobby(TEST_SESSION_ID));
   }
 
   @Test
   void shouldIgnoreDisconnectWhenUsernameIsNull() {
 
     SessionDisconnectEvent event = org.mockito.Mockito.mock(SessionDisconnectEvent.class);
-    when(event.getSessionId()).thenReturn("123");
+    when(event.getSessionId()).thenReturn(TEST_SESSION_ID);
 
     listener.handleDisconnect(event);
   }
@@ -47,11 +48,11 @@ class WebSocketEventListenerTest {
   @Test
   void shouldIgnoreDisconnectWhenLobbyIsMissing() {
 
-    registry.register("123", "Max", "ABCDE");
-    registry.remove("123");
+    registry.register(TEST_SESSION_ID, "Max", "ABCDE");
+    registry.remove(TEST_SESSION_ID);
 
     SessionDisconnectEvent event = org.mockito.Mockito.mock(SessionDisconnectEvent.class);
-    when(event.getSessionId()).thenReturn("123");
+    when(event.getSessionId()).thenReturn(TEST_SESSION_ID);
 
     listener.handleDisconnect(event);
   }
@@ -68,24 +69,24 @@ class WebSocketEventListenerTest {
   @Test
   void shouldIgnoreDisconnectWhenLobbyIsNullButUserExists() throws Exception {
 
-    registry.register("123", "Max", "ABCDE");
-    removeLobbyMappingOnly("123");
+    registry.register(TEST_SESSION_ID, "Max", "ABCDE");
+    removeLobbyMappingForTestSession();
 
     SessionDisconnectEvent event = org.mockito.Mockito.mock(SessionDisconnectEvent.class);
-    when(event.getSessionId()).thenReturn("123");
+    when(event.getSessionId()).thenReturn(TEST_SESSION_ID);
 
     listener.handleDisconnect(event);
 
-    assertEquals("Max", registry.getUser("123"));
-    assertNull(registry.getLobby("123"));
+    assertEquals("Max", registry.getUser(TEST_SESSION_ID));
+    assertNull(registry.getLobby(TEST_SESSION_ID));
   }
 
   @SuppressWarnings("unchecked")
-  private void removeLobbyMappingOnly(String sessionId) throws Exception {
+  private void removeLobbyMappingForTestSession() throws Exception {
     Field lobbyField = SessionRegistry.class.getDeclaredField("sessionToLobby");
     lobbyField.setAccessible(true);
 
     Map<String, String> sessionToLobby = (Map<String, String>) lobbyField.get(registry);
-    sessionToLobby.remove(sessionId);
+    sessionToLobby.remove(TEST_SESSION_ID);
   }
 }
