@@ -1,15 +1,16 @@
 package com.codenames.codenames.backend.playingfield;
 
 import com.codenames.codenames.backend.clue.Clue;
+import com.codenames.codenames.backend.game.dto.GameStateDto;
 import com.codenames.codenames.backend.utility.Team;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Service;
 
 /**
- * Service class for the game. The class stores an instance of GameManager for each
- * lobby. This also exposes the methods of the GameManager, so that the websocket controllers can
- * have message mappings to allow frontend to interact with the backend.
+ * Service class for the game. The class stores an instance of GameManager for each lobby. This also
+ * exposes the methods of the GameManager, so that the websocket controllers can have message
+ * mappings to allow frontend to interact with the backend.
  */
 @Service
 public class GameService {
@@ -34,8 +35,7 @@ public class GameService {
    * @param startingTeam the starting team required to initialize a GM
    */
   public void createGameManager(String lobbyCode, Team startingTeam) {
-    games.computeIfAbsent(
-        lobbyCode, key -> gameManagerFactory.create(startingTeam));
+    games.computeIfAbsent(lobbyCode, key -> gameManagerFactory.create(startingTeam));
   }
 
   /**
@@ -58,6 +58,16 @@ public class GameService {
       throw new IllegalStateException("GameManager does not exist for lobby: " + lobbyCode);
     }
     return games.get(lobbyCode);
+  }
+
+  /**
+   * Retrieves the current GameManager for a lobby.
+   *
+   * @param lobbyCode lobby identifier
+   * @return the active GameManager
+   */
+  public GameManager getGameState(String lobbyCode) {
+    return getGame(lobbyCode);
   }
 
   /**
@@ -93,5 +103,24 @@ public class GameService {
   public void passTurn(String lobbyCode, Team callingTeam) {
     GameManager gm = getGame(lobbyCode);
     gm.passTurn(callingTeam);
+  }
+
+  /**
+   * Creates a DTO representing the current game state.
+   *
+   * @param lobbyCode lobby identifier
+   * @return DTO containing board and turn information
+   */
+  public GameStateDto createGameStateDto(String lobbyCode) {
+
+    GameManager gm = getGame(lobbyCode);
+
+    return new GameStateDto(
+        gm.getCardList(),
+        gm.getCurrentClue(),
+        gm.getRemainingGuesses(),
+        gm.getWinner(),
+        gm.getCurrentTurn(),
+        gm.getCurrentPhase());
   }
 }

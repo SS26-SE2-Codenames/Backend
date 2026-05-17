@@ -1,27 +1,32 @@
 package com.codenames.codenames.backend.lobby.services;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.codenames.codenames.backend.chat.ChatService;
 import com.codenames.codenames.backend.lobby.dto.PlayerDto;
 import com.codenames.codenames.backend.playingfield.GameService;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import com.codenames.codenames.backend.websocket.Player;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
 
 /**
  * Tests for {@link LobbyService}.
  *
  * <p>Validates lobby creation, joining, leaving, and player management behavior.
  */
-
 class LobbyServiceTest {
 
   private LobbyService lobbyService;
@@ -92,10 +97,7 @@ class LobbyServiceTest {
 
   @Test
   void createLobbyShouldGenerateNewCodeIfDuplicateExists() {
-    when(generator.generateLobbyCode())
-            .thenReturn("ABCDE")
-            .thenReturn("ABCDE")
-            .thenReturn("FGHIJ");
+    when(generator.generateLobbyCode()).thenReturn("ABCDE").thenReturn("ABCDE").thenReturn("FGHIJ");
 
     lobbyService.createLobby("Host1");
     String code2 = lobbyService.createLobby("Host2");
@@ -184,9 +186,7 @@ class LobbyServiceTest {
 
     List<Player> players = lobbyService.getPlayers("ABCDE");
 
-    long count = players.stream()
-            .filter(p -> p.username().equals("Max"))
-            .count();
+    long count = players.stream().filter(p -> p.username().equals("Max")).count();
 
     assertEquals(1, count);
   }
@@ -285,7 +285,7 @@ class LobbyServiceTest {
   }
 
   @Test
-  void getPlayersDtoShouldReturnPlayerDTOs_whenLobbyExists() {
+  void getPlayersDtoShouldReturnPlayerDtos_whenLobbyExists() {
     lobbyService.createLobby("Host");
 
     List<PlayerDto> result = lobbyService.getPlayersDto("ABCDE");
