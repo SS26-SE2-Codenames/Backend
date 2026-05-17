@@ -7,8 +7,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 /**
  * Listener for WebSocket lifecycle events.
  *
- * <p>Handles client disconnections by removing playerList from lobbies, cleaning up session mappings,
- * and notifying remaining clients.
+ * <p>Handles client disconnections by cleaning up session mappings.
  */
 @Component
 public class WebSocketEventListener {
@@ -18,8 +17,6 @@ public class WebSocketEventListener {
    * Creates a new {@code WebSocketEventListener}.
    *
    * @param sessionRegistry the registry managing WebSocket sessions
-   * @param lobbyService the service handling lobby operations
-   * @param messagingTemplate the messaging template used for broadcasting updates
    */
   public WebSocketEventListener(SessionRegistry sessionRegistry) {
     this.sessionRegistry = sessionRegistry;
@@ -28,8 +25,8 @@ public class WebSocketEventListener {
   /**
    * Handles a WebSocket disconnect event.
    *
-   * <p>Removes the disconnected player from the lobby, cleans up session data, and broadcasts the
-   * updated player list.
+   * <p>Removes transient WebSocket session mappings while preserving lobby membership for
+   * reconnect.
    *
    * @param event the disconnect event containing session information
    */
