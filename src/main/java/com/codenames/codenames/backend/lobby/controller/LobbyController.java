@@ -1,5 +1,6 @@
 package com.codenames.codenames.backend.lobby.controller;
 
+import com.codenames.codenames.backend.lobby.dto.GameStartResponse;
 import com.codenames.codenames.backend.lobby.dto.LobbyResponse;
 import com.codenames.codenames.backend.lobby.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.services.LobbyService;
@@ -162,5 +163,28 @@ public class LobbyController {
               )
       );
     }
+  }
+
+  @GetMapping("/{lobbyCode}/start-game")
+  public ResponseEntity<GameStartResponse> startGame(
+          @PathVariable String lobbyCode, @RequestParam String username
+  ) {
+    boolean isStarted = service.startGame(lobbyCode, username);
+
+    if(isStarted) return ResponseEntity.ok(
+            new GameStartResponse(
+                    "Game is starting now.",
+                    lobbyCode,
+                    service.getPlayersDto(lobbyCode),
+                    true
+            )
+    );
+    return ResponseEntity.badRequest().body(
+            new GameStartResponse("Could not start the game.",
+                    username,
+                    service.getPlayersDto(lobbyCode),
+                    false
+            )
+    );
   }
 }

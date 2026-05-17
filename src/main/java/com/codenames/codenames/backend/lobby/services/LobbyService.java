@@ -9,6 +9,7 @@ import com.codenames.codenames.backend.utility.Team;
 import com.codenames.codenames.backend.websocket.Player;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +61,6 @@ public class LobbyService {
 
     Lobby lobby = new Lobby(lobbyCode, username);
     lobbyList.put(lobbyCode, lobby);
-    addGameManagerForLobby(lobby, lobbyCode);
     log.info("{}: a lobby has been created", lobbyCode);
     return lobbyCode;
   }
@@ -255,5 +255,24 @@ public class LobbyService {
       return lobby.getPlayerRole(username);
     }
     return null;
+  }
+
+  public boolean startGame(String lobbyCode, String username) {
+    boolean isStarted = !lobbyCode.isBlank() && !username.isBlank() && Objects.equals(getHost(lobbyCode), username);
+    Lobby lobby = lobbyList.get(lobbyCode);
+    addGameManagerForLobby(lobby, lobbyCode);
+
+    log.info("{}: Game start requested", lobbyCode);
+    return isStarted;
+  }
+
+  private String getHost(String lobbyCode) {
+    List<Player> players = getPlayers(lobbyCode);
+    for(Player p : players) {
+      if(p.isHost()) {
+        return p.username();
+      }
+    }
+    return "";
   }
 }
