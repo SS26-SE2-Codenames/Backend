@@ -1,5 +1,6 @@
 package com.codenames.codenames.backend.game.controller;
 
+import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -43,7 +44,7 @@ class GameSocketControllerTest {
 
     message.setLobbyCode("ABCDE");
 
-    when(gameService.createGameStateDto("ABCDE")).thenReturn(mock(GameStateDto.class));
+    when(gameService.getCurrentGameState("ABCDE")).thenReturn(mock(GameStateDataTransferObject.class));
 
     controller.startGame(message);
 
@@ -59,7 +60,7 @@ class GameSocketControllerTest {
     message.setPosition(0);
     message.setCurrentTurn(Team.RED);
 
-    when(gameService.createGameStateDto("ABCDE")).thenReturn(mock(GameStateDto.class));
+    when(gameService.getCurrentGameState("ABCDE")).thenReturn(mock(GameStateDataTransferObject.class));
 
     controller.revealCard(message);
 
@@ -78,7 +79,7 @@ class GameSocketControllerTest {
     message.setGuessAmount(2);
     message.setCurrentTurn(Team.RED);
 
-    when(gameService.createGameStateDto("ABCDE")).thenReturn(mock(GameStateDto.class));
+    when(gameService.getCurrentGameState("ABCDE")).thenReturn(mock(GameStateDataTransferObject.class));
 
     controller.submitClue(message);
 
@@ -95,7 +96,7 @@ class GameSocketControllerTest {
     message.setLobbyCode("ABCDE");
     message.setCurrentTurn(Team.RED);
 
-    when(gameService.createGameStateDto("ABCDE")).thenReturn(mock(GameStateDto.class));
+    when(gameService.getCurrentGameState("ABCDE")).thenReturn(mock(GameStateDataTransferObject.class));
 
     controller.passTurn(message);
 

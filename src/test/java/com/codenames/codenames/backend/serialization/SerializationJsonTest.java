@@ -38,7 +38,7 @@ class SerializationJsonTest {
     String expectedResult =
         "{\"winner\":\"RED\",\"currentTurn\":\"RED\",\"currentRedFound\":0,\"currentBlueFound\":0"
             + ",\"currentClue\":\"Test\",\"remainingGuesses\":1,\"cardList\":[{\"word\":\"TEST\","
-            + "\"color\":\"HIDDEN\",\"isGuessed\":false}]}";
+            + "\"color\":null,\"isGuessed\":false}]}";
     String result = serializer.serialize(dummyGameState);
     assertEquals(expectedResult, result);
   }

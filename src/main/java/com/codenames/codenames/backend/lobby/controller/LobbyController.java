@@ -1,6 +1,5 @@
 package com.codenames.codenames.backend.lobby.controller;
 
-import com.codenames.codenames.backend.lobby.dto.GameStartResponse;
 import com.codenames.codenames.backend.lobby.dto.LobbyResponse;
 import com.codenames.codenames.backend.lobby.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.services.LobbyService;
@@ -185,8 +184,9 @@ public class LobbyController {
             )
     );
     return ResponseEntity.badRequest().body(
-            new LobbyResponse("Could not start the game.",
-                    username,
+            new LobbyResponse(
+                    "Could not start the game.",
+                    lobbyCode,
                     service.getPlayersDto(lobbyCode),
                     false
             )

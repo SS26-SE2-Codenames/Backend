@@ -311,7 +311,60 @@ class LobbyServiceTest {
 
   @Test
   void testAddGameManagerForLobby() {
-    lobbyService.createLobby("Host");
+    lobbyService.createLobby("User");
+    lobbyService.startGame("ABCDE", "User");
     verify(gameService, times(1)).createGameManager(eq("ABCDE"), any(Team.class));
+  }
+
+  @Test
+  void testGetIsStarted() {
+    when(gameService.isGameStarted("ABCDE")).thenReturn(true);
+
+    boolean result = lobbyService.getIsStarted("ABCDE");
+    assertTrue(result);
+  }
+
+  @Test
+  void testGetIsStarted_GameServiceReturnsFalse() {
+    when(gameService.isGameStarted("ABCDE")).thenReturn(false);
+
+    boolean result = lobbyService.getIsStarted("ABCDE");
+    assertFalse(result);
+  }
+
+  @Test
+  void testGetHost_Works() {
+    lobbyService.createLobby("Alice");
+    lobbyService.joinLobby("Bob", "ABCDE");
+    lobbyService.joinLobby("Ceasar", "ABCDE");
+
+    String expected = "Alice";
+    String result = lobbyService.getHost("ABCDE");
+
+    assertEquals(expected, result);
+  }
+
+  @Test
+  void testGetHost_NullCode() {
+    String result = lobbyService.getHost(null);
+    String expected = "";
+
+    assertEquals(expected, result);
+  }
+
+  @Test
+  void testGetHost_EmptyCode() {
+    String result = lobbyService.getHost("");
+    String expected = "";
+
+    assertEquals(expected, result);
+  }
+
+  @Test
+  void testGetHost_EmptyPlayers() {
+    String result = lobbyService.getHost("ABCDE");
+    String expected = "";
+
+    assertEquals(expected, result);
   }
 }

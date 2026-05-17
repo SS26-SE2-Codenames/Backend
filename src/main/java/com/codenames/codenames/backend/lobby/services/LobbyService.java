@@ -264,8 +264,10 @@ public class LobbyService {
     return isStarted;
   }
 
-  private String getHost(String lobbyCode) {
+  public String getHost(String lobbyCode) {
+    if(lobbyCode == null || lobbyCode.isBlank()) return "";
     List<Player> players = getPlayers(lobbyCode);
+    if(players.isEmpty()) return "";
     for(Player p : players) {
       if(p.isHost()) {
         return p.username();
