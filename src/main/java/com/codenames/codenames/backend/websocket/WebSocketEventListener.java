@@ -1,9 +1,6 @@
 package com.codenames.codenames.backend.websocket;
 
-import com.codenames.codenames.backend.lobby.services.LobbyService;
-import java.util.List;
 import org.springframework.context.event.EventListener;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
@@ -16,8 +13,6 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 @Component
 public class WebSocketEventListener {
   private final SessionRegistry sessionRegistry;
-  private final LobbyService lobbyService;
-  private final SimpMessagingTemplate messagingTemplate;
 
   /**
    * Creates a new {@code WebSocketEventListener}.
@@ -26,13 +21,8 @@ public class WebSocketEventListener {
    * @param lobbyService the service handling lobby operations
    * @param messagingTemplate the messaging template used for broadcasting updates
    */
-  public WebSocketEventListener(
-      SessionRegistry sessionRegistry,
-      LobbyService lobbyService,
-      SimpMessagingTemplate messagingTemplate) {
+  public WebSocketEventListener(SessionRegistry sessionRegistry) {
     this.sessionRegistry = sessionRegistry;
-    this.lobbyService = lobbyService;
-    this.messagingTemplate = messagingTemplate;
   }
 
   /**
@@ -48,19 +38,10 @@ public class WebSocketEventListener {
 
     String sessionId = event.getSessionId();
 
-    String username = sessionRegistry.getUser(sessionId);
-    String lobbyCode = sessionRegistry.getLobby(sessionId);
-
-    if (username == null || lobbyCode == null) {
+    if (sessionRegistry.getUser(sessionId) == null || sessionRegistry.getLobby(sessionId) == null) {
       return;
     }
 
-    lobbyService.leaveLobby(username, lobbyCode);
     sessionRegistry.remove(sessionId);
-
-    List<String> players =
-        lobbyService.getPlayers(lobbyCode).stream().map(Player::username).toList();
-
-    messagingTemplate.convertAndSend("/topic/lobby/" + lobbyCode, players);
   }
 }
