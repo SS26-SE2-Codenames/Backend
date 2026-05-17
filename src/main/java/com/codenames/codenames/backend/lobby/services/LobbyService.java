@@ -17,10 +17,9 @@ import org.springframework.stereotype.Service;
 /**
  * Service responsible for managing lobbies and player interactions.
  *
- * <p>Handles creation of lobbies, player joins/leaves, and retrieval of lobby data.
- * Ensures uniqueness of lobby codes and thread-safe access to lobby storage.
+ * <p>Handles creation of lobbies, player joins/leaves, and retrieval of lobby data. Ensures
+ * uniqueness of lobby codes and thread-safe access to lobby storage.
  */
-
 @Slf4j
 @Service
 public class LobbyService {
@@ -37,9 +36,7 @@ public class LobbyService {
    * @param generator the lobby code generator used to create unique lobby codes
    */
   public LobbyService(
-          LobbyCodeGenerator generator,
-          ChatService chatService,
-          GameService gameService) {
+      LobbyCodeGenerator generator, ChatService chatService, GameService gameService) {
     this.generator = generator;
     this.chatService = chatService;
     this.gameService = gameService;
@@ -68,7 +65,7 @@ public class LobbyService {
   /**
    * Helper method to add the GameManager once a lobby is created.
    *
-   * @param lobby     the lobby object to determine the starting team
+   * @param lobby the lobby object to determine the starting team
    * @param lobbyCode the ID for the lobby which the GameManager is responsible for
    */
   private void addGameManagerForLobby(Lobby lobby, String lobbyCode) {
@@ -79,7 +76,7 @@ public class LobbyService {
   /**
    * Adds a player to an existing lobby.
    *
-   * @param username  the username of the player
+   * @param username the username of the player
    * @param lobbyCode the lobby code identifying the lobby
    * @return {@code true} if the player successfully joined, {@code false} otherwise
    */
@@ -96,7 +93,7 @@ public class LobbyService {
   /**
    * Removes a player from a lobby.
    *
-   * @param username  the username of the player
+   * @param username the username of the player
    * @param lobbyCode the lobby code identifying the lobby
    * @return {@code true} if the player was removed, {@code false} if the lobby does not exist
    */
@@ -114,10 +111,10 @@ public class LobbyService {
   /**
    * Assigns a team and role to a player in a lobby.
    *
-   * @param username  the username of the player
+   * @param username the username of the player
    * @param lobbyCode the lobby code identifying the lobby
-   * @param team      the selected team
-   * @param role      the selected role
+   * @param team the selected team
+   * @param role the selected role
    * @return {@code true} if the position was assigned, {@code false} otherwise
    */
   public boolean selectPosition(String username, String lobbyCode, Team team, Role role) {
@@ -140,8 +137,8 @@ public class LobbyService {
   }
 
   /**
-   * Checks if the lobby still has players
-   * after a player leaves and removes the lobby if it is empty.
+   * Checks if the lobby still has players after a player leaves and removes the lobby if it is
+   * empty.
    *
    * @param lobbyCode the lobby code identifying the lobby
    */
@@ -172,17 +169,18 @@ public class LobbyService {
    * @param lobbyCode the lobby code identifying the lobby
    * @return a list of PlayerDto objects, or an empty list if the lobby does not exist
    */
-
   public List<PlayerDto> getPlayersDto(String lobbyCode) {
     Lobby lobby = lobbyList.get(lobbyCode);
     if (lobby != null) {
       return lobby.getPlayerList().stream()
-              .map(player -> new PlayerDto(
+          .map(
+              player ->
+                  new PlayerDto(
                       player.username(),
                       lobby.getPlayerTeam(player.username()),
                       lobby.getPlayerRole(player.username()),
                       player.isHost()))
-              .toList();
+          .toList();
     }
     return List.of();
   }
@@ -190,16 +188,16 @@ public class LobbyService {
   /**
    * Checks whether a spymaster is already assigned for the given team in the lobby.
    *
-   * @param lobby    the lobby to inspect
+   * @param lobby the lobby to inspect
    * @param username the username requesting the role
-   * @param team     the team to inspect
+   * @param team the team to inspect
    * @return {@code true} if a different player is already the spymaster for that team
    */
   private boolean isSpymasterAlreadyAssigned(Lobby lobby, String username, Team team) {
     for (Player player : lobby.getPlayerList()) {
       if (!player.username().equals(username)
-              && lobby.getPlayerTeam(player.username()) == team
-              && lobby.getPlayerRole(player.username()) == Role.SPYMASTER) {
+          && lobby.getPlayerTeam(player.username()) == team
+          && lobby.getPlayerRole(player.username()) == Role.SPYMASTER) {
         return true;
       }
     }
@@ -230,7 +228,7 @@ public class LobbyService {
   /**
    * Retrieves the team of a player in a lobby.
    *
-   * @param username  the username of a player
+   * @param username the username of a player
    * @param lobbyCode the lobby code of the lobby
    * @return the team of the player, or {@code null} if the lobby or player does not exist
    */
@@ -245,7 +243,7 @@ public class LobbyService {
   /**
    * Retrieves the role of a player in a lobby.
    *
-   * @param username  the username of a player
+   * @param username the username of a player
    * @param lobbyCode the lobby code of the lobby
    * @return the role of the player, or {@code null} if the lobby or player does not exist
    */
