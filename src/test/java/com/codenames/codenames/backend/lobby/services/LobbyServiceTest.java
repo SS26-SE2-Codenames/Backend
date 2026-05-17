@@ -1,19 +1,20 @@
 package com.codenames.codenames.backend.lobby.services;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+import com.codenames.codenames.backend.chat.ChatService;
+import com.codenames.codenames.backend.lobby.dto.PlayerDto;
+import com.codenames.codenames.backend.playingfield.GameService;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import com.codenames.codenames.backend.websocket.Player;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests for {@link LobbyService}.
@@ -25,11 +26,15 @@ class LobbyServiceTest {
 
   private LobbyService lobbyService;
   private LobbyCodeGenerator generator;
+  private GameService gameService;
 
   @BeforeEach
   void setup() {
     generator = mock(LobbyCodeGenerator.class);
-    lobbyService = new LobbyService(generator);
+    gameService = mock(GameService.class);
+    ChatService chatService = mock(ChatService.class);
+
+    lobbyService = new LobbyService(generator, chatService, gameService);
     when(generator.generateLobbyCode()).thenReturn("ABCDE");
   }
 
@@ -41,7 +46,7 @@ class LobbyServiceTest {
     assertTrue(result);
 
     List<Player> players = lobbyService.getPlayers("ABCDE");
-    assertTrue(players.stream().anyMatch(p -> p.getUsername().equals("TestUser")));
+    assertTrue(players.stream().anyMatch(p -> p.username().equals("TestUser")));
   }
 
   @Test
@@ -76,7 +81,7 @@ class LobbyServiceTest {
 
     List<Player> players = lobbyService.getPlayers("ABCDE");
 
-    assertFalse(players.stream().anyMatch(p -> p.getUsername().equals("Host")));
+    assertFalse(players.stream().anyMatch(p -> p.username().equals("Host")));
   }
 
   @Test
@@ -88,9 +93,9 @@ class LobbyServiceTest {
   @Test
   void createLobbyShouldGenerateNewCodeIfDuplicateExists() {
     when(generator.generateLobbyCode())
-        .thenReturn("ABCDE")
-        .thenReturn("ABCDE")
-        .thenReturn("FGHIJ");
+            .thenReturn("ABCDE")
+            .thenReturn("ABCDE")
+            .thenReturn("FGHIJ");
 
     lobbyService.createLobby("Host1");
     String code2 = lobbyService.createLobby("Host2");
@@ -180,8 +185,8 @@ class LobbyServiceTest {
     List<Player> players = lobbyService.getPlayers("ABCDE");
 
     long count = players.stream()
-        .filter(p -> p.getUsername().equals("Max"))
-        .count();
+            .filter(p -> p.username().equals("Max"))
+            .count();
 
     assertEquals(1, count);
   }
@@ -244,5 +249,69 @@ class LobbyServiceTest {
     String lobbyCode = lobbyService.createLobby("Host");
 
     assertNull(lobbyService.getPlayerRole("nonExistentPlayer", lobbyCode));
+  }
+
+  @Test
+  void testLobbyIsRemovedWhenItIsEmpty() {
+    lobbyService.createLobby("Host");
+    lobbyService.leaveLobby("Host", "ABCDE");
+    lobbyService.checkLobbyStillHasPlayers("ABCDE");
+    assertFalse(lobbyService.getLobbyList().containsKey("ABCDE"));
+  }
+
+  @Test
+  void testLobbyIsNotRemovedWhenItHasPlayers() {
+    lobbyService.createLobby("Host");
+    lobbyService.joinLobby("Player1", "ABCDE");
+    lobbyService.checkLobbyStillHasPlayers("ABCDE");
+    assertTrue(lobbyService.getLobbyList().containsKey("ABCDE"));
+  }
+
+  @Test
+  void testGetPlayersDto() {
+    lobbyService.createLobby("Host");
+
+    List<PlayerDto> players = lobbyService.getPlayersDto("ABCDE");
+    PlayerDto player = players.get(0);
+    assertEquals("Host", player.username());
+    assertTrue(player.isHost());
+  }
+
+  @Test
+  void testGetPlayersDto_lobbyNotExists() {
+    List<PlayerDto> players = lobbyService.getPlayersDto("UNKNOWN");
+    assertNotNull(players);
+    assertTrue(players.isEmpty());
+  }
+
+  @Test
+  void getPlayersDtoShouldReturnPlayerDTOs_whenLobbyExists() {
+    lobbyService.createLobby("Host");
+
+    List<PlayerDto> result = lobbyService.getPlayersDto("ABCDE");
+
+    assertNotNull(result);
+    assertEquals(1, result.size());
+
+    PlayerDto player = result.get(0);
+
+    assertEquals("Host", player.username());
+    assertNull(player.team());
+    assertNull(player.role());
+    assertTrue(player.isHost());
+  }
+
+  @Test
+  void getPlayersDtoShouldReturnEmptyList_whenLobbyDoesNotExist() {
+    List<PlayerDto> result = lobbyService.getPlayersDto("ABCDE");
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void testAddGameManagerForLobby() {
+    lobbyService.createLobby("Host");
+    verify(gameService, times(1)).createGameManager(eq("ABCDE"), any(Team.class));
   }
 }

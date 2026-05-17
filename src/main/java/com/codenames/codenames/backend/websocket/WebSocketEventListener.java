@@ -10,7 +10,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 /**
  * Listener for WebSocket lifecycle events.
  *
- * <p>Handles client disconnections by removing players from lobbies, cleaning up session mappings,
+ * <p>Handles client disconnections by removing playerList from lobbies, cleaning up session mappings,
  * and notifying remaining clients.
  */
 @Component
@@ -59,7 +59,7 @@ public class WebSocketEventListener {
     sessionRegistry.remove(sessionId);
 
     List<String> players =
-        lobbyService.getPlayers(lobbyCode).stream().map(Player::getUsername).toList();
+        lobbyService.getPlayers(lobbyCode).stream().map(Player::username).toList();
 
     messagingTemplate.convertAndSend("/topic/lobby/" + lobbyCode, players);
   }
