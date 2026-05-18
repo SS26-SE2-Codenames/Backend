@@ -1,5 +1,6 @@
 package com.codenames.codenames.backend.serialization;
 
+import com.codenames.codenames.backend.clue.Clue;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import java.util.List;
@@ -9,18 +10,12 @@ import java.util.List;
  *
  * @param winner the winner
  * @param currentTurn the current team who is allowed to make a move
- * @param currentRedFound the amount of red cards revealed
- * @param currentBlueFound the amount of red cards revealed
- * @param currentClue the word of the clue
- * @param remainingGuesses the amount of guesses
+ * @param currentClue the current clue object, consisting of word and amount of guesses
  * @param cardList the cards on the board
  */
 public record GameStateDataTransferObject(
     Team winner,
     Team currentTurn,
     Role currentPhase,
-    int currentRedFound,
-    int currentBlueFound,
-    String currentClue,
-    int remainingGuesses,
+    Clue currentClue,
     List<CardDataTransferObject> cardList) {}

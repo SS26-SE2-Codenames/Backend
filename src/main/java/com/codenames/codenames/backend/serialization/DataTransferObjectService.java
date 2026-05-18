@@ -1,5 +1,6 @@
 package com.codenames.codenames.backend.serialization;
 
+import com.codenames.codenames.backend.clue.Clue;
 import com.codenames.codenames.backend.playingfield.Card;
 import com.codenames.codenames.backend.playingfield.GameManager;
 import com.codenames.codenames.backend.utility.Role;
@@ -56,10 +57,7 @@ public class DataTransferObjectService {
         winner,
         currentTurn,
         currentPhase,
-        gameManager.getCurrentRedFound(),
-        gameManager.getCurrentBlueFound(),
-        gameManager.getCurrentClueWord(),
-        gameManager.getRemainingGuesses(),
+        new Clue(gameManager.getCurrentClue().word(), gameManager.getCurrentClue().guessAmount()),
         cardDataTransferObject);
   }
 }

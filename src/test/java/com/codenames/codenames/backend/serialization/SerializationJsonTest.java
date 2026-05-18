@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.codenames.codenames.backend.clue.Clue;
 import com.codenames.codenames.backend.playingfield.Card;
 import com.codenames.codenames.backend.utility.Color;
 import com.codenames.codenames.backend.utility.Role;
@@ -33,7 +34,7 @@ class SerializationJsonTest {
 
     dummyList = List.of(new CardDataTransferObject("TEST", "HIDDEN", false));
     dummyGameState =
-        new GameStateDataTransferObject(redTeam, redTeam, spymaster, 0, 0, "Test", 1, dummyList);
+        new GameStateDataTransferObject(redTeam, redTeam, spymaster, new Clue("Test", 1), dummyList);
   }
 
   @Test
