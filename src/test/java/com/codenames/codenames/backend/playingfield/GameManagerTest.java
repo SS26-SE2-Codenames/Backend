@@ -3,6 +3,7 @@ package com.codenames.codenames.backend.playingfield;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -327,5 +328,101 @@ class GameManagerTest {
   @Test
   void testPassTurn_throwsWhenSpymaster() {
     assertThrows(IllegalStateException.class, () -> gameManager.passTurn(redTeam));
+  }
+
+  @Test
+  void recoveryConstructorThrowsWhenCardsAreNull() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            new GameManager(
+                null,
+                Team.RED,
+                Role.SPYMASTER,
+                null,
+                0,
+                0,
+                0,
+                null,
+                mockClueValidationService));
+  }
+
+  @Test
+  void recoveryConstructorThrowsWhenCardsAreEmpty() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            new GameManager(
+                List.of(),
+                Team.RED,
+                Role.SPYMASTER,
+                null,
+                0,
+                0,
+                0,
+                null,
+                mockClueValidationService));
+  }
+
+  @Test
+  void recoveryConstructorThrowsWhenCurrentTurnIsNull() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            new GameManager(
+                List.of(new Card("Dog", Color.RED)),
+                null,
+                Role.SPYMASTER,
+                null,
+                0,
+                0,
+                0,
+                null,
+                mockClueValidationService));
+  }
+
+  @Test
+  void recoveryConstructorThrowsWhenCurrentPhaseIsNull() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            new GameManager(
+                List.of(new Card("Dog", Color.RED)),
+                Team.RED,
+                null,
+                null,
+                0,
+                0,
+                0,
+                null,
+                mockClueValidationService));
+  }
+
+  @Test
+  void recoveryConstructorRestoresPersistedState() {
+    Card guessedRed = new Card("Dog", Color.RED);
+    guessedRed.setIsGuessedTrue();
+    List<Card> cards = new ArrayList<>();
+    cards.add(guessedRed);
+    cards.add(new Card("Cat", Color.BLUE));
+
+    GameManager restored =
+        new GameManager(
+            cards,
+            Team.BLUE,
+            Role.OPERATIVE,
+            Team.RED,
+            1,
+            0,
+            2,
+            new Clue("ANIMAL", 2),
+            mockClueValidationService);
+
+    assertEquals(Team.BLUE, restored.getCurrentTurn());
+    assertEquals(Role.OPERATIVE, restored.getCurrentPhase());
+    assertEquals(2, restored.getRemainingGuesses());
+    assertEquals("ANIMAL", restored.getCurrentClueWord());
+    assertEquals(Team.RED, restored.getWinner());
+    assertTrue(restored.getCardList().get(0).isGuessed());
   }
 }

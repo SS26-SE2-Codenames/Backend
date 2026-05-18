@@ -16,6 +16,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.chat.ChatService;
+import com.codenames.codenames.backend.lobby.Lobby;
 import com.codenames.codenames.backend.lobby.dto.PlayerDto;
 import com.codenames.codenames.backend.playingfield.GameService;
 import com.codenames.codenames.backend.utility.Role;
@@ -260,6 +261,7 @@ class LobbyServiceTest {
     lobbyService.leaveLobby("Host", "ABCDE");
     lobbyService.checkLobbyStillHasPlayers("ABCDE");
     assertFalse(lobbyService.getLobbyList().containsKey("ABCDE"));
+    verify(gameService, times(1)).removeGame("ABCDE");
   }
 
   @Test
@@ -354,5 +356,15 @@ class LobbyServiceTest {
     String result = lobbyService.getHost(lobbyCode);
 
     assertEquals("", result);
+  }
+
+  @Test
+  void testRestoreLobbyAddsLobbyToLobbyList() {
+    Lobby restoredLobby = new Lobby("ABCDE", "Host");
+
+    lobbyService.restoreLobby("ABCDE", restoredLobby);
+
+    assertTrue(lobbyService.getLobbyList().containsKey("ABCDE"));
+    assertEquals(restoredLobby, lobbyService.getLobbyList().get("ABCDE"));
   }
 }

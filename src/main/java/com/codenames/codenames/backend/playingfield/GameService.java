@@ -141,13 +141,12 @@ public class GameService {
   public GameStateDataTransferObject getCurrentGameState(String lobbyCode) {
     GameManager gm = getGame(lobbyCode);
     return dtoService.createGameStateDataTransferObject(
-            gm, gm.getCurrentTurn(), gm.getCurrentPhase()
-    );
+        gm, gm.getCurrentTurn(), gm.getCurrentPhase());
   }
 
   /**
-   * This method uses the private method getGame to check if a game is already started
-   *      via the existence of a game manager.
+   * This method uses the private method getGame to check if a game is already started via the
+   * existence of a game manager.
    *
    * @param lobbyCode the lobbyCode of the lobby
    * @return if the game manager for the lobby already exists aka the game is started
