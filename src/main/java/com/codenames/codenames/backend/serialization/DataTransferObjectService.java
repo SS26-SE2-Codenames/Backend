@@ -1,5 +1,6 @@
 package com.codenames.codenames.backend.serialization;
 
+import com.codenames.codenames.backend.game.dto.ClueDto;
 import com.codenames.codenames.backend.playingfield.Card;
 import com.codenames.codenames.backend.playingfield.GameManager;
 import com.codenames.codenames.backend.utility.Color;
@@ -28,26 +29,32 @@ public class DataTransferObjectService {
    * Creates the game state DTO that needs to be serialized into JSON.
    *
    * @param gameManager the game manager that holds the state of the game
-   * @param role the role of the player who requires the DTO
    * @param currentTurn the current turn
    * @return a DTO of the current game state
    */
   public GameStateDataTransferObject createGameStateDataTransferObject(
-          GameManager gameManager, Role role, Team currentTurn, Role currentPhase) {
+          GameManager gameManager, Team currentTurn, Role currentPhase) {
 
     List<Card> cardList = gameManager.getCardList();
     List<CardDataTransferObject> cardDataTransferObject = new ArrayList<>();
     for (Card card : cardList) {
       cardDataTransferObject.add(createCardDataTransferObject(card));
     }
+    if (gameManager.getCurrentClue() == null) {
+      return new GameStateDataTransferObject(
+          gameManager.getWinner(),
+          currentTurn,
+          currentPhase,
+          null,
+          cardDataTransferObject);
+    }
+    String word = gameManager.getCurrentClue().word();
+    int guessAmount = gameManager.getCurrentClue().guessAmount();
     return new GameStateDataTransferObject(
         gameManager.getWinner(),
         currentTurn,
         currentPhase,
-        gameManager.getCurrentRedFound(),
-        gameManager.getCurrentBlueFound(),
-        gameManager.getCurrentClueWord(),
-        gameManager.getRemainingGuesses(),
+        new ClueDto(word, guessAmount),
         cardDataTransferObject);
   }
 }

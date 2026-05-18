@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.codenames.codenames.backend.clue.Clue;
 import com.codenames.codenames.backend.playingfield.Card;
 import com.codenames.codenames.backend.playingfield.GameManager;
 import com.codenames.codenames.backend.utility.Color;
@@ -38,13 +39,13 @@ class DataTransferObjectServiceTest {
     when(mockGameManager.getCurrentBlueFound()).thenReturn(0);
 
     gameStateDto =
-        service.createGameStateDataTransferObject(mockGameManager, operative, redTeam, spymaster);
+        service.createGameStateDataTransferObject(mockGameManager, redTeam, spymaster);
   }
 
   @Test
   void testSpymasterVisibility() {
     gameStateDto =
-        service.createGameStateDataTransferObject(mockGameManager, spymaster, redTeam, spymaster);
+        service.createGameStateDataTransferObject(mockGameManager, redTeam, spymaster);
     assertEquals(Color.RED, gameStateDto.cardList().get(0).color());
   }
 
@@ -67,7 +68,24 @@ class DataTransferObjectServiceTest {
   void testGetWinner_null() {
     when(mockGameManager.getWinner()).thenReturn(null);
     gameStateDto =
-        service.createGameStateDataTransferObject(mockGameManager, operative, redTeam, operative);
+        service.createGameStateDataTransferObject(mockGameManager, redTeam, operative);
     assertNull(gameStateDto.winner());
+  }
+
+  @Test
+  void testCreateGameStateDataTransferObject() {
+    Clue clue = new Clue("word", 1);
+    when(mockGameManager.getCardList()).thenReturn(List.of());
+    when(mockGameManager.getWinner()).thenReturn(null);
+    when(mockGameManager.getCurrentClue()).thenReturn(clue);
+
+    GameStateDataTransferObject dto = service.createGameStateDataTransferObject(mockGameManager, redTeam, operative);
+
+    assertEquals(clue.word(), dto.currentClue().word());
+    assertEquals(clue.guessAmount(), dto.currentClue().guessAmount());
+    assertNull(dto.winner());
+    assertEquals(0, dto.cardList().size());
+    assertEquals(redTeam, dto.currentTurn());
+    assertEquals(operative, dto.currentPhase());
   }
 }
