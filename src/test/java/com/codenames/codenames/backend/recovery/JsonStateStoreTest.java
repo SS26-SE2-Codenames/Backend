@@ -1,7 +1,7 @@
 package com.codenames.codenames.backend.recovery;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.codenames.codenames.backend.lobby.dto.PlayerDto;
@@ -117,5 +117,26 @@ class JsonStateStoreTest {
     assertTrue(loadedSnapshot.isPresent());
     assertTrue(loadedSnapshot.get().lobbies().containsKey("ABCDE"));
     assertEquals(1, loadedSnapshot.get().lobbies().size());
+  }
+
+  @Test
+  void saveThrowsIllegalStateWhenStateParentCannotBeCreated() throws IOException {
+    Path fileAsParent = tempDir.resolve("not-a-directory");
+    Files.writeString(fileAsParent, "occupied");
+    Path stateFile = fileAsParent.resolve("state.json");
+    JsonStateStore stateStore = new JsonStateStore(new ObjectMapper(), stateFile.toString());
+    SystemSnapshot snapshot =
+        new SystemSnapshot(SystemSnapshot.CURRENT_SCHEMA_VERSION, Map.of(), Map.of());
+
+    assertThrows(IllegalStateException.class, () -> stateStore.save(snapshot));
+  }
+
+  @Test
+  void loadThrowsIllegalStateWhenJsonIsInvalid() throws IOException {
+    Path stateFile = tempDir.resolve("state.json");
+    Files.writeString(stateFile, "{invalid-json");
+    JsonStateStore stateStore = new JsonStateStore(new ObjectMapper(), stateFile.toString());
+
+    assertThrows(IllegalStateException.class, stateStore::load);
   }
 }
