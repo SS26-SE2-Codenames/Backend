@@ -72,8 +72,8 @@ public class CardGenerator {
     List<Color> colorList = new ArrayList<>();
     addColorToList(colorList, red, Color.RED);
     addColorToList(colorList, blue, Color.BLUE);
-    addColorToList(colorList, white, Color.WHITE);
-    addColorToList(colorList, black, Color.BLACK);
+    addColorToList(colorList, white, Color.NEUTRAL);
+    addColorToList(colorList, black, Color.ASSASSIN);
 
     List<Card> cardList = new ArrayList<>();
     List<String> wordList = pickWords(totalWords);

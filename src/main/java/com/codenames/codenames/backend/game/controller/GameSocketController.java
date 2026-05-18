@@ -47,7 +47,7 @@ public class GameSocketController {
 
     messagingTemplate.convertAndSend(
         GAME_TOPIC_PREFIX + message.getLobbyCode(),
-        gameService.createGameStateDto(message.getLobbyCode()));
+        gameService.getCurrentGameState(message.getLobbyCode()));
   }
 
   /**
@@ -64,7 +64,7 @@ public class GameSocketController {
 
     messagingTemplate.convertAndSend(
         GAME_TOPIC_PREFIX + message.getLobbyCode(),
-        gameService.createGameStateDto(message.getLobbyCode()));
+        gameService.getCurrentGameState(message.getLobbyCode()));
   }
 
   /**
@@ -84,7 +84,7 @@ public class GameSocketController {
 
     messagingTemplate.convertAndSend(
         GAME_TOPIC_PREFIX + message.getLobbyCode(),
-        gameService.createGameStateDto(message.getLobbyCode()));
+        gameService.getCurrentGameState(message.getLobbyCode()));
   }
 
   /**
@@ -99,6 +99,6 @@ public class GameSocketController {
 
     messagingTemplate.convertAndSend(
         GAME_TOPIC_PREFIX + message.getLobbyCode(),
-        gameService.createGameStateDto(message.getLobbyCode()));
+        gameService.getCurrentGameState(message.getLobbyCode()));
   }
 }

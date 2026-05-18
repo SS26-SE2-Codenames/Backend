@@ -96,7 +96,7 @@ public class GameManager {
       case BLUE:
         currentBlueFound++;
         break;
-      case BLACK:
+      case ASSASSIN:
         if (this.currentTurn == Team.RED) {
           this.winner = Team.BLUE;
         } else {

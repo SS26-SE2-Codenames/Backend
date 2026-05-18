@@ -28,8 +28,8 @@ class BoardTest {
 
     Card card1 = new Card("Test1", Color.RED);
     Card card2 = new Card("Test2", Color.BLUE);
-    Card card3 = new Card("Test3", Color.WHITE);
-    Card card4 = new Card("Test4", Color.BLACK);
+    Card card3 = new Card("Test3", Color.NEUTRAL);
+    Card card4 = new Card("Test4", Color.ASSASSIN);
 
     dummyCardList = Arrays.asList(card1, card2, card3, card4);
 
@@ -56,8 +56,8 @@ class BoardTest {
   void testCheckColor() {
     assertEquals(Color.RED, board.checkColor(0));
     assertEquals(Color.BLUE, board.checkColor(1));
-    assertEquals(Color.WHITE, board.checkColor(2));
-    assertEquals(Color.BLACK, board.checkColor(3));
+    assertEquals(Color.NEUTRAL, board.checkColor(2));
+    assertEquals(Color.ASSASSIN, board.checkColor(3));
   }
 
   @Test

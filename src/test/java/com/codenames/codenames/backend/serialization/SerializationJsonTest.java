@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.codenames.codenames.backend.game.dto.ClueDto;
 import com.codenames.codenames.backend.playingfield.Card;
 import com.codenames.codenames.backend.utility.Color;
 import com.codenames.codenames.backend.utility.Role;
@@ -31,18 +32,17 @@ class SerializationJsonTest {
     card = new Card("TEST", Color.RED);
     serializer = new SerializationJson(mapper);
 
-    dummyList = List.of(new CardDataTransferObject("TEST", "HIDDEN", false));
+    dummyList = List.of(new CardDataTransferObject("TEST", null, false));
     dummyGameState =
-        new GameStateDataTransferObject(redTeam, redTeam, spymaster, 0, 0, "Test", 1, dummyList);
+        new GameStateDataTransferObject(redTeam, redTeam, spymaster, new ClueDto("Test", 1), dummyList);
   }
 
   @Test
   void testSerialize_pass() {
     String expectedResult =
-        "{\"winner\":\"RED\",\"currentTurn\":\"RED\",\"currentPhase\":\"SPYMASTER\","
-            + "\"currentRedFound\":0,\"currentBlueFound\":0,\"currentClue\":\"Test\","
-            + "\"remainingGuesses\":1,\"cardList\":[{\"word\":\"TEST\",\"color\":\"HIDDEN\","
-            + "\"isGuessed\":false}]}";
+            """
+            {"winner":"RED","currentTurn":"RED","currentPhase":"SPYMASTER","currentClue":{"word":"Test","guessAmount":1},"cardList":[{"word":"TEST","color":null,"isGuessed":false}]}"""
+        ;
     String result = serializer.serialize(dummyGameState);
     assertEquals(expectedResult, result);
   }

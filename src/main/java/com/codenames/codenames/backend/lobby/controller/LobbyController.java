@@ -48,11 +48,11 @@ public class LobbyController {
     String lobbyCode = service.createLobby(username);
     if (lobbyCode == null || lobbyCode.isBlank()) {
       return ResponseEntity.internalServerError()
-              .body(new LobbyResponse("Error while creating lobby.", "", null));
+              .body(new LobbyResponse("Error while creating lobby.", "", null, false));
     } else {
       List<PlayerDto> players = service.getPlayersDto(lobbyCode);
       return ResponseEntity.ok(
-              new LobbyResponse("Successfully created Lobby.", lobbyCode, players)
+              new LobbyResponse("Successfully created Lobby.", lobbyCode, players, false)
       );
     }
   }
@@ -73,12 +73,13 @@ public class LobbyController {
               new LobbyResponse(
                       "Joined Lobby successfully.",
                       lobbyCode,
-                      service.getPlayersDto(lobbyCode)
+                      service.getPlayersDto(lobbyCode),
+                      false
               )
       );
     } else {
       return ResponseEntity.badRequest()
-              .body(new LobbyResponse(LOBBY_NOT_FOUND, lobbyCode, null));
+              .body(new LobbyResponse(LOBBY_NOT_FOUND, lobbyCode, null, false));
     }
   }
 
@@ -99,14 +100,15 @@ public class LobbyController {
               new LobbyResponse(
                       "Left lobby successfully.",
                       lobbyCode,
-                      service.getPlayersDto(lobbyCode)
+                      service.getPlayersDto(lobbyCode),
+                      false
               )
       );
       service.checkLobbyStillHasPlayers(lobbyCode);
       return response;
     } else {
       return ResponseEntity.badRequest()
-              .body(new LobbyResponse(LOBBY_NOT_FOUND, lobbyCode, null));
+              .body(new LobbyResponse(LOBBY_NOT_FOUND, lobbyCode, null, false));
     }
   }
 
@@ -123,8 +125,9 @@ public class LobbyController {
           @PathVariable String lobbyCode
   ) {
     List<PlayerDto> players = service.getPlayersDto(lobbyCode);
+    boolean isStarted = service.getIsStarted(lobbyCode);
     return ResponseEntity.ok(
-            new LobbyResponse("Lobby info retrieved successfully.", lobbyCode, players)
+            new LobbyResponse("Lobby info retrieved successfully.", lobbyCode, players, isStarted)
     );
   }
 
@@ -150,7 +153,8 @@ public class LobbyController {
               new LobbyResponse(
                       "Position selected successfully.",
                       lobbyCode,
-                      service.getPlayersDto(lobbyCode)
+                      service.getPlayersDto(lobbyCode),
+                      false
               )
       );
     } else {
@@ -158,9 +162,45 @@ public class LobbyController {
               new LobbyResponse(
                       "Could not assign selected team/role.",
                       lobbyCode,
-                      service.getPlayersDto(lobbyCode)
+                      service.getPlayersDto(lobbyCode),
+                      false
               )
       );
     }
+  }
+
+  /**
+   * Endpoint for starting a game, this is the last http-request only the host can make.
+   *
+   * @param lobbyCode the unique lobby code
+   * @param username the name of the requesting user
+   * @return a response entity of a lobby response, with isStarted @code true or @code false,
+   *      whether the starting was successful or not
+   */
+
+  @GetMapping("/{lobbyCode}/start-game")
+  public ResponseEntity<LobbyResponse> startGame(
+          @PathVariable String lobbyCode, @RequestParam String username
+  ) {
+    boolean isStarted = service.startGame(lobbyCode, username);
+
+    if (isStarted) {
+      return ResponseEntity.ok(
+              new LobbyResponse(
+                      "Game is starting now.",
+                      lobbyCode,
+                      service.getPlayersDto(lobbyCode),
+                      true
+              )
+      );
+    }
+    return ResponseEntity.badRequest().body(
+            new LobbyResponse(
+                    "Could not start the game.",
+                    lobbyCode,
+                    service.getPlayersDto(lobbyCode),
+                    false
+            )
+    );
   }
 }
