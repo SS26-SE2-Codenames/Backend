@@ -24,6 +24,11 @@ public class Board {
     this.cardList = cardGenerator.generateCards(totalWords, red, blue, white, black);
   }
 
+  /**
+   * Constructs a board from an already existing card list (recovery path).
+   *
+   * @param cards recovered cards
+   */
   public Board(List<Card> cards) {
     this.cardList = new ArrayList<>(cards);
   }

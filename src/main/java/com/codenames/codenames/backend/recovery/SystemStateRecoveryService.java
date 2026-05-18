@@ -15,6 +15,7 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+/** Restores persisted lobbies and games into in-memory runtime services on backend startup. */
 @Slf4j
 @Service
 public class SystemStateRecoveryService {
@@ -24,6 +25,14 @@ public class SystemStateRecoveryService {
   private final GameService gameService;
   private final GameManagerFactory gameManagerFactory;
 
+  /**
+   * Creates a recovery service.
+   *
+   * @param stateStore JSON state store used for loading snapshots
+   * @param lobbyService lobby runtime service
+   * @param gameService game runtime service
+   * @param gameManagerFactory factory used to rebuild game managers from snapshots
+   */
   public SystemStateRecoveryService(
       JsonStateStore stateStore,
       LobbyService lobbyService,
@@ -35,6 +44,7 @@ public class SystemStateRecoveryService {
     this.gameManagerFactory = gameManagerFactory;
   }
 
+  /** Loads and restores persisted state at startup when a compatible snapshot exists. */
   @jakarta.annotation.PostConstruct
   public void recoverOnStartup() {
     stateStore
@@ -53,6 +63,11 @@ public class SystemStateRecoveryService {
             });
   }
 
+  /**
+   * Restores all lobby snapshots into {@link LobbyService}.
+   *
+   * @param lobbySnapshots persisted lobby snapshots keyed by lobby code
+   */
   private void restoreLobbies(Map<String, LobbySnapshot> lobbySnapshots) {
     if (lobbySnapshots == null || lobbySnapshots.isEmpty()) {
       return;
@@ -65,6 +80,11 @@ public class SystemStateRecoveryService {
     }
   }
 
+  /**
+   * Restores all game snapshots into {@link GameService}.
+   *
+   * @param gameSnapshots persisted game snapshots keyed by lobby code
+   */
   private void restoreGames(Map<String, GameSnapshot> gameSnapshots) {
     if (gameSnapshots == null || gameSnapshots.isEmpty()) {
       return;
@@ -75,6 +95,13 @@ public class SystemStateRecoveryService {
     }
   }
 
+  /**
+   * Builds a runtime lobby from a persisted lobby snapshot.
+   *
+   * @param lobbyCode target lobby code
+   * @param snapshot persisted lobby snapshot
+   * @return rebuilt lobby, or {@code null} when snapshot player data is invalid
+   */
   private Lobby buildLobby(String lobbyCode, LobbySnapshot snapshot) {
     if (snapshot == null || snapshot.players() == null || snapshot.players().isEmpty()) {
       log.warn("Skipping restore for lobby {} due to missing player data.", lobbyCode);

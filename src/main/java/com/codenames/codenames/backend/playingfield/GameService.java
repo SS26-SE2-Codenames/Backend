@@ -51,6 +51,12 @@ public class GameService {
     games.remove(lobbyCode);
   }
 
+  /**
+   * Registers a recovered {@link GameManager} for a lobby after backend restart.
+   *
+   * @param lobbyCode lobby identifier
+   * @param gameManager recovered game manager
+   */
   public void restoreGameManager(String lobbyCode, GameManager gameManager) {
     games.put(lobbyCode, gameManager);
   }

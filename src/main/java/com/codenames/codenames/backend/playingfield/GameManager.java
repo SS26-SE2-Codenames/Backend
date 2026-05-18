@@ -64,6 +64,19 @@ public class GameManager {
         new Board(cardGenerator, TOTAL_CARDS, redCards, blueCards, WHITE_CARDS, BLACK_CARDS);
   }
 
+  /**
+   * Constructor used by recovery logic to rebuild an already running game state.
+   *
+   * @param cards recovered card list
+   * @param currentTurn recovered active team
+   * @param currentPhase recovered active phase
+   * @param winner recovered winner, if present
+   * @param currentRedFound recovered red score
+   * @param currentBlueFound recovered blue score
+   * @param remainingGuesses recovered remaining guesses
+   * @param currentClue recovered current clue, if present
+   * @param clueValidationService clue validation service
+   */
   public GameManager(
       List<Card> cards,
       Team currentTurn,
@@ -95,6 +108,13 @@ public class GameManager {
     this.board = new Board(cards);
   }
 
+  /**
+   * Counts cards of a specific color within the current board snapshot.
+   *
+   * @param cards recovered cards
+   * @param color color to count
+   * @return number of cards with the requested color
+   */
   private int countCardsByColor(List<Card> cards, Color color) {
     return (int) cards.stream().filter(card -> card.getColor() == color).count();
   }

@@ -36,6 +36,12 @@ public class GameManagerFactory {
     return new GameManager(startingTeam, cardGenerator, clueValidationService);
   }
 
+  /**
+   * Recreates a {@link GameManager} from a persisted snapshot.
+   *
+   * @param snapshot persisted game state snapshot
+   * @return restored game manager
+   */
   public GameManager createFromSnapshot(GameSnapshot snapshot) {
     Clue clue =
         snapshot.currentClue() == null
@@ -55,6 +61,12 @@ public class GameManagerFactory {
         clueValidationService);
   }
 
+  /**
+   * Maps persisted card DTO representation to runtime {@link Card}.
+   *
+   * @param cardDto persisted card payload
+   * @return runtime card instance
+   */
   private Card toCard(CardDataTransferObject cardDto) {
     Card card = new Card(cardDto.word(), cardDto.color());
     if (cardDto.isGuessed()) {

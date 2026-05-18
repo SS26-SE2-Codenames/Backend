@@ -89,6 +89,12 @@ public class LobbyService {
     return false;
   }
 
+  /**
+   * Registers a recovered lobby into in-memory lobby storage.
+   *
+   * @param lobbyCode lobby identifier
+   * @param lobby recovered lobby instance
+   */
   public void restoreLobby(String lobbyCode, Lobby lobby) {
     lobbyList.put(lobbyCode, lobby);
   }
