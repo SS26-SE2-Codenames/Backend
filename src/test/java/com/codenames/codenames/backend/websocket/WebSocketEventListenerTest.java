@@ -1,84 +1,92 @@
 package com.codenames.codenames.backend.websocket;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
-import com.codenames.codenames.backend.lobby.services.LobbyService;
+import java.lang.reflect.Field;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 /** Unit tests for {@link WebSocketEventListener}. */
 class WebSocketEventListenerTest {
+  private static final String TEST_SESSION_ID = "123";
   private SessionRegistry registry;
-  private LobbyService lobbyService;
-  private SimpMessagingTemplate messagingTemplate;
   private WebSocketEventListener listener;
 
   @BeforeEach
   void setup() {
     registry = new SessionRegistry();
-    lobbyService = mock(LobbyService.class);
-    messagingTemplate = mock(SimpMessagingTemplate.class);
-
-    listener = new WebSocketEventListener(registry, lobbyService, messagingTemplate);
+    listener = new WebSocketEventListener(registry);
   }
 
   @Test
-  void shouldHandleDisconnectAndRemovePlayer() {
+  void shouldHandleDisconnectAndRemoveSessionMapping() {
 
-    registry.register("123", "Max", "ABCDE");
+    registry.register(TEST_SESSION_ID, "Max", "ABCDE");
 
-    SessionDisconnectEvent event = mock(SessionDisconnectEvent.class);
-    when(event.getSessionId()).thenReturn("123");
-
-    when(lobbyService.getPlayers("ABCDE")).thenReturn(java.util.List.of());
+    SessionDisconnectEvent event = org.mockito.Mockito.mock(SessionDisconnectEvent.class);
+    when(event.getSessionId()).thenReturn(TEST_SESSION_ID);
 
     listener.handleDisconnect(event);
 
-    verify(lobbyService).leaveLobby("Max", "ABCDE");
-    assertNull(registry.getUser("123"));
+    assertNull(registry.getUser(TEST_SESSION_ID));
+    assertNull(registry.getLobby(TEST_SESSION_ID));
   }
 
   @Test
   void shouldIgnoreDisconnectWhenUsernameIsNull() {
 
-    SessionDisconnectEvent event = mock(SessionDisconnectEvent.class);
-    when(event.getSessionId()).thenReturn("123");
+    SessionDisconnectEvent event = org.mockito.Mockito.mock(SessionDisconnectEvent.class);
+    when(event.getSessionId()).thenReturn(TEST_SESSION_ID);
 
     listener.handleDisconnect(event);
-
-    verifyNoInteractions(lobbyService);
-    verifyNoInteractions(messagingTemplate);
   }
 
   @Test
   void shouldIgnoreDisconnectWhenLobbyIsMissing() {
 
-    registry.register("123", "Max", "ABCDE");
-    registry.remove("123");
+    registry.register(TEST_SESSION_ID, "Max", "ABCDE");
+    registry.remove(TEST_SESSION_ID);
 
-    SessionDisconnectEvent event = mock(SessionDisconnectEvent.class);
-    when(event.getSessionId()).thenReturn("123");
+    SessionDisconnectEvent event = org.mockito.Mockito.mock(SessionDisconnectEvent.class);
+    when(event.getSessionId()).thenReturn(TEST_SESSION_ID);
 
     listener.handleDisconnect(event);
-
-    verifyNoInteractions(lobbyService);
-    verifyNoInteractions(messagingTemplate);
   }
 
   @Test
   void shouldIgnoreUnknownSession() {
 
-    SessionDisconnectEvent event = mock(SessionDisconnectEvent.class);
+    SessionDisconnectEvent event = org.mockito.Mockito.mock(SessionDisconnectEvent.class);
     when(event.getSessionId()).thenReturn("unknown");
 
     listener.handleDisconnect(event);
+  }
 
-    verifyNoInteractions(lobbyService);
+  @Test
+  void shouldIgnoreDisconnectWhenLobbyIsNullButUserExists() throws Exception {
+
+    registry.register(TEST_SESSION_ID, "Max", "ABCDE");
+    removeLobbyMappingForTestSession();
+
+    SessionDisconnectEvent event = org.mockito.Mockito.mock(SessionDisconnectEvent.class);
+    when(event.getSessionId()).thenReturn(TEST_SESSION_ID);
+
+    listener.handleDisconnect(event);
+
+    assertEquals("Max", registry.getUser(TEST_SESSION_ID));
+    assertNull(registry.getLobby(TEST_SESSION_ID));
+  }
+
+  @SuppressWarnings("unchecked")
+  private void removeLobbyMappingForTestSession() throws Exception {
+    Field lobbyField = SessionRegistry.class.getDeclaredField("sessionToLobby");
+    lobbyField.setAccessible(true);
+
+    Map<String, String> sessionToLobby = (Map<String, String>) lobbyField.get(registry);
+    sessionToLobby.remove(TEST_SESSION_ID);
   }
 }

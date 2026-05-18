@@ -173,6 +173,7 @@ public class GameManager {
     if (clueValidationService.validateWord(this.board, clue.word())) {
       this.currentClue = clue;
       this.remainingGuesses = clue.guessAmount();
+      advanceTurn();
     } else {
       throw new IllegalArgumentException("Clue is invalid, cannot be a word that is on the board!");
     }
