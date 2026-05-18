@@ -116,6 +116,6 @@ class JsonStateStoreTest {
 
     assertTrue(loadedSnapshot.isPresent());
     assertTrue(loadedSnapshot.get().lobbies().containsKey("ABCDE"));
-    assertFalse(loadedSnapshot.get().lobbies().isEmpty());
+    assertEquals(1, loadedSnapshot.get().lobbies().size());
   }
 }
