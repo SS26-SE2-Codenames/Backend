@@ -30,7 +30,7 @@ class JsonStateStoreTest {
     Path stateFile = tempDir.resolve("state.json");
     JsonStateStore stateStore = new JsonStateStore(new ObjectMapper(), stateFile.toString());
 
-    Optional<SystemSnapshot> loadedSnapshot = stateStore.load();
+    Optional<SystemSnapshot> loadedSnapshot = loadSnapshot(stateStore);
 
     assertTrue(loadedSnapshot.isEmpty());
   }
@@ -41,7 +41,7 @@ class JsonStateStoreTest {
     Files.createFile(stateFile);
     JsonStateStore stateStore = new JsonStateStore(new ObjectMapper(), stateFile.toString());
 
-    Optional<SystemSnapshot> loadedSnapshot = stateStore.load();
+    Optional<SystemSnapshot> loadedSnapshot = loadSnapshot(stateStore);
 
     assertTrue(loadedSnapshot.isEmpty());
   }
@@ -69,7 +69,7 @@ class JsonStateStoreTest {
             Map.of("ABCDE", gameSnapshot));
 
     stateStore.save(expectedSnapshot);
-    Optional<SystemSnapshot> loadedSnapshot = stateStore.load();
+    Optional<SystemSnapshot> loadedSnapshot = loadSnapshot(stateStore);
 
     assertTrue(loadedSnapshot.isPresent());
     assertTrue(Files.exists(stateFile));
@@ -112,7 +112,7 @@ class JsonStateStoreTest {
     stateStore.save(firstSnapshot);
     stateStore.save(secondSnapshot);
 
-    Optional<SystemSnapshot> loadedSnapshot = stateStore.load();
+    Optional<SystemSnapshot> loadedSnapshot = loadSnapshot(stateStore);
 
     assertTrue(loadedSnapshot.isPresent());
     assertTrue(loadedSnapshot.get().lobbies().containsKey("ABCDE"));
@@ -138,5 +138,9 @@ class JsonStateStoreTest {
     JsonStateStore stateStore = new JsonStateStore(new ObjectMapper(), stateFile.toString());
 
     assertThrows(IllegalStateException.class, stateStore::load);
+  }
+
+  private Optional<SystemSnapshot> loadSnapshot(JsonStateStore stateStore) {
+    return stateStore.load();
   }
 }
