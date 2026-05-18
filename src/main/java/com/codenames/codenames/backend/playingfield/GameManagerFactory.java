@@ -1,7 +1,11 @@
 package com.codenames.codenames.backend.playingfield;
 
+import com.codenames.codenames.backend.clue.Clue;
 import com.codenames.codenames.backend.clue.ClueValidationService;
+import com.codenames.codenames.backend.recovery.snapshot.GameSnapshot;
+import com.codenames.codenames.backend.serialization.CardDataTransferObject;
 import com.codenames.codenames.backend.utility.Team;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 /** Generates GameManager instances to be used by GameService. */
@@ -30,5 +34,32 @@ public class GameManagerFactory {
    */
   public GameManager create(Team startingTeam) {
     return new GameManager(startingTeam, cardGenerator, clueValidationService);
+  }
+
+  public GameManager createFromSnapshot(GameSnapshot snapshot) {
+    Clue clue =
+        snapshot.currentClue() == null
+            ? null
+            : new Clue(snapshot.currentClue().word(), snapshot.currentClue().guessAmount());
+    List<Card> cards = snapshot.cards().stream().map(this::toCard).toList();
+
+    return new GameManager(
+        cards,
+        snapshot.currentTurn(),
+        snapshot.currentPhase(),
+        snapshot.winner(),
+        snapshot.currentRedFound(),
+        snapshot.currentBlueFound(),
+        snapshot.remainingGuesses(),
+        clue,
+        clueValidationService);
+  }
+
+  private Card toCard(CardDataTransferObject cardDto) {
+    Card card = new Card(cardDto.word(), cardDto.color());
+    if (cardDto.isGuessed()) {
+      card.setIsGuessedTrue();
+    }
+    return card;
   }
 }
