@@ -1,6 +1,7 @@
 package com.codenames.codenames.backend.recovery;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -138,6 +139,36 @@ class JsonStateStoreTest {
     JsonStateStore stateStore = new JsonStateStore(new ObjectMapper(), stateFile.toString());
 
     assertThrows(IllegalStateException.class, stateStore::load);
+  }
+
+  @Test
+  void gettersExposeConfiguredDependencies() {
+    ObjectMapper mapper = new ObjectMapper();
+    Path stateFile = tempDir.resolve("state.json");
+    JsonStateStore stateStore = new JsonStateStore(mapper, stateFile.toString());
+
+    assertSame(mapper, stateStore.getObjectMapper());
+    assertEquals(stateFile, stateStore.getStateFilePath());
+    assertSame(stateStore.getIoLock(), stateStore.getIoLock());
+  }
+
+  @Test
+  void saveWorksWhenStateFileHasNoParentDirectory() throws IOException {
+    String fileName = "json-state-store-" + System.nanoTime() + ".json";
+    Path stateFile = Path.of(fileName);
+    JsonStateStore stateStore = new JsonStateStore(new ObjectMapper(), fileName);
+    SystemSnapshot snapshot =
+        new SystemSnapshot(SystemSnapshot.CURRENT_SCHEMA_VERSION, Map.of(), Map.of());
+
+    try {
+      stateStore.save(snapshot);
+
+      assertTrue(Files.exists(stateFile));
+      assertTrue(stateStore.load().isPresent());
+    } finally {
+      Files.deleteIfExists(stateFile);
+      Files.deleteIfExists(Path.of(fileName + ".tmp"));
+    }
   }
 
   private Optional<SystemSnapshot> loadSnapshot(JsonStateStore stateStore) {
