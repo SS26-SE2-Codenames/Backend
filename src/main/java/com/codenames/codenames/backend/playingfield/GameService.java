@@ -136,7 +136,9 @@ public class GameService {
    */
   public GameStateDataTransferObject getCurrentGameState(String lobbyCode) {
     GameManager gm = getGame(lobbyCode);
-    return dtoService.createGameStateDataTransferObject(gm, null, gm.getCurrentTurn(), gm.getCurrentPhase());
+    return dtoService.createGameStateDataTransferObject(
+            gm, gm.getCurrentTurn(), gm.getCurrentPhase()
+    );
   }
 
   /**

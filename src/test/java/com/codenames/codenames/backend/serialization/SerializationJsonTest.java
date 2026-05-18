@@ -6,7 +6,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.codenames.codenames.backend.clue.Clue;
 import com.codenames.codenames.backend.game.dto.ClueDto;
 import com.codenames.codenames.backend.playingfield.Card;
 import com.codenames.codenames.backend.utility.Color;
