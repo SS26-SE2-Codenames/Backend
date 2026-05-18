@@ -1,6 +1,7 @@
 package com.codenames.codenames.backend.serialization;
 
 import com.codenames.codenames.backend.clue.Clue;
+import com.codenames.codenames.backend.game.dto.ClueDto;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import java.util.List;
@@ -17,5 +18,5 @@ public record GameStateDataTransferObject(
     Team winner,
     Team currentTurn,
     Role currentPhase,
-    Clue currentClue,
+    ClueDto currentClue,
     List<CardDataTransferObject> cardList) {}

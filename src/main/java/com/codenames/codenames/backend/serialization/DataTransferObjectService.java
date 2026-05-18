@@ -1,6 +1,7 @@
 package com.codenames.codenames.backend.serialization;
 
 import com.codenames.codenames.backend.clue.Clue;
+import com.codenames.codenames.backend.game.dto.ClueDto;
 import com.codenames.codenames.backend.playingfield.Card;
 import com.codenames.codenames.backend.playingfield.GameManager;
 import com.codenames.codenames.backend.utility.Color;
@@ -41,11 +42,22 @@ public class DataTransferObjectService {
     for (Card card : cardList) {
       cardDataTransferObject.add(createCardDataTransferObject(card));
     }
+    if (gameManager.getCurrentClue() == null) {
+      return new GameStateDataTransferObject(
+          gameManager.getWinner(),
+          currentTurn,
+          currentPhase,
+          null,
+          cardDataTransferObject);
+    }
+    String word = gameManager.getCurrentClue().word();
+    if(word == null) word = "";
+    int guessAmount = gameManager.getCurrentClue().guessAmount();
     return new GameStateDataTransferObject(
         gameManager.getWinner(),
         currentTurn,
         currentPhase,
-        new Clue(gameManager.getCurrentClue().word(), gameManager.getCurrentClue().guessAmount()),
+        new ClueDto(word, guessAmount),
         cardDataTransferObject);
   }
 }
