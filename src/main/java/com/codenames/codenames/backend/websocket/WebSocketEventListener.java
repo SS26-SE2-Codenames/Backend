@@ -26,7 +26,7 @@ public class WebSocketEventListener {
    * Handles a WebSocket disconnect event.
    *
    * <p>Removes transient WebSocket session mappings while preserving lobby membership for
-   * reconnect.
+   * reconnecting.
    *
    * @param event the disconnect event containing session information
    */

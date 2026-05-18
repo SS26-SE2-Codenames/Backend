@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -285,7 +288,7 @@ class LobbyServiceTest {
   }
 
   @Test
-  void getPlayersDtoShouldReturnPlayerDtos_whenLobbyExists() {
+  void getPlayersDtoShouldReturnPlayerDTOs_whenLobbyExists() {
     lobbyService.createLobby("Host");
 
     List<PlayerDto> result = lobbyService.getPlayersDto("ABCDE");
@@ -311,7 +314,45 @@ class LobbyServiceTest {
 
   @Test
   void testAddGameManagerForLobby() {
-    lobbyService.createLobby("Host");
+    lobbyService.createLobby("User");
+    lobbyService.startGame("ABCDE", "User");
     verify(gameService, times(1)).createGameManager(eq("ABCDE"), any(Team.class));
+  }
+
+  @Test
+  void testGetIsStarted() {
+    when(gameService.isGameStarted("ABCDE")).thenReturn(true);
+
+    boolean result = lobbyService.getIsStarted("ABCDE");
+    assertTrue(result);
+  }
+
+  @Test
+  void testGetIsStarted_GameServiceReturnsFalse() {
+    when(gameService.isGameStarted("ABCDE")).thenReturn(false);
+
+    boolean result = lobbyService.getIsStarted("ABCDE");
+    assertFalse(result);
+  }
+
+  @Test
+  void testGetHost_Works() {
+    lobbyService.createLobby("Alice");
+    lobbyService.joinLobby("Bob", "ABCDE");
+    lobbyService.joinLobby("Caesar", "ABCDE");
+
+    String expected = "Alice";
+    String result = lobbyService.getHost("ABCDE");
+
+    assertEquals(expected, result);
+  }
+
+  @ParameterizedTest
+  @NullAndEmptySource
+  @ValueSource(strings = {"ABCDE"})
+  void testGetHost_ReturnsEmptyString(String lobbyCode) {
+    String result = lobbyService.getHost(lobbyCode);
+
+    assertEquals("", result);
   }
 }

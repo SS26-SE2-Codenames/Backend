@@ -1,5 +1,6 @@
 package com.codenames.codenames.backend.playingfield;
 
+import com.codenames.codenames.backend.serialization.DataTransferObjectService;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -28,8 +29,9 @@ class GameServiceTest {
   void setup() {
     mockGameManagerFactory = mock(GameManagerFactory.class);
     mockGameManager = mock(GameManager.class);
+    DataTransferObjectService mockDtoService = mock(DataTransferObjectService.class);
 
-    gameService = new GameService(mockGameManagerFactory);
+    gameService = new GameService(mockGameManagerFactory, mockDtoService);
     when(mockGameManagerFactory.create(redTeam)).thenReturn(mockGameManager);
 
     gameService.createGameManager(lobbyCode, redTeam);
