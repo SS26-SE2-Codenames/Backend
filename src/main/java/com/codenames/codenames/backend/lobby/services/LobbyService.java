@@ -90,6 +90,10 @@ public class LobbyService {
     return false;
   }
 
+  public void restoreLobby(String lobbyCode, Lobby lobby) {
+    lobbyList.put(lobbyCode, lobby);
+  }
+
   /**
    * Removes a player from a lobby.
    *

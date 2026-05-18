@@ -51,6 +51,10 @@ public class GameService {
     games.remove(lobbyCode);
   }
 
+  public void restoreGameManager(String lobbyCode, GameManager gameManager) {
+    games.put(lobbyCode, gameManager);
+  }
+
   /**
    * Helper method to retrieve a GM object from the hash map.
    *
