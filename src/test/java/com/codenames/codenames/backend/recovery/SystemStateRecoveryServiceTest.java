@@ -2,6 +2,7 @@ package com.codenames.codenames.backend.recovery;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.codenames.codenames.backend.chat.ChatService;
@@ -25,6 +26,7 @@ import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -104,10 +106,161 @@ class SystemStateRecoveryServiceTest {
     assertFalse(restoredGame.getCardList().get(1).isGuessed());
   }
 
+  @Test
+  void recoverOnStartupWithCurrentSchemaAndEmptyMapsDoesNothing() {
+    TestContext context = createContext(tempDir.resolve("state-empty.json"));
+    SystemSnapshot snapshot =
+        new SystemSnapshot(SystemSnapshot.CURRENT_SCHEMA_VERSION, Map.of(), Map.of());
+    context.stateStore().save(snapshot);
+
+    context.recoveryService().recoverOnStartup();
+
+    assertTrue(context.lobbyService().getLobbyList().isEmpty());
+    assertFalse(context.gameService().isGameStarted("ABCDE"));
+  }
+
+  @Test
+  void recoverOnStartupHandlesNullLobbyAndGameMaps() {
+    TestContext context = createContext(tempDir.resolve("state-null-maps.json"));
+    SystemSnapshot snapshot =
+        new SystemSnapshot(SystemSnapshot.CURRENT_SCHEMA_VERSION, null, null);
+    context.stateStore().save(snapshot);
+
+    context.recoveryService().recoverOnStartup();
+
+    assertTrue(context.lobbyService().getLobbyList().isEmpty());
+    assertFalse(context.gameService().isGameStarted("ABCDE"));
+  }
+
+  @Test
+  void recoverOnStartupSkipsLobbyWhenSnapshotEntryIsNull() {
+    TestContext context = createContext(tempDir.resolve("state-null-lobby-entry.json"));
+    Map<String, LobbySnapshot> lobbies = new HashMap<>();
+    lobbies.put("ABCDE", null);
+    SystemSnapshot snapshot =
+        new SystemSnapshot(SystemSnapshot.CURRENT_SCHEMA_VERSION, lobbies, Map.of());
+    context.stateStore().save(snapshot);
+
+    context.recoveryService().recoverOnStartup();
+
+    assertTrue(context.lobbyService().getLobbyList().isEmpty());
+  }
+
+  @Test
+  void recoverOnStartupSkipsLobbyWhenPlayersListIsNull() {
+    TestContext context = createContext(tempDir.resolve("state-null-players.json"));
+    LobbySnapshot lobbySnapshot = new LobbySnapshot("ABCDE", null);
+    SystemSnapshot snapshot =
+        new SystemSnapshot(
+            SystemSnapshot.CURRENT_SCHEMA_VERSION, Map.of("ABCDE", lobbySnapshot), Map.of());
+    context.stateStore().save(snapshot);
+
+    context.recoveryService().recoverOnStartup();
+
+    assertTrue(context.lobbyService().getLobbyList().isEmpty());
+  }
+
+  @Test
+  void recoverOnStartupSkipsLobbyWhenPlayersListIsEmpty() {
+    TestContext context = createContext(tempDir.resolve("state-empty-players.json"));
+    LobbySnapshot lobbySnapshot = new LobbySnapshot("ABCDE", List.of());
+    SystemSnapshot snapshot =
+        new SystemSnapshot(
+            SystemSnapshot.CURRENT_SCHEMA_VERSION, Map.of("ABCDE", lobbySnapshot), Map.of());
+    context.stateStore().save(snapshot);
+
+    context.recoveryService().recoverOnStartup();
+
+    assertTrue(context.lobbyService().getLobbyList().isEmpty());
+  }
+
+  @Test
+  void recoverOnStartupSkipsLobbyWhenAllUsernamesAreInvalid() {
+    TestContext context = createContext(tempDir.resolve("state-invalid-usernames.json"));
+    LobbySnapshot lobbySnapshot =
+        new LobbySnapshot(
+            "ABCDE",
+            List.of(
+                new PlayerDto("   ", Team.RED, Role.SPYMASTER, true),
+                new PlayerDto(null, Team.BLUE, Role.OPERATIVE, false)));
+    SystemSnapshot snapshot =
+        new SystemSnapshot(
+            SystemSnapshot.CURRENT_SCHEMA_VERSION, Map.of("ABCDE", lobbySnapshot), Map.of());
+    context.stateStore().save(snapshot);
+
+    context.recoveryService().recoverOnStartup();
+
+    assertTrue(context.lobbyService().getLobbyList().isEmpty());
+  }
+
+  @Test
+  void recoverOnStartupRestoresLobbyWhenSomeTeamOrRoleValuesAreMissing() {
+    TestContext context = createContext(tempDir.resolve("state-missing-team-role.json"));
+    LobbySnapshot lobbySnapshot =
+        new LobbySnapshot(
+            "ABCDE",
+            List.of(
+                new PlayerDto("Host", Team.RED, Role.SPYMASTER, true),
+                new PlayerDto("Player", null, null, false)));
+    SystemSnapshot snapshot =
+        new SystemSnapshot(
+            SystemSnapshot.CURRENT_SCHEMA_VERSION, Map.of("ABCDE", lobbySnapshot), Map.of());
+    context.stateStore().save(snapshot);
+
+    context.recoveryService().recoverOnStartup();
+
+    Lobby restoredLobby = context.lobbyService().getLobbyList().get("ABCDE");
+    assertEquals(Team.RED, restoredLobby.getPlayerTeam("Host"));
+    assertEquals(Role.SPYMASTER, restoredLobby.getPlayerRole("Host"));
+    assertNull(restoredLobby.getPlayerTeam("Player"));
+    assertNull(restoredLobby.getPlayerRole("Player"));
+  }
+
+  @Test
+  void recoverOnStartupRestoresOnlyGamesWhenLobbiesMapIsNull() {
+    TestContext context = createContext(tempDir.resolve("state-lobbies-null-games-present.json"));
+    GameSnapshot gameSnapshot =
+        new GameSnapshot(
+            Team.BLUE,
+            Role.SPYMASTER,
+            null,
+            0,
+            0,
+            0,
+            null,
+            List.of(new CardDataTransferObject("Tree", Color.BLUE, false)));
+    SystemSnapshot snapshot =
+        new SystemSnapshot(
+            SystemSnapshot.CURRENT_SCHEMA_VERSION, null, Map.of("ABCDE", gameSnapshot));
+    context.stateStore().save(snapshot);
+
+    context.recoveryService().recoverOnStartup();
+
+    assertTrue(context.lobbyService().getLobbyList().isEmpty());
+    assertTrue(context.gameService().isGameStarted("ABCDE"));
+  }
+
+  @Test
+  void recoverOnStartupRestoresOnlyLobbiesWhenGamesMapIsNull() {
+    TestContext context = createContext(tempDir.resolve("state-games-null-lobbies-present.json"));
+    LobbySnapshot lobbySnapshot =
+        new LobbySnapshot("ABCDE", List.of(new PlayerDto("Host", Team.RED, Role.SPYMASTER, true)));
+    SystemSnapshot snapshot =
+        new SystemSnapshot(
+            SystemSnapshot.CURRENT_SCHEMA_VERSION, Map.of("ABCDE", lobbySnapshot), null);
+    context.stateStore().save(snapshot);
+
+    context.recoveryService().recoverOnStartup();
+
+    assertTrue(context.lobbyService().getLobbyList().containsKey("ABCDE"));
+    assertFalse(context.gameService().isGameStarted("ABCDE"));
+  }
+
   private TestContext createContext(Path stateFile) {
     JsonStateStore stateStore = new JsonStateStore(new ObjectMapper(), stateFile.toString());
     GameManagerFactory gameManagerFactory =
-        new GameManagerFactory(new CardGenerator("CodenamesWordlist.txt"), new ClueValidationService());
+        new GameManagerFactory(
+            new CardGenerator("CodenamesWordlist.txt"), new ClueValidationService());
     GameService gameService = new GameService(gameManagerFactory, new DataTransferObjectService());
     LobbyService lobbyService =
         new LobbyService(new LobbyCodeGenerator(), new ChatService(null), gameService);
