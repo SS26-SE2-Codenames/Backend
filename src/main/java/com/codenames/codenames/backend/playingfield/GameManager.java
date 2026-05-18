@@ -64,6 +64,41 @@ public class GameManager {
         new Board(cardGenerator, TOTAL_CARDS, redCards, blueCards, WHITE_CARDS, BLACK_CARDS);
   }
 
+  public GameManager(
+      List<Card> cards,
+      Team currentTurn,
+      Role currentPhase,
+      Team winner,
+      int currentRedFound,
+      int currentBlueFound,
+      int remainingGuesses,
+      Clue currentClue,
+      ClueValidationService clueValidationService) {
+    if (cards == null || cards.isEmpty()) {
+      throw new IllegalArgumentException("cards cannot be null or empty");
+    }
+    if (currentTurn == null || currentPhase == null) {
+      throw new IllegalArgumentException("current turn and phase cannot be null");
+    }
+
+    this.currentTurn = currentTurn;
+    this.currentPhase = currentPhase;
+    this.winner = winner;
+    this.currentRedFound = currentRedFound;
+    this.currentBlueFound = currentBlueFound;
+    this.remainingGuesses = remainingGuesses;
+    this.currentClue = currentClue;
+    this.clueValidationService = clueValidationService;
+
+    this.redCards = countCardsByColor(cards, Color.RED);
+    this.blueCards = countCardsByColor(cards, Color.BLUE);
+    this.board = new Board(cards);
+  }
+
+  private int countCardsByColor(List<Card> cards, Color color) {
+    return (int) cards.stream().filter(card -> card.getColor() == color).count();
+  }
+
   /**
    * Returns the current list of cards in a board.
    *
