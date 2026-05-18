@@ -21,7 +21,7 @@ class CardTest {
 
   @Test
   void testConstructorNullWord() {
-    assertThrows(IllegalArgumentException.class, () -> new Card(null, Color.BLACK));
+    assertThrows(IllegalArgumentException.class, () -> new Card(null, Color.ASSASSIN));
   }
 
   @Test

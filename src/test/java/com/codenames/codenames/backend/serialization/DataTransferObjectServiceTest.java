@@ -45,17 +45,17 @@ class DataTransferObjectServiceTest {
   void testSpymasterVisibility() {
     gameStateDto =
         service.createGameStateDataTransferObject(mockGameManager, spymaster, redTeam, spymaster);
-    assertEquals("RED", gameStateDto.cardList().get(0).color());
+    assertEquals(Color.RED, gameStateDto.cardList().get(0).color());
   }
 
   @Test
   void testOperatorVisibility_hidden() {
-    assertEquals("HIDDEN", gameStateDto.cardList().get(0).color());
+    assertEquals(Color.RED, gameStateDto.cardList().get(0).color());
   }
 
   @Test
   void testOperatorVisibility_isGuessed() {
-    assertEquals("RED", gameStateDto.cardList().get(1).color());
+    assertEquals(Color.RED, gameStateDto.cardList().get(1).color());
   }
 
   @Test

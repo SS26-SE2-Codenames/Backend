@@ -170,4 +170,50 @@ class LobbyControllerTest {
             .andExpect(jsonPath("$.playerList[1].username")
                     .value("Bob"));
   }
+
+  @Test
+  void testStartGameReturns200_WhenConditionIsMet() throws Exception {
+    List<PlayerDto> players = List.of(
+            new PlayerDto("Alice", null, null, true),
+            new PlayerDto("Bob", null, null, false)
+    );
+
+    when(service.getPlayersDto("ABCDE")).thenReturn(players);
+    when(service.startGame("ABCDE", "Alice")).thenReturn(true);
+
+    mockMvc.perform(get("/lobby/ABCDE/start-game")
+                    .param("username", "Alice"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.message")
+                    .value("Game is starting now."))
+            .andExpect(jsonPath("$.lobbyCode")
+                    .value("ABCDE"))
+            .andExpect(jsonPath("$.playerList[0].username")
+                    .value("Alice"))
+            .andExpect(jsonPath("$.isStarted")
+                    .value("true"));
+  }
+
+  @Test
+  void testStartGameReturns400_WhenServiceReturnsFalse() throws Exception{
+    List<PlayerDto> players = List.of(
+            new PlayerDto("Alice", null, null, true),
+            new PlayerDto("Bob", null, null, false)
+    );
+
+    when(service.getPlayersDto("ABCDE")).thenReturn(players);
+    when(service.startGame("ABCDE", "Alice")).thenReturn(false);
+
+    mockMvc.perform(get("/lobby/ABCDE/start-game")
+                    .param("username", "Alice"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message")
+                    .value("Could not start the game."))
+            .andExpect(jsonPath("$.lobbyCode")
+                    .value("ABCDE"))
+            .andExpect(jsonPath("$.playerList[0].username")
+                    .value("Alice"))
+            .andExpect(jsonPath("$.isStarted")
+                    .value("false"));
+  }
 }
