@@ -70,7 +70,7 @@ class GameManagerTest {
     return fullListGameManager;
   }
 
-  private void helperMethodAdvanceTurns(int advanceAmount) {
+  private void helperMethodAdvanceTurns(GameManager gameManager, int advanceAmount) {
     for (int i = 0; i < advanceAmount; i++) {
       gameManager.advanceTurn();
     }
@@ -117,7 +117,6 @@ class GameManagerTest {
   void testGetWinner_redStartsRedWins() {
     gameManager = helperMethodGenerateFullCardList(redColor, redTeam);
 
-    helperMethodAdvanceTurns(1);
     for (int i = 0; i < STARTING_TEAM_CARDS; i++) {
       gameManager.flipCard(i, redTeam);
     }
@@ -128,9 +127,8 @@ class GameManagerTest {
   void testGetWinner_redStartsBlueWins() {
     gameManager = helperMethodGenerateFullCardList(blueColor, redTeam);
 
-    helperMethodAdvanceTurns(2); // blue spymaster
+    helperMethodAdvanceTurns(gameManager, 1); // blue spymaster
     helperMethodSubmitClue(gameManager, SECOND_TEAM_CARDS, blueTeam);
-    helperMethodAdvanceTurns(1); // blue operative
 
     for (int i = 0; i < SECOND_TEAM_CARDS; i++) {
       gameManager.flipCard(i, blueTeam);
@@ -141,9 +139,8 @@ class GameManagerTest {
   @Test
   void testGetWinner_blueStartsRedWins() {
     gameManager = helperMethodGenerateFullCardList(redColor, blueTeam);
-    helperMethodAdvanceTurns(2); // red spymaster
+    helperMethodAdvanceTurns(gameManager, 1); // red spymaster
     helperMethodSubmitClue(gameManager, 8, redTeam);
-    helperMethodAdvanceTurns(1); // red operative
 
     for (int i = 0; i < SECOND_TEAM_CARDS; i++) {
       gameManager.flipCard(i, redTeam);
@@ -155,7 +152,6 @@ class GameManagerTest {
   void testGetWinner_blueStartsBlueWins() {
     gameManager = helperMethodGenerateFullCardList(blueColor, blueTeam);
 
-    helperMethodAdvanceTurns(1);
     for (int i = 0; i < STARTING_TEAM_CARDS; i++) {
       gameManager.flipCard(i, blueTeam);
     }
@@ -167,9 +163,8 @@ class GameManagerTest {
     mockCardGeneration(List.of(new Card("Test", Color.ASSASSIN)));
     gameManager = new GameManager(blueTeam, mockCardGenerator, mockClueValidationService);
     helperMethodSubmitClue(gameManager, 1, blueTeam);
-    helperMethodAdvanceTurns(2); // red spymaster
+    helperMethodAdvanceTurns(gameManager, 1); // red spymaster
     helperMethodSubmitClue(gameManager, 1, redTeam);
-    helperMethodAdvanceTurns(1); // red operative
 
     gameManager.flipCard(0, redTeam);
     assertEquals(blueTeam, gameManager.getWinner());
@@ -179,9 +174,8 @@ class GameManagerTest {
   void testGetWinner_blueFoundBlackCardFound() {
     mockCardGeneration(List.of(new Card("Test", Color.ASSASSIN)));
     gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
-    helperMethodAdvanceTurns(2); // blue spymaster
+    helperMethodAdvanceTurns(gameManager, 2); // blue spymaster
     helperMethodSubmitClue(gameManager, 1, blueTeam);
-    helperMethodAdvanceTurns(1); // blue operative
     gameManager.flipCard(0, blueTeam);
     assertEquals(redTeam, gameManager.getWinner());
   }
@@ -191,7 +185,6 @@ class GameManagerTest {
     mockCardGeneration(List.of(new Card("Test", Color.NEUTRAL)));
     gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
     helperMethodSubmitClue(gameManager, 1, redTeam);
-    helperMethodAdvanceTurns(1);
     gameManager.flipCard(0, redTeam);
     assertNull(gameManager.getWinner());
   }
@@ -199,7 +192,6 @@ class GameManagerTest {
   @Test
   void testFlipCard_cardAlreadyFlipped() {
     helperMethodSubmitClue(gameManager, 1, redTeam);
-    helperMethodAdvanceTurns(1);
     gameManager.flipCard(0, redTeam);
     assertThrows(IllegalStateException.class, () -> gameManager.flipCard(0, redTeam));
   }
@@ -209,7 +201,6 @@ class GameManagerTest {
     mockCardGeneration(List.of(new Card("Test", Color.ASSASSIN)));
     gameManager = new GameManager(blueTeam, mockCardGenerator, mockClueValidationService);
     helperMethodSubmitClue(gameManager, 1, blueTeam);
-    helperMethodAdvanceTurns(1); // red operative
     gameManager.flipCard(0, blueTeam);
     assertThrows(IllegalStateException.class, () -> gameManager.flipCard(0, blueTeam));
   }
@@ -238,7 +229,6 @@ class GameManagerTest {
     mockCardGeneration(List.of(new Card("Test", redColor), new Card("Test2", redColor)));
     gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
     helperMethodSubmitClue(gameManager, 0, redTeam);
-    helperMethodAdvanceTurns(1);
     gameManager.flipCard(0, redTeam);
     assertThrows(IllegalStateException.class, () -> gameManager.flipCard(1, redTeam));
   }
@@ -281,44 +271,44 @@ class GameManagerTest {
 
   @Test
   void testAdvanceTurn_spymasterToOperative() {
-    helperMethodAdvanceTurns(1);
+    helperMethodAdvanceTurns(gameManager, 1);
     assertEquals(Role.OPERATIVE, gameManager.getCurrentPhase());
   }
 
   @Test
   void testAdvanceTurn_spymasterToOperative_sameTeam() {
-    helperMethodAdvanceTurns(1);
+    helperMethodAdvanceTurns(gameManager, 1);
     assertEquals(redTeam, gameManager.getCurrentTurn());
   }
 
   @Test
   void testAdvanceTurnTwice_operativeToSpymaster() {
-    helperMethodAdvanceTurns(2);
+    helperMethodAdvanceTurns(gameManager, 2);
     assertEquals(Role.SPYMASTER, gameManager.getCurrentPhase());
   }
 
   @Test
   void testAdvanceTurnTwice_redTeamToBlueTeam() {
-    helperMethodAdvanceTurns(2);
+    helperMethodAdvanceTurns(gameManager, 2);
     assertEquals(blueTeam, gameManager.getCurrentTurn());
   }
 
   @Test
   void testAdvanceTurnTwice_wipeClue() {
-    helperMethodAdvanceTurns(2);
+    helperMethodAdvanceTurns(gameManager, 2);
     assertNull(gameManager.getCurrentClue());
   }
 
   @Test
   void testPassTurn_correctTeam() {
-    helperMethodAdvanceTurns(1);
+    helperMethodAdvanceTurns(gameManager, 1);
     gameManager.passTurn(redTeam);
     assertEquals(blueTeam, gameManager.getCurrentTurn());
   }
 
   @Test
   void testPassTurn_correctPhase() {
-    helperMethodAdvanceTurns(1);
+    helperMethodAdvanceTurns(gameManager, 1);
     gameManager.passTurn(redTeam);
     assertEquals(Role.SPYMASTER, gameManager.getCurrentPhase());
   }

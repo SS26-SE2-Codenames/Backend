@@ -3,6 +3,7 @@ package com.codenames.codenames.backend.serialization;
 import com.codenames.codenames.backend.playingfield.Card;
 import com.codenames.codenames.backend.playingfield.GameManager;
 import com.codenames.codenames.backend.utility.Color;
+import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +28,12 @@ public class DataTransferObjectService {
    * Creates the game state DTO that needs to be serialized into JSON.
    *
    * @param gameManager the game manager that holds the state of the game
+   * @param role the role of the player who requires the DTO
    * @param currentTurn the current turn
    * @return a DTO of the current game state
    */
   public GameStateDataTransferObject createGameStateDataTransferObject(
-          GameManager gameManager, Team currentTurn) {
+          GameManager gameManager, Role role, Team currentTurn, Role currentPhase) {
 
     List<Card> cardList = gameManager.getCardList();
     List<CardDataTransferObject> cardDataTransferObject = new ArrayList<>();
@@ -41,6 +43,7 @@ public class DataTransferObjectService {
     return new GameStateDataTransferObject(
         gameManager.getWinner(),
         currentTurn,
+        currentPhase,
         gameManager.getCurrentRedFound(),
         gameManager.getCurrentBlueFound(),
         gameManager.getCurrentClueWord(),

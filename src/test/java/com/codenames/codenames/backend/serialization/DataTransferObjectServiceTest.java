@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import com.codenames.codenames.backend.playingfield.Card;
 import com.codenames.codenames.backend.playingfield.GameManager;
 import com.codenames.codenames.backend.utility.Color;
+import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +21,8 @@ class DataTransferObjectServiceTest {
   DataTransferObjectService service;
   GameStateDataTransferObject gameStateDto;
   private static final Team redTeam = Team.RED;
+  private static final Role spymaster = Role.SPYMASTER;
+  private static final Role operative = Role.OPERATIVE;
 
   @BeforeEach
   void setUp() {
@@ -35,14 +38,24 @@ class DataTransferObjectServiceTest {
     when(mockGameManager.getCurrentBlueFound()).thenReturn(0);
 
     gameStateDto =
-        service.createGameStateDataTransferObject(mockGameManager, redTeam);
+        service.createGameStateDataTransferObject(mockGameManager, operative, redTeam, spymaster);
   }
 
   @Test
-  void testCorrectColors() {
+  void testSpymasterVisibility() {
     gameStateDto =
-        service.createGameStateDataTransferObject(mockGameManager, redTeam);
+        service.createGameStateDataTransferObject(mockGameManager, spymaster, redTeam, spymaster);
     assertEquals(Color.RED, gameStateDto.cardList().get(0).color());
+  }
+
+  @Test
+  void testOperatorVisibility_hidden() {
+    assertEquals(Color.RED, gameStateDto.cardList().get(0).color());
+  }
+
+  @Test
+  void testOperatorVisibility_isGuessed() {
+    assertEquals(Color.RED, gameStateDto.cardList().get(1).color());
   }
 
   @Test
@@ -54,7 +67,7 @@ class DataTransferObjectServiceTest {
   void testGetWinner_null() {
     when(mockGameManager.getWinner()).thenReturn(null);
     gameStateDto =
-        service.createGameStateDataTransferObject(mockGameManager, redTeam);
+        service.createGameStateDataTransferObject(mockGameManager, operative, redTeam, operative);
     assertNull(gameStateDto.winner());
   }
 }

@@ -84,7 +84,6 @@ public class GameService {
   public void submitClue(String lobbyCode, Clue clue, Team callingTeam) {
     GameManager gm = getGame(lobbyCode);
     gm.submitClue(clue, callingTeam);
-    gm.advanceTurn();
   }
 
   /**
@@ -130,14 +129,14 @@ public class GameService {
   }
 
   /**
-   * Maps current game State into a @link GameStateTransferObject.
+   * Maps the current game state into a @link GameStateTransferObject.
    *
    * @param lobbyCode the unique lobby code
    * @return the mapped game state transfer object
    */
   public GameStateDataTransferObject getCurrentGameState(String lobbyCode) {
     GameManager gm = getGame(lobbyCode);
-    return dtoService.createGameStateDataTransferObject(gm, gm.getCurrentTurn());
+    return dtoService.createGameStateDataTransferObject(gm, null, gm.getCurrentTurn(), gm.getCurrentPhase());
   }
 
   /**
