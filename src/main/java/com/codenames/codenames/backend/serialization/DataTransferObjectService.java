@@ -49,9 +49,6 @@ public class DataTransferObjectService {
           cardDataTransferObject);
     }
     String word = gameManager.getCurrentClue().word();
-    if (word == null) {
-      word = "";
-    }
     int guessAmount = gameManager.getCurrentClue().guessAmount();
     return new GameStateDataTransferObject(
         gameManager.getWinner(),
