@@ -80,7 +80,6 @@ public class GameService {
   public void submitClue(String lobbyCode, Clue clue, Team callingTeam) {
     GameManager gm = getGame(lobbyCode);
     gm.submitClue(clue, callingTeam);
-    gm.advanceTurn();
   }
 
   /**

@@ -39,7 +39,7 @@ public class DataTransferObjectService {
    * @return a DTO of the current game state
    */
   public GameStateDataTransferObject createGameStateDataTransferObject(
-      GameManager gameManager, Role role, Team currentTurn) {
+      GameManager gameManager, Role role, Team currentTurn, Role currentPhase) {
 
     List<Card> cardList = gameManager.getCardList();
     List<CardDataTransferObject> cardDataTransferObject = new ArrayList<>();
@@ -55,6 +55,7 @@ public class DataTransferObjectService {
     return new GameStateDataTransferObject(
         winner,
         currentTurn,
+        currentPhase,
         gameManager.getCurrentRedFound(),
         gameManager.getCurrentBlueFound(),
         gameManager.getCurrentClueWord(),

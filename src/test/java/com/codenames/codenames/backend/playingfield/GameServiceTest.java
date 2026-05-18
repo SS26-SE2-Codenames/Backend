@@ -60,7 +60,6 @@ class GameServiceTest {
 
     gameService.submitClue(lobbyCode, mockClue, redTeam);
     verify(mockGameManager, times(1)).submitClue(mockClue, redTeam);
-    verify(mockGameManager, times(1)).advanceTurn();
   }
 
   @Test
