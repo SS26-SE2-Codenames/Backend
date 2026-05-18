@@ -13,6 +13,11 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+/**
+ * JSON-backed storage for persisted system snapshots.
+ *
+ * <p>Writes are synchronized and performed via temporary-file replace to reduce corruption risk.
+ */
 @Component
 @Getter
 public class JsonStateStore {
@@ -21,12 +26,23 @@ public class JsonStateStore {
   private final Path stateFilePath;
   private final ReentrantLock ioLock = new ReentrantLock();
 
+  /**
+   * Creates a new state store with configured target file path.
+   *
+   * @param objectMapper mapper used for JSON serialization
+   * @param stateFile configured path to the persisted state file
+   */
   public JsonStateStore(
       ObjectMapper objectMapper, @Value("${app.state-file:data/state.json}") String stateFile) {
     this.objectMapper = objectMapper;
     this.stateFilePath = Path.of(stateFile);
   }
 
+  /**
+   * Persists the full system snapshot atomically.
+   *
+   * @param snapshot full snapshot to store
+   */
   public void save(SystemSnapshot snapshot) {
     ioLock.lock();
     try {
@@ -46,6 +62,11 @@ public class JsonStateStore {
     }
   }
 
+  /**
+   * Loads the persisted system snapshot when present.
+   *
+   * @return optional snapshot
+   */
   public Optional<SystemSnapshot> load() {
     ioLock.lock();
     try {
@@ -60,6 +81,13 @@ public class JsonStateStore {
     }
   }
 
+  /**
+   * Replaces target file with source file using atomic move where supported.
+   *
+   * @param source temporary source file
+   * @param target final target file
+   * @throws IOException when move fails
+   */
   private void moveAtomically(Path source, Path target) throws IOException {
     try {
       Files.move(
