@@ -1,5 +1,6 @@
 package com.codenames.codenames.backend.lobby.controller;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -37,6 +38,8 @@ class LobbyControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message").value("Successfully created Lobby."))
         .andExpect(jsonPath("$.lobbyCode").value("ABCDE"));
+
+    verify(persistenceService).persistCurrentState();
   }
 
   @Test

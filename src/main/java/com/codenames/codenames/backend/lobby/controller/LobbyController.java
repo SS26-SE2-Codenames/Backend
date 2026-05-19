@@ -104,7 +104,7 @@ public class LobbyController {
     if (left) {
       service.checkLobbyStillHasPlayers(lobbyCode);
       persistenceService.persistCurrentState();
-      ResponseEntity<LobbyResponse> response = ResponseEntity.ok(
+      return ResponseEntity.ok(
               new LobbyResponse(
                       "Left lobby successfully.",
                       lobbyCode,
@@ -112,7 +112,6 @@ public class LobbyController {
                       false
               )
       );
-      return response;
     } else {
       return ResponseEntity.badRequest()
               .body(new LobbyResponse(LOBBY_NOT_FOUND, lobbyCode, null, false));
