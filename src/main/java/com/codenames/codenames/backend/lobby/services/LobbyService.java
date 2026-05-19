@@ -313,4 +313,14 @@ public class LobbyService {
   public boolean getIsStarted(String lobbyCode) {
     return gameService.isGameStarted(lobbyCode);
   }
+
+  /**
+   * Returns all lobbies as serializable snapshots.
+   *
+   * @return map of lobby codes to player dto lists
+   */
+  public Map<String, List<PlayerDto>> getLobbySnapshots() {
+    return lobbyList.keySet().stream()
+        .collect(java.util.stream.Collectors.toMap(lobbyCode -> lobbyCode, this::getPlayersDto));
+  }
 }

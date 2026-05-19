@@ -145,4 +145,15 @@ public class GameService {
       return false;
     }
   }
+
+  /**
+   * Returns all active games as serializable snapshots.
+   *
+   * @return map of lobby codes to game state dto snapshots
+   */
+  public Map<String, GameStateDataTransferObject> getGameSnapshots() {
+    return games.keySet().stream()
+        .collect(
+            java.util.stream.Collectors.toMap(lobbyCode -> lobbyCode, this::getCurrentGameState));
+  }
 }
