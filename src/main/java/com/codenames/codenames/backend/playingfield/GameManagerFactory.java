@@ -2,6 +2,7 @@ package com.codenames.codenames.backend.playingfield;
 
 import com.codenames.codenames.backend.clue.Clue;
 import com.codenames.codenames.backend.clue.ClueValidationService;
+import com.codenames.codenames.backend.game.dto.ClueDto;
 import com.codenames.codenames.backend.recovery.snapshot.GameSnapshot;
 import com.codenames.codenames.backend.serialization.CardDataTransferObject;
 import com.codenames.codenames.backend.utility.Team;
@@ -43,10 +44,9 @@ public class GameManagerFactory {
    * @return restored game manager
    */
   public GameManager createFromSnapshot(GameSnapshot snapshot) {
+    ClueDto clueDto = snapshot.currentClue();
     Clue clue =
-        snapshot.currentClue() == null
-            ? null
-            : new Clue(snapshot.currentClue().word(), snapshot.currentClue().guessAmount());
+        clueDto == null ? null : new Clue(clueDto.word(), clueDto.guessAmount());
     List<Card> cards = snapshot.cards().stream().map(this::toCard).toList();
 
     return new GameManager(
