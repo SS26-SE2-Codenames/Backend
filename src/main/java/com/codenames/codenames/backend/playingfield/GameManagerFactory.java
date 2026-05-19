@@ -1,13 +1,8 @@
 package com.codenames.codenames.backend.playingfield;
 
-import com.codenames.codenames.backend.clue.Clue;
 import com.codenames.codenames.backend.clue.ClueValidationService;
-import com.codenames.codenames.backend.game.dto.ClueDto;
-import com.codenames.codenames.backend.serialization.CardDataTransferObject;
 import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
-import com.codenames.codenames.backend.utility.Color;
 import com.codenames.codenames.backend.utility.Team;
-import java.util.List;
 import org.springframework.stereotype.Component;
 
 /** Generates GameManager instances to be used by GameService. */
@@ -45,41 +40,6 @@ public class GameManagerFactory {
    * @return restored game manager
    */
   public GameManager createFromSnapshot(GameStateDataTransferObject snapshot) {
-    ClueDto clueDto = snapshot.currentClue();
-    Clue clue = clueDto == null ? null : new Clue(clueDto.word(), clueDto.guessAmount());
-    List<Card> cards = snapshot.cardList().stream().map(this::toCard).toList();
-    int recoveredRedFound = countGuessedByColor(cards, Color.RED);
-    int recoveredBlueFound = countGuessedByColor(cards, Color.BLUE);
-    GameRecoveryState recoveryState =
-        new GameRecoveryState(
-            cards,
-            snapshot.currentTurn(),
-            snapshot.currentPhase(),
-            snapshot.winner(),
-            recoveredRedFound,
-            recoveredBlueFound,
-            snapshot.remainingGuesses(),
-            clue);
-
-    return new GameManager(recoveryState, clueValidationService);
-  }
-
-  /**
-   * Maps persisted card DTO representation to runtime {@link Card}.
-   *
-   * @param cardDto persisted card payload
-   * @return runtime card instance
-   */
-  private Card toCard(CardDataTransferObject cardDto) {
-    Card card = new Card(cardDto.word(), cardDto.color());
-    if (cardDto.isGuessed()) {
-      card.setIsGuessedTrue();
-    }
-    return card;
-  }
-
-  private int countGuessedByColor(List<Card> cards, Color color) {
-    return (int)
-        cards.stream().filter(card -> card.isGuessed() && card.getColor() == color).count();
+    return new GameManager(snapshot, clueValidationService);
   }
 }
