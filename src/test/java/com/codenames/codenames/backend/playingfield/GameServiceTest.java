@@ -2,7 +2,6 @@ package com.codenames.codenames.backend.playingfield;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -12,7 +11,6 @@ import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.clue.Clue;
 import com.codenames.codenames.backend.game.dto.ClueDto;
-import com.codenames.codenames.backend.game.dto.GameStateDto;
 import com.codenames.codenames.backend.serialization.CardDataTransferObject;
 import com.codenames.codenames.backend.serialization.DataTransferObjectService;
 import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
@@ -96,16 +94,6 @@ class GameServiceTest {
   }
 
   @Test
-  void testCreateGameStateDto() {
-
-    when(mockGameManager.getCardList()).thenReturn(List.of());
-
-    GameStateDto dto = gameService.createGameStateDto(lobbyCode);
-
-    assertNotNull(dto);
-  }
-
-  @Test
   void testRestoreGameManager() {
     String restoredLobbyCode = "VWXYZ";
     GameManager restoredGameManager = mock(GameManager.class);
@@ -123,9 +111,11 @@ class GameServiceTest {
             redTeam,
             Role.SPYMASTER,
             new ClueDto("ANIMAL", 2),
+            2,
             List.of(new CardDataTransferObject("Dog", Color.RED, false)));
     when(mockGameManager.getCurrentTurn()).thenReturn(redTeam);
     when(mockGameManager.getCurrentPhase()).thenReturn(Role.SPYMASTER);
+    when(mockGameManager.getRemainingGuesses()).thenReturn(2);
     when(mockDtoService.createGameStateDataTransferObject(mockGameManager, redTeam, Role.SPYMASTER))
         .thenReturn(expected);
 
