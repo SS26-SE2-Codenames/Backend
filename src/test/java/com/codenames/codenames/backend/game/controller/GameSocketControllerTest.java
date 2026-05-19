@@ -105,6 +105,6 @@ class GameSocketControllerTest {
   }
 
   private GameStateDataTransferObject createGameStateDataTransferObject() {
-    return new GameStateDataTransferObject(null, Team.RED, null, null, List.of());
+    return new GameStateDataTransferObject(null, Team.RED, null, null, 0, List.of());
   }
 }
