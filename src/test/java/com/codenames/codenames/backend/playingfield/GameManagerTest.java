@@ -336,66 +336,39 @@ class GameManagerTest {
         IllegalArgumentException.class,
         () ->
             new GameManager(
-                null,
-                Team.RED,
-                Role.SPYMASTER,
-                null,
-                0,
-                0,
-                0,
-                null,
-                mockClueValidationService));
+                null, Team.RED, Role.SPYMASTER, null, 0, 0, 0, null, mockClueValidationService));
   }
 
   @Test
   void recoveryConstructorThrowsWhenCardsAreEmpty() {
+    List<Card> cards = List.of();
+
     assertThrows(
         IllegalArgumentException.class,
         () ->
             new GameManager(
-                List.of(),
-                Team.RED,
-                Role.SPYMASTER,
-                null,
-                0,
-                0,
-                0,
-                null,
-                mockClueValidationService));
+                cards, Team.RED, Role.SPYMASTER, null, 0, 0, 0, null, mockClueValidationService));
   }
 
   @Test
   void recoveryConstructorThrowsWhenCurrentTurnIsNull() {
+    List<Card> cards = List.of(new Card("Dog", Color.RED));
+
     assertThrows(
         IllegalArgumentException.class,
         () ->
             new GameManager(
-                List.of(new Card("Dog", Color.RED)),
-                null,
-                Role.SPYMASTER,
-                null,
-                0,
-                0,
-                0,
-                null,
-                mockClueValidationService));
+                cards, null, Role.SPYMASTER, null, 0, 0, 0, null, mockClueValidationService));
   }
 
   @Test
   void recoveryConstructorThrowsWhenCurrentPhaseIsNull() {
+    List<Card> cards = List.of(new Card("Dog", Color.RED));
+
     assertThrows(
         IllegalArgumentException.class,
         () ->
-            new GameManager(
-                List.of(new Card("Dog", Color.RED)),
-                Team.RED,
-                null,
-                null,
-                0,
-                0,
-                0,
-                null,
-                mockClueValidationService));
+            new GameManager(cards, Team.RED, null, null, 0, 0, 0, null, mockClueValidationService));
   }
 
   @Test
