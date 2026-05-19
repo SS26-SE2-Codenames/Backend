@@ -1,7 +1,6 @@
 package com.codenames.codenames.backend.playingfield;
 
 import com.codenames.codenames.backend.clue.Clue;
-import com.codenames.codenames.backend.game.dto.GameStateDto;
 import com.codenames.codenames.backend.serialization.DataTransferObjectService;
 import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import com.codenames.codenames.backend.utility.Team;
@@ -117,25 +116,6 @@ public class GameService {
   public void passTurn(String lobbyCode, Team callingTeam) {
     GameManager gm = getGame(lobbyCode);
     gm.passTurn(callingTeam);
-  }
-
-  /**
-   * Creates a DTO representing the current game state.
-   *
-   * @param lobbyCode lobby identifier
-   * @return DTO containing board and turn information
-   */
-  public GameStateDto createGameStateDto(String lobbyCode) {
-
-    GameManager gm = getGame(lobbyCode);
-
-    return new GameStateDto(
-        gm.getCardList(),
-        gm.getCurrentClue(),
-        gm.getRemainingGuesses(),
-        gm.getWinner(),
-        gm.getCurrentTurn(),
-        gm.getCurrentPhase());
   }
 
   /**
