@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.codenames.codenames.backend.chat.ChatService;
 import com.codenames.codenames.backend.clue.ClueValidationService;
+import com.codenames.codenames.backend.game.dto.ClueDto;
 import com.codenames.codenames.backend.lobby.Lobby;
 import com.codenames.codenames.backend.lobby.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.services.LobbyCodeGenerator;
@@ -15,9 +16,7 @@ import com.codenames.codenames.backend.playingfield.CardGenerator;
 import com.codenames.codenames.backend.playingfield.GameManager;
 import com.codenames.codenames.backend.playingfield.GameManagerFactory;
 import com.codenames.codenames.backend.playingfield.GameService;
-import com.codenames.codenames.backend.recovery.snapshot.ClueSnapshot;
 import com.codenames.codenames.backend.recovery.snapshot.GameSnapshot;
-import com.codenames.codenames.backend.recovery.snapshot.LobbySnapshot;
 import com.codenames.codenames.backend.recovery.snapshot.SystemSnapshot;
 import com.codenames.codenames.backend.serialization.CardDataTransferObject;
 import com.codenames.codenames.backend.serialization.DataTransferObjectService;
@@ -62,12 +61,10 @@ class SystemStateRecoveryServiceTest {
   @Test
   void recoverOnStartupRestoresLobbiesAndGamesFromSnapshot() {
     TestContext context = createContext(tempDir.resolve("state.json"));
-    LobbySnapshot lobbySnapshot =
-        new LobbySnapshot(
-            "ABCDE",
-            List.of(
-                new PlayerDto("Host", Team.RED, Role.SPYMASTER, true),
-                new PlayerDto("Player", Team.BLUE, Role.OPERATIVE, false)));
+    List<PlayerDto> lobbyPlayers =
+        List.of(
+            new PlayerDto("Host", Team.RED, Role.SPYMASTER, true),
+            new PlayerDto("Player", Team.BLUE, Role.OPERATIVE, false));
     GameSnapshot gameSnapshot =
         new GameSnapshot(
             Team.RED,
@@ -76,14 +73,14 @@ class SystemStateRecoveryServiceTest {
             1,
             0,
             2,
-            new ClueSnapshot("ANIMAL", 2),
+            new ClueDto("ANIMAL", 2),
             List.of(
                 new CardDataTransferObject("Dog", Color.RED, true),
                 new CardDataTransferObject("Cat", Color.BLUE, false)));
     SystemSnapshot snapshot =
         new SystemSnapshot(
             SystemSnapshot.CURRENT_SCHEMA_VERSION,
-            Map.of("ABCDE", lobbySnapshot),
+            Map.of("ABCDE", lobbyPlayers),
             Map.of("ABCDE", gameSnapshot));
     context.stateStore().save(snapshot);
 
@@ -122,8 +119,7 @@ class SystemStateRecoveryServiceTest {
   @Test
   void recoverOnStartupHandlesNullLobbyAndGameMaps() {
     TestContext context = createContext(tempDir.resolve("state-null-maps.json"));
-    SystemSnapshot snapshot =
-        new SystemSnapshot(SystemSnapshot.CURRENT_SCHEMA_VERSION, null, null);
+    SystemSnapshot snapshot = new SystemSnapshot(SystemSnapshot.CURRENT_SCHEMA_VERSION, null, null);
     context.stateStore().save(snapshot);
 
     context.recoveryService().recoverOnStartup();
@@ -135,7 +131,7 @@ class SystemStateRecoveryServiceTest {
   @Test
   void recoverOnStartupSkipsLobbyWhenSnapshotEntryIsNull() {
     TestContext context = createContext(tempDir.resolve("state-null-lobby-entry.json"));
-    Map<String, LobbySnapshot> lobbies = new HashMap<>();
+    Map<String, List<PlayerDto>> lobbies = new HashMap<>();
     lobbies.put("ABCDE", null);
     SystemSnapshot snapshot =
         new SystemSnapshot(SystemSnapshot.CURRENT_SCHEMA_VERSION, lobbies, Map.of());
@@ -149,10 +145,10 @@ class SystemStateRecoveryServiceTest {
   @Test
   void recoverOnStartupSkipsLobbyWhenPlayersListIsNull() {
     TestContext context = createContext(tempDir.resolve("state-null-players.json"));
-    LobbySnapshot lobbySnapshot = new LobbySnapshot("ABCDE", null);
+    Map<String, List<PlayerDto>> lobbies = new HashMap<>();
+    lobbies.put("ABCDE", null);
     SystemSnapshot snapshot =
-        new SystemSnapshot(
-            SystemSnapshot.CURRENT_SCHEMA_VERSION, Map.of("ABCDE", lobbySnapshot), Map.of());
+        new SystemSnapshot(SystemSnapshot.CURRENT_SCHEMA_VERSION, lobbies, Map.of());
     context.stateStore().save(snapshot);
 
     context.recoveryService().recoverOnStartup();
@@ -163,7 +159,7 @@ class SystemStateRecoveryServiceTest {
   @Test
   void recoverOnStartupSkipsLobbyWhenPlayersListIsEmpty() {
     TestContext context = createContext(tempDir.resolve("state-empty-players.json"));
-    LobbySnapshot lobbySnapshot = new LobbySnapshot("ABCDE", List.of());
+    List<PlayerDto> lobbySnapshot = List.of();
     SystemSnapshot snapshot =
         new SystemSnapshot(
             SystemSnapshot.CURRENT_SCHEMA_VERSION, Map.of("ABCDE", lobbySnapshot), Map.of());
@@ -177,12 +173,10 @@ class SystemStateRecoveryServiceTest {
   @Test
   void recoverOnStartupSkipsLobbyWhenAllUsernamesAreInvalid() {
     TestContext context = createContext(tempDir.resolve("state-invalid-usernames.json"));
-    LobbySnapshot lobbySnapshot =
-        new LobbySnapshot(
-            "ABCDE",
-            List.of(
-                new PlayerDto("   ", Team.RED, Role.SPYMASTER, true),
-                new PlayerDto(null, Team.BLUE, Role.OPERATIVE, false)));
+    List<PlayerDto> lobbySnapshot =
+        List.of(
+            new PlayerDto("   ", Team.RED, Role.SPYMASTER, true),
+            new PlayerDto(null, Team.BLUE, Role.OPERATIVE, false));
     SystemSnapshot snapshot =
         new SystemSnapshot(
             SystemSnapshot.CURRENT_SCHEMA_VERSION, Map.of("ABCDE", lobbySnapshot), Map.of());
@@ -196,12 +190,10 @@ class SystemStateRecoveryServiceTest {
   @Test
   void recoverOnStartupRestoresLobbyWhenSomeTeamOrRoleValuesAreMissing() {
     TestContext context = createContext(tempDir.resolve("state-missing-team-role.json"));
-    LobbySnapshot lobbySnapshot =
-        new LobbySnapshot(
-            "ABCDE",
-            List.of(
-                new PlayerDto("Host", Team.RED, Role.SPYMASTER, true),
-                new PlayerDto("Player", null, null, false)));
+    List<PlayerDto> lobbySnapshot =
+        List.of(
+            new PlayerDto("Host", Team.RED, Role.SPYMASTER, true),
+            new PlayerDto("Player", null, null, false));
     SystemSnapshot snapshot =
         new SystemSnapshot(
             SystemSnapshot.CURRENT_SCHEMA_VERSION, Map.of("ABCDE", lobbySnapshot), Map.of());
@@ -243,8 +235,7 @@ class SystemStateRecoveryServiceTest {
   @Test
   void recoverOnStartupRestoresOnlyLobbiesWhenGamesMapIsNull() {
     TestContext context = createContext(tempDir.resolve("state-games-null-lobbies-present.json"));
-    LobbySnapshot lobbySnapshot =
-        new LobbySnapshot("ABCDE", List.of(new PlayerDto("Host", Team.RED, Role.SPYMASTER, true)));
+    List<PlayerDto> lobbySnapshot = List.of(new PlayerDto("Host", Team.RED, Role.SPYMASTER, true));
     SystemSnapshot snapshot =
         new SystemSnapshot(
             SystemSnapshot.CURRENT_SCHEMA_VERSION, Map.of("ABCDE", lobbySnapshot), null);
