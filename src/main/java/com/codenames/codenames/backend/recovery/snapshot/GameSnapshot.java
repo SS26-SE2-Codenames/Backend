@@ -1,5 +1,6 @@
 package com.codenames.codenames.backend.recovery.snapshot;
 
+import com.codenames.codenames.backend.game.dto.ClueDto;
 import com.codenames.codenames.backend.serialization.CardDataTransferObject;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
@@ -14,7 +15,7 @@ import java.util.List;
  * @param currentRedFound discovered red cards
  * @param currentBlueFound discovered blue cards
  * @param remainingGuesses remaining guesses
- * @param currentClue current clue if present
+ * @param currentClue current clue DTO if present
  * @param cards full card state list
  */
 public record GameSnapshot(
@@ -24,5 +25,5 @@ public record GameSnapshot(
     int currentRedFound,
     int currentBlueFound,
     int remainingGuesses,
-    ClueSnapshot currentClue,
+    ClueDto currentClue,
     List<CardDataTransferObject> cards) {}
