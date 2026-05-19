@@ -2,6 +2,7 @@ package com.codenames.codenames.backend.lobby.controller;
 
 import com.codenames.codenames.backend.lobby.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.services.LobbyService;
+import com.codenames.codenames.backend.recovery.SystemStatePersistenceService;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,9 @@ class LobbyControllerTest {
 
   @MockBean
   private LobbyService service;
+
+  @MockBean
+  private SystemStatePersistenceService persistenceService;
 
   @Test
   void createLobbyShouldReturn200() throws Exception {

@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.lobby.services.LobbyService;
 import com.codenames.codenames.backend.playingfield.GameService;
+import com.codenames.codenames.backend.recovery.SystemStatePersistenceService;
 import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,15 +31,19 @@ class GameControllerTest {
   private SessionRegistry sessionRegistry;
   private GameController controller;
   private SimpMessagingTemplate messagingTemplate;
+  private SystemStatePersistenceService persistenceService;
 
   @BeforeEach
   void setup() {
     lobbyService = mock(LobbyService.class);
     gameService = mock(GameService.class);
     messagingTemplate = mock(SimpMessagingTemplate.class);
+    persistenceService = mock(SystemStatePersistenceService.class);
     sessionRegistry = new SessionRegistry();
 
-    controller = new GameController(lobbyService, gameService, messagingTemplate, sessionRegistry);
+    controller =
+        new GameController(
+            lobbyService, gameService, messagingTemplate, sessionRegistry, persistenceService);
   }
 
   @Test
@@ -63,6 +68,7 @@ class GameControllerTest {
     controller.join(msg, accessor);
 
     verify(lobbyService).joinLobby("Max", "ABCDE");
+    verify(persistenceService).persistCurrentState();
 
     assertEquals("Max", sessionRegistry.getUser("123"));
     assertEquals("ABCDE", sessionRegistry.getLobby("123"));
@@ -90,7 +96,7 @@ class GameControllerTest {
     controller.join(msg, accessor);
 
     verify(messagingTemplate).convertAndSend("/topic/errors/123", "Join failed");
-
+    verifyNoInteractions(persistenceService);
     verifyNoMoreInteractions(messagingTemplate);
   }
 
@@ -107,6 +113,7 @@ class GameControllerTest {
 
     verifyNoInteractions(lobbyService);
     verifyNoInteractions(messagingTemplate);
+    verifyNoInteractions(persistenceService);
   }
 
   @Test
@@ -132,6 +139,7 @@ class GameControllerTest {
     assertEquals("ABCDE", sessionRegistry.getLobby("123"));
 
     verify(lobbyService).joinLobby("Max", "ABCDE");
+    verify(persistenceService).persistCurrentState();
     verify(messagingTemplate).convertAndSend(eq("/topic/lobby/ABCDE"), any(Object.class));
     verify(messagingTemplate).convertAndSend(eq("/topic/game/ABCDE"), any(Object.class));
   }
@@ -158,6 +166,7 @@ class GameControllerTest {
     assertEquals("Max", sessionRegistry.getUser("reconnect-1"));
     assertEquals("ABCDE", sessionRegistry.getLobby("reconnect-1"));
 
+    verify(persistenceService).persistCurrentState();
     verify(messagingTemplate).convertAndSend(eq("/topic/lobby/ABCDE"), any(Object.class));
     verify(messagingTemplate).convertAndSend(eq("/topic/game/ABCDE"), any(Object.class));
   }

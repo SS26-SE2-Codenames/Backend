@@ -10,6 +10,7 @@ import com.codenames.codenames.backend.game.dto.PassTurnMessage;
 import com.codenames.codenames.backend.game.dto.RevealCardMessage;
 import com.codenames.codenames.backend.game.dto.StartGameMessage;
 import com.codenames.codenames.backend.playingfield.GameService;
+import com.codenames.codenames.backend.recovery.SystemStatePersistenceService;
 import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import com.codenames.codenames.backend.utility.Team;
 import java.util.List;
@@ -27,13 +28,14 @@ class GameSocketControllerTest {
   @Mock private GameService gameService;
 
   @Mock private SimpMessagingTemplate messagingTemplate;
+  @Mock private SystemStatePersistenceService persistenceService;
 
   private GameSocketController controller;
 
   @BeforeEach
   void setUp() {
 
-    controller = new GameSocketController(gameService, messagingTemplate);
+    controller = new GameSocketController(gameService, messagingTemplate, persistenceService);
   }
 
   @Test
@@ -47,6 +49,7 @@ class GameSocketControllerTest {
 
     controller.startGame(message);
 
+    verify(persistenceService).persistCurrentState();
     verify(messagingTemplate).convertAndSend(anyString(), any(Object.class));
   }
 
@@ -64,7 +67,7 @@ class GameSocketControllerTest {
     controller.revealCard(message);
 
     verify(gameService).flipCard("ABCDE", 0, Team.RED);
-
+    verify(persistenceService).persistCurrentState();
     verify(messagingTemplate).convertAndSend(anyString(), any(Object.class));
   }
 
@@ -83,7 +86,7 @@ class GameSocketControllerTest {
     controller.submitClue(message);
 
     verify(gameService).submitClue(anyString(), any(), any());
-
+    verify(persistenceService).persistCurrentState();
     verify(messagingTemplate).convertAndSend(anyString(), any(Object.class));
   }
 
@@ -100,7 +103,7 @@ class GameSocketControllerTest {
     controller.passTurn(message);
 
     verify(gameService).passTurn("ABCDE", Team.RED);
-
+    verify(persistenceService).persistCurrentState();
     verify(messagingTemplate).convertAndSend(anyString(), any(Object.class));
   }
 
