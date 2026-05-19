@@ -101,6 +101,6 @@ public class GameController {
    * @param code the lobby code identifying the game
    */
   private void sendGameStateUpdate(String code) {
-    messagingTemplate.convertAndSend("/topic/game/" + code, gameService.createGameStateDto(code));
+    messagingTemplate.convertAndSend("/topic/game/" + code, gameService.getCurrentGameState(code));
   }
 }
