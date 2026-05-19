@@ -1,9 +1,7 @@
 package com.codenames.codenames.backend.game.controller;
 
-import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -12,6 +10,8 @@ import com.codenames.codenames.backend.game.dto.PassTurnMessage;
 import com.codenames.codenames.backend.game.dto.RevealCardMessage;
 import com.codenames.codenames.backend.game.dto.StartGameMessage;
 import com.codenames.codenames.backend.playingfield.GameService;
+import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
+import java.util.List;
 import com.codenames.codenames.backend.utility.Team;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@ class GameSocketControllerTest {
 
     message.setLobbyCode("ABCDE");
 
-    when(gameService.getCurrentGameState("ABCDE")).thenReturn(mock(GameStateDataTransferObject.class));
+    when(gameService.getCurrentGameState("ABCDE")).thenReturn(createGameStateDataTransferObject());
 
     controller.startGame(message);
 
@@ -59,7 +59,7 @@ class GameSocketControllerTest {
     message.setPosition(0);
     message.setCurrentTurn(Team.RED);
 
-    when(gameService.getCurrentGameState("ABCDE")).thenReturn(mock(GameStateDataTransferObject.class));
+    when(gameService.getCurrentGameState("ABCDE")).thenReturn(createGameStateDataTransferObject());
 
     controller.revealCard(message);
 
@@ -78,7 +78,7 @@ class GameSocketControllerTest {
     message.setGuessAmount(2);
     message.setCurrentTurn(Team.RED);
 
-    when(gameService.getCurrentGameState("ABCDE")).thenReturn(mock(GameStateDataTransferObject.class));
+    when(gameService.getCurrentGameState("ABCDE")).thenReturn(createGameStateDataTransferObject());
 
     controller.submitClue(message);
 
@@ -95,12 +95,16 @@ class GameSocketControllerTest {
     message.setLobbyCode("ABCDE");
     message.setCurrentTurn(Team.RED);
 
-    when(gameService.getCurrentGameState("ABCDE")).thenReturn(mock(GameStateDataTransferObject.class));
+    when(gameService.getCurrentGameState("ABCDE")).thenReturn(createGameStateDataTransferObject());
 
     controller.passTurn(message);
 
     verify(gameService).passTurn("ABCDE", Team.RED);
 
     verify(messagingTemplate).convertAndSend(anyString(), any(Object.class));
+  }
+
+  private GameStateDataTransferObject createGameStateDataTransferObject() {
+    return new GameStateDataTransferObject(null, Team.RED, null, null, List.of());
   }
 }
