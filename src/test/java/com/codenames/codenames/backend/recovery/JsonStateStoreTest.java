@@ -6,10 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.codenames.codenames.backend.game.dto.ClueDto;
 import com.codenames.codenames.backend.lobby.dto.PlayerDto;
-import com.codenames.codenames.backend.recovery.snapshot.ClueSnapshot;
 import com.codenames.codenames.backend.recovery.snapshot.GameSnapshot;
-import com.codenames.codenames.backend.recovery.snapshot.LobbySnapshot;
 import com.codenames.codenames.backend.recovery.snapshot.SystemSnapshot;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
@@ -53,21 +52,19 @@ class JsonStateStoreTest {
     Path stateFile = tempDir.resolve("state.json");
     JsonStateStore stateStore = new JsonStateStore(new ObjectMapper(), stateFile.toString());
 
-    LobbySnapshot lobbySnapshot =
-        new LobbySnapshot(
-            "ABCDE",
-            List.of(
-                new PlayerDto("Host", Team.RED, Role.SPYMASTER, true),
-                new PlayerDto("Player", Team.BLUE, Role.OPERATIVE, false)));
+    List<PlayerDto> lobbyPlayers =
+        List.of(
+            new PlayerDto("Host", Team.RED, Role.SPYMASTER, true),
+            new PlayerDto("Player", Team.BLUE, Role.OPERATIVE, false));
 
     GameSnapshot gameSnapshot =
         new GameSnapshot(
-            Team.RED, Role.OPERATIVE, null, 1, 0, 2, new ClueSnapshot("ANIMAL", 2), List.of());
+            Team.RED, Role.OPERATIVE, null, 1, 0, 2, new ClueDto("ANIMAL", 2), List.of());
 
     SystemSnapshot expectedSnapshot =
         new SystemSnapshot(
             SystemSnapshot.CURRENT_SCHEMA_VERSION,
-            Map.of("ABCDE", lobbySnapshot),
+            Map.of("ABCDE", lobbyPlayers),
             Map.of("ABCDE", gameSnapshot));
 
     stateStore.save(expectedSnapshot);
@@ -81,13 +78,12 @@ class JsonStateStoreTest {
     assertEquals(1, actualSnapshot.lobbies().size());
     assertEquals(1, actualSnapshot.games().size());
 
-    LobbySnapshot actualLobbySnapshot = actualSnapshot.lobbies().get("ABCDE");
-    assertEquals("ABCDE", actualLobbySnapshot.lobbyCode());
-    assertEquals(2, actualLobbySnapshot.players().size());
-    assertEquals("Host", actualLobbySnapshot.players().get(0).username());
-    assertEquals(Team.RED, actualLobbySnapshot.players().get(0).team());
-    assertEquals(Role.SPYMASTER, actualLobbySnapshot.players().get(0).role());
-    assertTrue(actualLobbySnapshot.players().get(0).isHost());
+    List<PlayerDto> actualPlayers = actualSnapshot.lobbies().get("ABCDE");
+    assertEquals(2, actualPlayers.size());
+    assertEquals("Host", actualPlayers.get(0).username());
+    assertEquals(Team.RED, actualPlayers.get(0).team());
+    assertEquals(Role.SPYMASTER, actualPlayers.get(0).role());
+    assertTrue(actualPlayers.get(0).isHost());
 
     GameSnapshot actualGameSnapshot = actualSnapshot.games().get("ABCDE");
     assertEquals(Team.RED, actualGameSnapshot.currentTurn());
@@ -108,7 +104,7 @@ class JsonStateStoreTest {
     SystemSnapshot secondSnapshot =
         new SystemSnapshot(
             SystemSnapshot.CURRENT_SCHEMA_VERSION,
-            Map.of("ABCDE", new LobbySnapshot("ABCDE", List.of())),
+            Map.of("ABCDE", List.of()),
             Map.of());
 
     stateStore.save(firstSnapshot);
