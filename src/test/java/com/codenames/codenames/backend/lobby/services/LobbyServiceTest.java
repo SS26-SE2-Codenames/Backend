@@ -20,6 +20,7 @@ import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import com.codenames.codenames.backend.websocket.Player;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -366,5 +367,27 @@ class LobbyServiceTest {
 
     assertTrue(lobbyService.getLobbyList().containsKey("ABCDE"));
     assertEquals(restoredLobby, lobbyService.getLobbyList().get("ABCDE"));
+  }
+
+  @Test
+  void getLobbySnapshotsShouldReturnAllLobbyPlayerDtos() {
+    lobbyService.createLobby("Host");
+    lobbyService.joinLobby("Player", "ABCDE");
+    lobbyService.selectPosition("Host", "ABCDE", Team.RED, Role.SPYMASTER);
+
+    Map<String, List<PlayerDto>> snapshots = lobbyService.getLobbySnapshots();
+
+    assertTrue(snapshots.containsKey("ABCDE"));
+    assertEquals(2, snapshots.get("ABCDE").size());
+
+    PlayerDto host =
+        snapshots.get("ABCDE").stream()
+            .filter(player -> player.username().equals("Host"))
+            .findFirst()
+            .orElseThrow();
+
+    assertEquals(Team.RED, host.team());
+    assertEquals(Role.SPYMASTER, host.role());
+    assertTrue(host.isHost());
   }
 }

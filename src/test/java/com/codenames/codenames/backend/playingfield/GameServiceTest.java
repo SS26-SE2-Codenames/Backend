@@ -18,6 +18,7 @@ import com.codenames.codenames.backend.utility.Color;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -132,5 +133,27 @@ class GameServiceTest {
   @Test
   void testIsGameStartedWhenGameDoesNotExist() {
     assertFalse(gameService.isGameStarted("UNKNOWN"));
+  }
+
+  @Test
+  void getGameSnapshotsShouldReturnAllCurrentGameStates() {
+    GameStateDataTransferObject expected =
+        new GameStateDataTransferObject(
+            null,
+            redTeam,
+            Role.SPYMASTER,
+            new ClueDto("ANIMAL", 2),
+            2,
+            List.of(new CardDataTransferObject("Dog", Color.RED, false)));
+
+    when(mockGameManager.getCurrentTurn()).thenReturn(redTeam);
+    when(mockGameManager.getCurrentPhase()).thenReturn(Role.SPYMASTER);
+    when(mockDtoService.createGameStateDataTransferObject(mockGameManager, redTeam, Role.SPYMASTER))
+        .thenReturn(expected);
+
+    Map<String, GameStateDataTransferObject> snapshots = gameService.getGameSnapshots();
+
+    assertEquals(1, snapshots.size());
+    assertEquals(expected, snapshots.get(lobbyCode));
   }
 }
