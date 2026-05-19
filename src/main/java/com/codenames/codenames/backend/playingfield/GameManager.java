@@ -67,45 +67,29 @@ public class GameManager {
   /**
    * Constructor used by recovery logic to rebuild an already running game state.
    *
-   * @param cards recovered card list
-   * @param currentTurn recovered active team
-   * @param currentPhase recovered active phase
-   * @param winner recovered winner, if present
-   * @param currentRedFound recovered red score
-   * @param currentBlueFound recovered blue score
-   * @param remainingGuesses recovered remaining guesses
-   * @param currentClue recovered current clue, if present
+   * @param state bundled recovery state
    * @param clueValidationService clue validation service
    */
-  public GameManager(
-      List<Card> cards,
-      Team currentTurn,
-      Role currentPhase,
-      Team winner,
-      int currentRedFound,
-      int currentBlueFound,
-      int remainingGuesses,
-      Clue currentClue,
-      ClueValidationService clueValidationService) {
-    if (cards == null || cards.isEmpty()) {
+  public GameManager(GameRecoveryState state, ClueValidationService clueValidationService) {
+    if (state.cards() == null || state.cards().isEmpty()) {
       throw new IllegalArgumentException("cards cannot be null or empty");
     }
-    if (currentTurn == null || currentPhase == null) {
+    if (state.currentTurn() == null || state.currentPhase() == null) {
       throw new IllegalArgumentException("current turn and phase cannot be null");
     }
 
-    this.currentTurn = currentTurn;
-    this.currentPhase = currentPhase;
-    this.winner = winner;
-    this.currentRedFound = currentRedFound;
-    this.currentBlueFound = currentBlueFound;
-    this.remainingGuesses = remainingGuesses;
-    this.currentClue = currentClue;
+    this.currentTurn = state.currentTurn();
+    this.currentPhase = state.currentPhase();
+    this.winner = state.winner();
+    this.currentRedFound = state.currentRedFound();
+    this.currentBlueFound = state.currentBlueFound();
+    this.remainingGuesses = state.remainingGuesses();
+    this.currentClue = state.currentClue();
     this.clueValidationService = clueValidationService;
 
-    this.redCards = countCardsByColor(cards, Color.RED);
-    this.blueCards = countCardsByColor(cards, Color.BLUE);
-    this.board = new Board(cards);
+    this.redCards = countCardsByColor(state.cards(), Color.RED);
+    this.blueCards = countCardsByColor(state.cards(), Color.BLUE);
+    this.board = new Board(state.cards());
   }
 
   /**

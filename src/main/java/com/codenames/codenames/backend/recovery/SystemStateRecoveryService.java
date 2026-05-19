@@ -6,8 +6,8 @@ import com.codenames.codenames.backend.lobby.services.LobbyService;
 import com.codenames.codenames.backend.playingfield.GameManager;
 import com.codenames.codenames.backend.playingfield.GameManagerFactory;
 import com.codenames.codenames.backend.playingfield.GameService;
-import com.codenames.codenames.backend.recovery.snapshot.GameSnapshot;
 import com.codenames.codenames.backend.recovery.snapshot.SystemSnapshot;
+import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -82,13 +82,13 @@ public class SystemStateRecoveryService {
   /**
    * Restores all game snapshots into {@link GameService}.
    *
-   * @param gameSnapshots persisted game snapshots keyed by lobby code
+   * @param gameSnapshots persisted game states keyed by lobby code
    */
-  private void restoreGames(Map<String, GameSnapshot> gameSnapshots) {
+  private void restoreGames(Map<String, GameStateDataTransferObject> gameSnapshots) {
     if (gameSnapshots == null || gameSnapshots.isEmpty()) {
       return;
     }
-    for (Map.Entry<String, GameSnapshot> entry : gameSnapshots.entrySet()) {
+    for (Map.Entry<String, GameStateDataTransferObject> entry : gameSnapshots.entrySet()) {
       GameManager restoredGame = gameManagerFactory.createFromSnapshot(entry.getValue());
       gameService.restoreGameManager(entry.getKey(), restoredGame);
     }
