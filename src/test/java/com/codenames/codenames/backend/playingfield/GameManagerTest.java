@@ -332,43 +332,41 @@ class GameManagerTest {
 
   @Test
   void recoveryConstructorThrowsWhenCardsAreNull() {
+    GameRecoveryState state =
+        new GameRecoveryState(null, Team.RED, Role.SPYMASTER, null, 0, 0, 0, null);
+
     assertThrows(
-        IllegalArgumentException.class,
-        () ->
-            new GameManager(
-                null, Team.RED, Role.SPYMASTER, null, 0, 0, 0, null, mockClueValidationService));
+        IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
   }
 
   @Test
   void recoveryConstructorThrowsWhenCardsAreEmpty() {
     List<Card> cards = List.of();
+    GameRecoveryState state =
+        new GameRecoveryState(cards, Team.RED, Role.SPYMASTER, null, 0, 0, 0, null);
 
     assertThrows(
-        IllegalArgumentException.class,
-        () ->
-            new GameManager(
-                cards, Team.RED, Role.SPYMASTER, null, 0, 0, 0, null, mockClueValidationService));
+        IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
   }
 
   @Test
   void recoveryConstructorThrowsWhenCurrentTurnIsNull() {
     List<Card> cards = List.of(new Card("Dog", Color.RED));
+    GameRecoveryState state =
+        new GameRecoveryState(cards, null, Role.SPYMASTER, null, 0, 0, 0, null);
 
     assertThrows(
-        IllegalArgumentException.class,
-        () ->
-            new GameManager(
-                cards, null, Role.SPYMASTER, null, 0, 0, 0, null, mockClueValidationService));
+        IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
   }
 
   @Test
   void recoveryConstructorThrowsWhenCurrentPhaseIsNull() {
     List<Card> cards = List.of(new Card("Dog", Color.RED));
+    GameRecoveryState state =
+        new GameRecoveryState(cards, Team.RED, null, null, 0, 0, 0, null);
 
     assertThrows(
-        IllegalArgumentException.class,
-        () ->
-            new GameManager(cards, Team.RED, null, null, 0, 0, 0, null, mockClueValidationService));
+        IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
   }
 
   @Test
@@ -379,17 +377,10 @@ class GameManagerTest {
     cards.add(guessedRed);
     cards.add(new Card("Cat", Color.BLUE));
 
-    GameManager restored =
-        new GameManager(
-            cards,
-            Team.BLUE,
-            Role.OPERATIVE,
-            Team.RED,
-            1,
-            0,
-            2,
-            new Clue("ANIMAL", 2),
-            mockClueValidationService);
+    GameRecoveryState state =
+        new GameRecoveryState(
+            cards, Team.BLUE, Role.OPERATIVE, Team.RED, 1, 0, 2, new Clue("ANIMAL", 2));
+    GameManager restored = new GameManager(state, mockClueValidationService);
 
     assertEquals(Team.BLUE, restored.getCurrentTurn());
     assertEquals(Role.OPERATIVE, restored.getCurrentPhase());

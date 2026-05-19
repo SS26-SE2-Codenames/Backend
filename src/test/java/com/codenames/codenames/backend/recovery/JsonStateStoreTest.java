@@ -8,8 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.codenames.codenames.backend.game.dto.ClueDto;
 import com.codenames.codenames.backend.lobby.dto.PlayerDto;
-import com.codenames.codenames.backend.recovery.snapshot.GameSnapshot;
 import com.codenames.codenames.backend.recovery.snapshot.SystemSnapshot;
+import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -57,9 +57,9 @@ class JsonStateStoreTest {
             new PlayerDto("Host", Team.RED, Role.SPYMASTER, true),
             new PlayerDto("Player", Team.BLUE, Role.OPERATIVE, false));
 
-    GameSnapshot gameSnapshot =
-        new GameSnapshot(
-            Team.RED, Role.OPERATIVE, null, 1, 0, 2, new ClueDto("ANIMAL", 2), List.of());
+    GameStateDataTransferObject gameSnapshot =
+        new GameStateDataTransferObject(
+            null, Team.RED, Role.OPERATIVE, new ClueDto("ANIMAL", 2), 2, List.of());
 
     SystemSnapshot expectedSnapshot =
         new SystemSnapshot(
@@ -85,13 +85,13 @@ class JsonStateStoreTest {
     assertEquals(Role.SPYMASTER, actualPlayers.get(0).role());
     assertTrue(actualPlayers.get(0).isHost());
 
-    GameSnapshot actualGameSnapshot = actualSnapshot.games().get("ABCDE");
+    GameStateDataTransferObject actualGameSnapshot = actualSnapshot.games().get("ABCDE");
     assertEquals(Team.RED, actualGameSnapshot.currentTurn());
     assertEquals(Role.OPERATIVE, actualGameSnapshot.currentPhase());
     assertEquals(2, actualGameSnapshot.remainingGuesses());
     assertEquals("ANIMAL", actualGameSnapshot.currentClue().word());
     assertEquals(2, actualGameSnapshot.currentClue().guessAmount());
-    assertTrue(actualGameSnapshot.cards().isEmpty());
+    assertTrue(actualGameSnapshot.cardList().isEmpty());
   }
 
   @Test

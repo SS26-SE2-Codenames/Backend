@@ -16,10 +16,10 @@ import com.codenames.codenames.backend.playingfield.CardGenerator;
 import com.codenames.codenames.backend.playingfield.GameManager;
 import com.codenames.codenames.backend.playingfield.GameManagerFactory;
 import com.codenames.codenames.backend.playingfield.GameService;
-import com.codenames.codenames.backend.recovery.snapshot.GameSnapshot;
 import com.codenames.codenames.backend.recovery.snapshot.SystemSnapshot;
 import com.codenames.codenames.backend.serialization.CardDataTransferObject;
 import com.codenames.codenames.backend.serialization.DataTransferObjectService;
+import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import com.codenames.codenames.backend.utility.Color;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
@@ -65,15 +65,13 @@ class SystemStateRecoveryServiceTest {
         List.of(
             new PlayerDto("Host", Team.RED, Role.SPYMASTER, true),
             new PlayerDto("Player", Team.BLUE, Role.OPERATIVE, false));
-    GameSnapshot gameSnapshot =
-        new GameSnapshot(
+    GameStateDataTransferObject gameSnapshot =
+        new GameStateDataTransferObject(
+            null,
             Team.RED,
             Role.OPERATIVE,
-            null,
-            1,
-            0,
-            2,
             new ClueDto("ANIMAL", 2),
+            2,
             List.of(
                 new CardDataTransferObject("Dog", Color.RED, true),
                 new CardDataTransferObject("Cat", Color.BLUE, false)));
@@ -211,15 +209,13 @@ class SystemStateRecoveryServiceTest {
   @Test
   void recoverOnStartupRestoresOnlyGamesWhenLobbiesMapIsNull() {
     TestContext context = createContext(tempDir.resolve("state-lobbies-null-games-present.json"));
-    GameSnapshot gameSnapshot =
-        new GameSnapshot(
+    GameStateDataTransferObject gameSnapshot =
+        new GameStateDataTransferObject(
+            null,
             Team.BLUE,
             Role.SPYMASTER,
             null,
             0,
-            0,
-            0,
-            null,
             List.of(new CardDataTransferObject("Tree", Color.BLUE, false)));
     SystemSnapshot snapshot =
         new SystemSnapshot(

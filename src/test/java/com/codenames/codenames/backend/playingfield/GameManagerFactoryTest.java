@@ -8,8 +8,8 @@ import static org.mockito.Mockito.mock;
 
 import com.codenames.codenames.backend.clue.ClueValidationService;
 import com.codenames.codenames.backend.game.dto.ClueDto;
-import com.codenames.codenames.backend.recovery.snapshot.GameSnapshot;
 import com.codenames.codenames.backend.serialization.CardDataTransferObject;
+import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import com.codenames.codenames.backend.utility.Color;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
@@ -38,15 +38,13 @@ class GameManagerFactoryTest {
 
   @Test
   void testCreateFromSnapshotWithClue() {
-    GameSnapshot snapshot =
-        new GameSnapshot(
+    GameStateDataTransferObject snapshot =
+        new GameStateDataTransferObject(
+            null,
             Team.RED,
             Role.OPERATIVE,
-            null,
-            1,
-            0,
-            2,
             new ClueDto("ANIMAL", 2),
+            2,
             List.of(
                 new CardDataTransferObject("Dog", Color.RED, true),
                 new CardDataTransferObject("Cat", Color.BLUE, false)));
@@ -61,15 +59,9 @@ class GameManagerFactoryTest {
 
   @Test
   void testCreateFromSnapshotWithoutClue() {
-    GameSnapshot snapshot =
-        new GameSnapshot(
-            Team.BLUE,
-            Role.SPYMASTER,
-            null,
-            0,
-            0,
-            0,
-            null,
+    GameStateDataTransferObject snapshot =
+        new GameStateDataTransferObject(
+            null, Team.BLUE, Role.SPYMASTER, null, 0,
             List.of(new CardDataTransferObject("Tree", Color.BLUE, false)));
 
     GameManager recovered = gameManagerFactory.createFromSnapshot(snapshot);
