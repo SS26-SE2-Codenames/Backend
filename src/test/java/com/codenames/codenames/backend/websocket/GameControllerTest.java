@@ -9,7 +9,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import com.codenames.codenames.backend.game.dto.GameStateDto;
+import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import com.codenames.codenames.backend.lobby.services.LobbyService;
 import com.codenames.codenames.backend.playingfield.GameService;
 import java.util.List;
@@ -58,7 +58,7 @@ class GameControllerTest {
     when(lobbyService.joinLobby("Max", "ABCDE")).thenReturn(true);
 
     when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max", true)));
-    when(gameService.createGameStateDto("ABCDE")).thenReturn(createGameStateDto());
+    when(gameService.getCurrentGameState("ABCDE")).thenReturn(createGameStatePayload());
 
     controller.join(msg, accessor);
 
@@ -124,7 +124,7 @@ class GameControllerTest {
 
     when(lobbyService.joinLobby("Max", "ABCDE")).thenReturn(true);
     when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max", true)));
-    when(gameService.createGameStateDto("ABCDE")).thenReturn(createGameStateDto());
+    when(gameService.getCurrentGameState("ABCDE")).thenReturn(createGameStatePayload());
 
     controller.join(msg, accessor);
 
@@ -151,7 +151,7 @@ class GameControllerTest {
 
     when(lobbyService.joinLobby("Max", "ABCDE")).thenReturn(false);
     when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max", true)));
-    when(gameService.createGameStateDto("ABCDE")).thenReturn(createGameStateDto());
+    when(gameService.getCurrentGameState("ABCDE")).thenReturn(createGameStatePayload());
 
     controller.join(msg, accessor);
 
@@ -162,7 +162,7 @@ class GameControllerTest {
     verify(messagingTemplate).convertAndSend(eq("/topic/game/ABCDE"), any(Object.class));
   }
 
-  private GameStateDto createGameStateDto() {
-    return new GameStateDto(List.of(), null, 0, null, null, null);
+  private GameStateDataTransferObject createGameStatePayload() {
+    return new GameStateDataTransferObject(null, null, null, null, 0, List.of());
   }
 }
