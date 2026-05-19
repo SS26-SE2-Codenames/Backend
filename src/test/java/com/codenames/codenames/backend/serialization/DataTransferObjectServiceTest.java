@@ -37,6 +37,7 @@ class DataTransferObjectServiceTest {
     when(mockGameManager.getWinner()).thenReturn(Team.RED);
     when(mockGameManager.getCurrentRedFound()).thenReturn(0);
     when(mockGameManager.getCurrentBlueFound()).thenReturn(0);
+    when(mockGameManager.getRemainingGuesses()).thenReturn(2);
 
     gameStateDto =
         service.createGameStateDataTransferObject(mockGameManager, redTeam, spymaster);
@@ -78,8 +79,10 @@ class DataTransferObjectServiceTest {
     when(mockGameManager.getCardList()).thenReturn(List.of());
     when(mockGameManager.getWinner()).thenReturn(null);
     when(mockGameManager.getCurrentClue()).thenReturn(clue);
+    when(mockGameManager.getRemainingGuesses()).thenReturn(3);
 
-    GameStateDataTransferObject dto = service.createGameStateDataTransferObject(mockGameManager, redTeam, operative);
+    GameStateDataTransferObject dto =
+        service.createGameStateDataTransferObject(mockGameManager, redTeam, operative);
 
     assertEquals(clue.word(), dto.currentClue().word());
     assertEquals(clue.guessAmount(), dto.currentClue().guessAmount());
@@ -87,5 +90,6 @@ class DataTransferObjectServiceTest {
     assertEquals(0, dto.cardList().size());
     assertEquals(redTeam, dto.currentTurn());
     assertEquals(operative, dto.currentPhase());
+    assertEquals(3, dto.remainingGuesses());
   }
 }
