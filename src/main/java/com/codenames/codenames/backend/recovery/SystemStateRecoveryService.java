@@ -7,7 +7,6 @@ import com.codenames.codenames.backend.playingfield.GameManager;
 import com.codenames.codenames.backend.playingfield.GameManagerFactory;
 import com.codenames.codenames.backend.playingfield.GameService;
 import com.codenames.codenames.backend.recovery.snapshot.GameSnapshot;
-import com.codenames.codenames.backend.recovery.snapshot.LobbySnapshot;
 import com.codenames.codenames.backend.recovery.snapshot.SystemSnapshot;
 import java.util.Comparator;
 import java.util.List;
@@ -66,13 +65,13 @@ public class SystemStateRecoveryService {
   /**
    * Restores all lobby snapshots into {@link LobbyService}.
    *
-   * @param lobbySnapshots persisted lobby snapshots keyed by lobby code
+   * @param lobbySnapshots persisted lobby player lists keyed by lobby code
    */
-  private void restoreLobbies(Map<String, LobbySnapshot> lobbySnapshots) {
+  private void restoreLobbies(Map<String, List<PlayerDto>> lobbySnapshots) {
     if (lobbySnapshots == null || lobbySnapshots.isEmpty()) {
       return;
     }
-    for (Map.Entry<String, LobbySnapshot> entry : lobbySnapshots.entrySet()) {
+    for (Map.Entry<String, List<PlayerDto>> entry : lobbySnapshots.entrySet()) {
       Lobby restoredLobby = buildLobby(entry.getKey(), entry.getValue());
       if (restoredLobby != null) {
         lobbyService.restoreLobby(entry.getKey(), restoredLobby);
@@ -99,29 +98,29 @@ public class SystemStateRecoveryService {
    * Builds a runtime lobby from a persisted lobby snapshot.
    *
    * @param lobbyCode target lobby code
-   * @param snapshot persisted lobby snapshot
-   * @return rebuilt lobby, or {@code null} when snapshot player data is invalid
+   * @param players persisted lobby players
+   * @return rebuilt lobby, or {@code null} when player data is invalid
    */
-  private Lobby buildLobby(String lobbyCode, LobbySnapshot snapshot) {
-    if (snapshot == null || snapshot.players() == null || snapshot.players().isEmpty()) {
+  private Lobby buildLobby(String lobbyCode, List<PlayerDto> players) {
+    if (players == null || players.isEmpty()) {
       log.warn("Skipping restore for lobby {} due to missing player data.", lobbyCode);
       return null;
     }
 
-    List<PlayerDto> players =
-        snapshot.players().stream()
+    List<PlayerDto> validPlayers =
+        players.stream()
             .filter(player -> player.username() != null && !player.username().isBlank())
             .sorted(Comparator.comparing(PlayerDto::isHost).reversed())
             .toList();
 
-    if (players.isEmpty()) {
+    if (validPlayers.isEmpty()) {
       return null;
     }
 
-    PlayerDto host = players.get(0);
+    PlayerDto host = validPlayers.get(0);
     Lobby lobby = new Lobby(lobbyCode, host.username());
 
-    for (PlayerDto player : players) {
+    for (PlayerDto player : validPlayers) {
       if (!player.username().equals(host.username())) {
         lobby.addPlayer(player.username(), player.isHost());
       }
