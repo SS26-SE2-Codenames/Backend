@@ -40,8 +40,8 @@ class GameManagerFactoryTest {
   void testCreateFromSnapshotWithClue() {
     GameStateDataTransferObject snapshot =
         new GameStateDataTransferObject(
-            null,
             Team.RED,
+            Team.BLUE,
             Role.OPERATIVE,
             new ClueDto("ANIMAL", 2),
             2,
@@ -52,21 +52,66 @@ class GameManagerFactoryTest {
     GameManager recovered = gameManagerFactory.createFromSnapshot(snapshot);
 
     assertNotNull(recovered);
-    assertTrue(recovered.getCardList().get(0).isGuessed());
-    assertEquals(2, recovered.getRemainingGuesses());
+    assertEquals(Team.BLUE, recovered.getCurrentTurn());
+    assertEquals(Role.OPERATIVE, recovered.getCurrentPhase());
     assertEquals("ANIMAL", recovered.getCurrentClueWord());
+    assertEquals(2, recovered.getRemainingGuesses());
+    assertEquals(1, recovered.getCurrentRedFound());
+    assertEquals(0, recovered.getCurrentBlueFound());
+    assertEquals(Team.RED, recovered.getWinner());
+    assertTrue(recovered.getCardList().get(0).isGuessed());
   }
 
   @Test
   void testCreateFromSnapshotWithoutClue() {
     GameStateDataTransferObject snapshot =
         new GameStateDataTransferObject(
-            null, Team.BLUE, Role.SPYMASTER, null, 0,
+            null,
+            Team.BLUE,
+            Role.SPYMASTER,
+            null,
+            0,
             List.of(new CardDataTransferObject("Tree", Color.BLUE, false)));
 
     GameManager recovered = gameManagerFactory.createFromSnapshot(snapshot);
 
     assertNotNull(recovered);
+    assertEquals(Team.BLUE, recovered.getCurrentTurn());
+    assertEquals(Role.SPYMASTER, recovered.getCurrentPhase());
     assertNull(recovered.getCurrentClue());
+  }
+
+  @Test
+  void testCreateFromSnapshotMapsCardsAndCountsGuessedCardsByColor() {
+    GameStateDataTransferObject snapshot =
+            new GameStateDataTransferObject(
+                    null,
+                    Team.RED,
+                    Role.OPERATIVE,
+                    null,
+                    1,
+                    List.of(
+                            new CardDataTransferObject("Dog", Color.RED, true),
+                            new CardDataTransferObject("Cat", Color.RED, false),
+                            new CardDataTransferObject("Tree", Color.BLUE, true),
+                            new CardDataTransferObject("Sun", Color.NEUTRAL, true)));
+
+    GameManager recovered = gameManagerFactory.createFromSnapshot(snapshot);
+
+    assertEquals(4, recovered.getCardList().size());
+
+    assertEquals("Dog", recovered.getCardList().get(0).getWord());
+    assertEquals(Color.RED, recovered.getCardList().get(0).getColor());
+    assertTrue(recovered.getCardList().get(0).isGuessed());
+
+    assertEquals("Cat", recovered.getCardList().get(1).getWord());
+    assertEquals(Color.RED, recovered.getCardList().get(1).getColor());
+
+    assertEquals("Tree", recovered.getCardList().get(2).getWord());
+    assertEquals(Color.BLUE, recovered.getCardList().get(2).getColor());
+    assertTrue(recovered.getCardList().get(2).isGuessed());
+
+    assertEquals(1, recovered.getCurrentRedFound());
+    assertEquals(1, recovered.getCurrentBlueFound());
   }
 }

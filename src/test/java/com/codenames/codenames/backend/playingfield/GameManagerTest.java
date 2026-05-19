@@ -14,6 +14,9 @@ import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.clue.Clue;
 import com.codenames.codenames.backend.clue.ClueValidationService;
+import com.codenames.codenames.backend.game.dto.ClueDto;
+import com.codenames.codenames.backend.serialization.CardDataTransferObject;
+import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import com.codenames.codenames.backend.utility.Color;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
@@ -332,8 +335,8 @@ class GameManagerTest {
 
   @Test
   void recoveryConstructorThrowsWhenCardsAreNull() {
-    GameRecoveryState state =
-        new GameRecoveryState(null, Team.RED, Role.SPYMASTER, null, 0, 0, 0, null);
+    GameStateDataTransferObject state =
+        new GameStateDataTransferObject(null, Team.RED, Role.SPYMASTER, null, 0, null);
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -341,9 +344,8 @@ class GameManagerTest {
 
   @Test
   void recoveryConstructorThrowsWhenCardsAreEmpty() {
-    List<Card> cards = List.of();
-    GameRecoveryState state =
-        new GameRecoveryState(cards, Team.RED, Role.SPYMASTER, null, 0, 0, 0, null);
+    GameStateDataTransferObject state =
+        new GameStateDataTransferObject(null, Team.RED, Role.SPYMASTER, null, 0, List.of());
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -351,9 +353,11 @@ class GameManagerTest {
 
   @Test
   void recoveryConstructorThrowsWhenCurrentTurnIsNull() {
-    List<Card> cards = List.of(new Card("Dog", Color.RED));
-    GameRecoveryState state =
-        new GameRecoveryState(cards, null, Role.SPYMASTER, null, 0, 0, 0, null);
+    List<CardDataTransferObject> cards =
+        List.of(new CardDataTransferObject("Dog", Color.RED, false));
+
+    GameStateDataTransferObject state =
+        new GameStateDataTransferObject(null, null, Role.SPYMASTER, null, 0, cards);
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -361,9 +365,11 @@ class GameManagerTest {
 
   @Test
   void recoveryConstructorThrowsWhenCurrentPhaseIsNull() {
-    List<Card> cards = List.of(new Card("Dog", Color.RED));
-    GameRecoveryState state =
-        new GameRecoveryState(cards, Team.RED, null, null, 0, 0, 0, null);
+    List<CardDataTransferObject> cards =
+        List.of(new CardDataTransferObject("Dog", Color.RED, false));
+
+    GameStateDataTransferObject state =
+        new GameStateDataTransferObject(null, Team.RED, null, null, 0, cards);
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -371,15 +377,15 @@ class GameManagerTest {
 
   @Test
   void recoveryConstructorRestoresPersistedState() {
-    Card guessedRed = new Card("Dog", Color.RED);
-    guessedRed.setIsGuessedTrue();
-    List<Card> cards = new ArrayList<>();
-    cards.add(guessedRed);
-    cards.add(new Card("Cat", Color.BLUE));
+    List<CardDataTransferObject> cards =
+        List.of(
+            new CardDataTransferObject("Dog", Color.RED, true),
+            new CardDataTransferObject("Cat", Color.BLUE, false));
 
-    GameRecoveryState state =
-        new GameRecoveryState(
-            cards, Team.BLUE, Role.OPERATIVE, Team.RED, 1, 0, 2, new Clue("ANIMAL", 2));
+    GameStateDataTransferObject state =
+        new GameStateDataTransferObject(
+            Team.RED, Team.BLUE, Role.OPERATIVE, new ClueDto("ANIMAL", 2), 2, cards);
+
     GameManager restored = new GameManager(state, mockClueValidationService);
 
     assertEquals(Team.BLUE, restored.getCurrentTurn());
@@ -387,6 +393,8 @@ class GameManagerTest {
     assertEquals(2, restored.getRemainingGuesses());
     assertEquals("ANIMAL", restored.getCurrentClueWord());
     assertEquals(Team.RED, restored.getWinner());
+    assertEquals(1, restored.getCurrentRedFound());
+    assertEquals(0, restored.getCurrentBlueFound());
     assertTrue(restored.getCardList().get(0).isGuessed());
   }
 }
