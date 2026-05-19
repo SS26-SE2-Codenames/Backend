@@ -3,6 +3,7 @@ package com.codenames.codenames.backend.lobby.controller;
 import com.codenames.codenames.backend.lobby.dto.LobbyResponse;
 import com.codenames.codenames.backend.lobby.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.services.LobbyService;
+import com.codenames.codenames.backend.recovery.SystemStatePersistenceService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,15 +26,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class LobbyController {
 
   private final LobbyService service;
+  private final SystemStatePersistenceService persistenceService;
   private static final String LOBBY_NOT_FOUND = "Could not find lobby.";
 
   /**
    * Creates a new {@code LobbyController}.
    *
    * @param service the lobby service used to handle business logic
+   * @param persistenceService service used to persist current backend state
    */
-  public LobbyController(LobbyService service) {
+  public LobbyController(LobbyService service, SystemStatePersistenceService persistenceService) {
     this.service = service;
+    this.persistenceService = persistenceService;
   }
 
   /**
@@ -50,6 +54,7 @@ public class LobbyController {
       return ResponseEntity.internalServerError()
               .body(new LobbyResponse("Error while creating lobby.", "", null, false));
     } else {
+      persistenceService.persistCurrentState();
       List<PlayerDto> players = service.getPlayersDto(lobbyCode);
       return ResponseEntity.ok(
               new LobbyResponse("Successfully created Lobby.", lobbyCode, players, false)
@@ -69,6 +74,7 @@ public class LobbyController {
           @RequestParam String username, @PathVariable String lobbyCode) {
     boolean joined = service.joinLobby(username, lobbyCode);
     if (joined) {
+      persistenceService.persistCurrentState();
       return ResponseEntity.ok(
               new LobbyResponse(
                       "Joined Lobby successfully.",
@@ -96,6 +102,8 @@ public class LobbyController {
           @RequestParam String username) {
     boolean left = service.leaveLobby(username, lobbyCode);
     if (left) {
+      service.checkLobbyStillHasPlayers(lobbyCode);
+      persistenceService.persistCurrentState();
       ResponseEntity<LobbyResponse> response = ResponseEntity.ok(
               new LobbyResponse(
                       "Left lobby successfully.",
@@ -104,7 +112,6 @@ public class LobbyController {
                       false
               )
       );
-      service.checkLobbyStillHasPlayers(lobbyCode);
       return response;
     } else {
       return ResponseEntity.badRequest()
@@ -149,6 +156,7 @@ public class LobbyController {
     );
 
     if (updated) {
+      persistenceService.persistCurrentState();
       return ResponseEntity.ok(
               new LobbyResponse(
                       "Position selected successfully.",
@@ -185,6 +193,7 @@ public class LobbyController {
     boolean isStarted = service.startGame(lobbyCode, username);
 
     if (isStarted) {
+      persistenceService.persistCurrentState();
       return ResponseEntity.ok(
               new LobbyResponse(
                       "Game is starting now.",
