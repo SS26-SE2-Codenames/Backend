@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import com.codenames.codenames.backend.clue.ClueValidationService;
-import com.codenames.codenames.backend.recovery.snapshot.ClueSnapshot;
+import com.codenames.codenames.backend.game.dto.ClueDto;
 import com.codenames.codenames.backend.recovery.snapshot.GameSnapshot;
 import com.codenames.codenames.backend.serialization.CardDataTransferObject;
 import com.codenames.codenames.backend.utility.Color;
@@ -46,7 +46,7 @@ class GameManagerFactoryTest {
             1,
             0,
             2,
-            new ClueSnapshot("ANIMAL", 2),
+            new ClueDto("ANIMAL", 2),
             List.of(
                 new CardDataTransferObject("Dog", Color.RED, true),
                 new CardDataTransferObject("Cat", Color.BLUE, false)));
