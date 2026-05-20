@@ -1,5 +1,6 @@
 package com.codenames.codenames.backend.recovery;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -41,9 +42,8 @@ class SystemStatePersistenceServiceTest {
 
     SystemSnapshot snapshot = snapshotCaptor.getValue();
 
-    org.junit.jupiter.api.Assertions.assertEquals(
-        SystemSnapshot.CURRENT_SCHEMA_VERSION, snapshot.schemaVersion());
-    org.junit.jupiter.api.Assertions.assertEquals(lobbySnapshots, snapshot.lobbies());
-    org.junit.jupiter.api.Assertions.assertEquals(gameSnapshots, snapshot.games());
+    assertEquals(SystemSnapshot.CURRENT_SCHEMA_VERSION, snapshot.schemaVersion());
+    assertEquals(lobbySnapshots, snapshot.lobbies());
+    assertEquals(gameSnapshots, snapshot.games());
   }
 }
