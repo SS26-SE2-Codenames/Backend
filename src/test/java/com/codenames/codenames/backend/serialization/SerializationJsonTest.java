@@ -35,7 +35,7 @@ class SerializationJsonTest {
     dummyList = List.of(new CardDataTransferObject("TEST", null, false));
     dummyGameState =
         new GameStateDataTransferObject(
-            redTeam, redTeam, spymaster, new ClueDto("Test", 1), 1, dummyList);
+            redTeam, redTeam, spymaster, new ClueDto("Test", 1), dummyList);
   }
 
   @Test

@@ -71,8 +71,7 @@ class SystemStateRecoveryServiceTest {
             Team.RED,
             Role.OPERATIVE,
             new ClueDto("ANIMAL", 2),
-            2,
-            List.of(
+                List.of(
                 new CardDataTransferObject("Dog", Color.RED, true),
                 new CardDataTransferObject("Cat", Color.BLUE, false)));
     SystemSnapshot snapshot =
@@ -215,8 +214,7 @@ class SystemStateRecoveryServiceTest {
             Team.BLUE,
             Role.SPYMASTER,
             null,
-            0,
-            List.of(new CardDataTransferObject("Tree", Color.BLUE, false)));
+                List.of(new CardDataTransferObject("Tree", Color.BLUE, false)));
     SystemSnapshot snapshot =
         new SystemSnapshot(
             SystemSnapshot.CURRENT_SCHEMA_VERSION, null, Map.of("ABCDE", gameSnapshot));

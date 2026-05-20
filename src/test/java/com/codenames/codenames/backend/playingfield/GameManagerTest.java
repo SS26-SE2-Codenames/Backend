@@ -336,7 +336,7 @@ class GameManagerTest {
   @Test
   void recoveryConstructorThrowsWhenCardsAreNull() {
     GameStateDataTransferObject state =
-        new GameStateDataTransferObject(null, Team.RED, Role.SPYMASTER, null, 0, null);
+        new GameStateDataTransferObject(null, Team.RED, Role.SPYMASTER, null, null);
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -345,7 +345,7 @@ class GameManagerTest {
   @Test
   void recoveryConstructorThrowsWhenCardsAreEmpty() {
     GameStateDataTransferObject state =
-        new GameStateDataTransferObject(null, Team.RED, Role.SPYMASTER, null, 0, List.of());
+        new GameStateDataTransferObject(null, Team.RED, Role.SPYMASTER, null, List.of());
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -357,7 +357,7 @@ class GameManagerTest {
         List.of(new CardDataTransferObject("Dog", Color.RED, false));
 
     GameStateDataTransferObject state =
-        new GameStateDataTransferObject(null, null, Role.SPYMASTER, null, 0, cards);
+        new GameStateDataTransferObject(null, null, Role.SPYMASTER, null, cards);
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -369,7 +369,7 @@ class GameManagerTest {
         List.of(new CardDataTransferObject("Dog", Color.RED, false));
 
     GameStateDataTransferObject state =
-        new GameStateDataTransferObject(null, Team.RED, null, null, 0, cards);
+        new GameStateDataTransferObject(null, Team.RED, null, null, cards);
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -384,7 +384,7 @@ class GameManagerTest {
 
     GameStateDataTransferObject state =
         new GameStateDataTransferObject(
-            Team.RED, Team.BLUE, Role.OPERATIVE, new ClueDto("ANIMAL", 2), 2, cards);
+            Team.RED, Team.BLUE, Role.OPERATIVE, new ClueDto("ANIMAL", 2), cards);
 
     GameManager restored = new GameManager(state, mockClueValidationService);
 

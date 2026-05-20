@@ -162,6 +162,6 @@ class GameControllerTest {
   }
 
   private GameStateDataTransferObject createGameStatePayload() {
-    return new GameStateDataTransferObject(null, null, null, null, 0, List.of());
+    return new GameStateDataTransferObject(null, null, null, null, List.of());
   }
 }

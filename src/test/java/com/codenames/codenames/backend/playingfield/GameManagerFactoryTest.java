@@ -44,8 +44,7 @@ class GameManagerFactoryTest {
             Team.BLUE,
             Role.OPERATIVE,
             new ClueDto("ANIMAL", 2),
-            2,
-            List.of(
+                List.of(
                 new CardDataTransferObject("Dog", Color.RED, true),
                 new CardDataTransferObject("Cat", Color.BLUE, false)));
 
@@ -70,8 +69,7 @@ class GameManagerFactoryTest {
             Team.BLUE,
             Role.SPYMASTER,
             null,
-            0,
-            List.of(new CardDataTransferObject("Tree", Color.BLUE, false)));
+                List.of(new CardDataTransferObject("Tree", Color.BLUE, false)));
 
     GameManager recovered = gameManagerFactory.createFromSnapshot(snapshot);
 
@@ -89,7 +87,6 @@ class GameManagerFactoryTest {
                     Team.RED,
                     Role.OPERATIVE,
                     null,
-                    1,
                     List.of(
                             new CardDataTransferObject("Dog", Color.RED, true),
                             new CardDataTransferObject("Cat", Color.RED, false),
