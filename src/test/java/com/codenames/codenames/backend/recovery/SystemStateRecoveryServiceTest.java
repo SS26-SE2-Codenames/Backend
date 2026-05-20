@@ -71,8 +71,7 @@ class SystemStateRecoveryServiceTest {
             Team.RED,
             Role.OPERATIVE,
             new ClueDto("ANIMAL", 2),
-            2,
-            List.of(
+                List.of(
                 new CardDataTransferObject("Dog", Color.RED, true),
                 new CardDataTransferObject("Cat", Color.BLUE, false)));
     SystemSnapshot snapshot =
@@ -95,7 +94,6 @@ class SystemStateRecoveryServiceTest {
     GameManager restoredGame = context.gameService().getGameState("ABCDE");
     assertEquals(Team.RED, restoredGame.getCurrentTurn());
     assertEquals(Role.OPERATIVE, restoredGame.getCurrentPhase());
-    assertEquals(2, restoredGame.getRemainingGuesses());
     assertEquals("ANIMAL", restoredGame.getCurrentClue().word());
     assertTrue(restoredGame.getCardList().get(0).isGuessed());
     assertFalse(restoredGame.getCardList().get(1).isGuessed());
@@ -215,8 +213,7 @@ class SystemStateRecoveryServiceTest {
             Team.BLUE,
             Role.SPYMASTER,
             null,
-            0,
-            List.of(new CardDataTransferObject("Tree", Color.BLUE, false)));
+                List.of(new CardDataTransferObject("Tree", Color.BLUE, false)));
     SystemSnapshot snapshot =
         new SystemSnapshot(
             SystemSnapshot.CURRENT_SCHEMA_VERSION, null, Map.of("ABCDE", gameSnapshot));

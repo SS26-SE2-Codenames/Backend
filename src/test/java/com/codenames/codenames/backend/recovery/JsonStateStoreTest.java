@@ -59,7 +59,7 @@ class JsonStateStoreTest {
 
     GameStateDataTransferObject gameSnapshot =
         new GameStateDataTransferObject(
-            null, Team.RED, Role.OPERATIVE, new ClueDto("ANIMAL", 2), 2, List.of());
+            null, Team.RED, Role.OPERATIVE, new ClueDto("ANIMAL", 2), List.of());
 
     SystemSnapshot expectedSnapshot =
         new SystemSnapshot(
@@ -88,7 +88,6 @@ class JsonStateStoreTest {
     GameStateDataTransferObject actualGameSnapshot = actualSnapshot.games().get("ABCDE");
     assertEquals(Team.RED, actualGameSnapshot.currentTurn());
     assertEquals(Role.OPERATIVE, actualGameSnapshot.currentPhase());
-    assertEquals(2, actualGameSnapshot.remainingGuesses());
     assertEquals("ANIMAL", actualGameSnapshot.currentClue().word());
     assertEquals(2, actualGameSnapshot.currentClue().guessAmount());
     assertTrue(actualGameSnapshot.cardList().isEmpty());

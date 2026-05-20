@@ -112,8 +112,7 @@ class GameServiceTest {
             redTeam,
             Role.SPYMASTER,
             new ClueDto("ANIMAL", 2),
-            2,
-            List.of(new CardDataTransferObject("Dog", Color.RED, false)));
+                List.of(new CardDataTransferObject("Dog", Color.RED, false)));
     when(mockGameManager.getCurrentTurn()).thenReturn(redTeam);
     when(mockGameManager.getCurrentPhase()).thenReturn(Role.SPYMASTER);
     when(mockGameManager.getRemainingGuesses()).thenReturn(2);
@@ -143,8 +142,7 @@ class GameServiceTest {
             redTeam,
             Role.SPYMASTER,
             new ClueDto("ANIMAL", 2),
-            2,
-            List.of(new CardDataTransferObject("Dog", Color.RED, false)));
+                List.of(new CardDataTransferObject("Dog", Color.RED, false)));
 
     when(mockGameManager.getCurrentTurn()).thenReturn(redTeam);
     when(mockGameManager.getCurrentPhase()).thenReturn(Role.SPYMASTER);

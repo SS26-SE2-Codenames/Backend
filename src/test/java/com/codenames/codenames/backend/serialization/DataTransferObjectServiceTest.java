@@ -90,6 +90,5 @@ class DataTransferObjectServiceTest {
     assertEquals(0, dto.cardList().size());
     assertEquals(redTeam, dto.currentTurn());
     assertEquals(operative, dto.currentPhase());
-    assertEquals(3, dto.remainingGuesses());
   }
 }

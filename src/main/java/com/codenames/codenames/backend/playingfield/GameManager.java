@@ -84,7 +84,6 @@ public class GameManager {
     this.currentTurn = state.currentTurn();
     this.currentPhase = state.currentPhase();
     this.winner = state.winner();
-    this.remainingGuesses = state.remainingGuesses();
     this.currentClue =
         state.currentClue() == null
             ? null
