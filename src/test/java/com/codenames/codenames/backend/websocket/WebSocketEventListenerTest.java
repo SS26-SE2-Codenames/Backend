@@ -43,6 +43,8 @@ class WebSocketEventListenerTest {
     when(event.getSessionId()).thenReturn(TEST_SESSION_ID);
 
     listener.handleDisconnect(event);
+
+    assertNull(registry.getUser(TEST_SESSION_ID));
   }
 
   @Test
@@ -64,6 +66,8 @@ class WebSocketEventListenerTest {
     when(event.getSessionId()).thenReturn("unknown");
 
     listener.handleDisconnect(event);
+
+    assertNull(registry.getUser(TEST_SESSION_ID));
   }
 
   @Test
@@ -88,5 +92,7 @@ class WebSocketEventListenerTest {
 
     Map<String, String> sessionToLobby = (Map<String, String>) lobbyField.get(registry);
     sessionToLobby.remove(TEST_SESSION_ID);
+
+    assertNull(registry.getLobby(TEST_SESSION_ID));
   }
 }
