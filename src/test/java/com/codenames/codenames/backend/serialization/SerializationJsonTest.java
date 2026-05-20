@@ -42,7 +42,7 @@ class SerializationJsonTest {
   void testSerialize_pass() {
     String expectedResult =
         """
-            {"winner":"RED","currentTurn":"RED","currentPhase":"SPYMASTER","currentClue":{"word":"Test","guessAmount":1},"remainingGuesses":1,"cardList":[{"word":"TEST","color":null,"isGuessed":false}]}""";
+            {"winner":"RED","currentTurn":"RED","currentPhase":"SPYMASTER","currentClue":{"word":"Test","guessAmount":1},"cardList":[{"word":"TEST","color":null,"isGuessed":false}]}""";
     String result = serializer.serialize(dummyGameState);
     assertEquals(expectedResult, result);
   }

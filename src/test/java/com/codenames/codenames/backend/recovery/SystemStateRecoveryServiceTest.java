@@ -94,7 +94,6 @@ class SystemStateRecoveryServiceTest {
     GameManager restoredGame = context.gameService().getGameState("ABCDE");
     assertEquals(Team.RED, restoredGame.getCurrentTurn());
     assertEquals(Role.OPERATIVE, restoredGame.getCurrentPhase());
-    assertEquals(2, restoredGame.getRemainingGuesses());
     assertEquals("ANIMAL", restoredGame.getCurrentClue().word());
     assertTrue(restoredGame.getCardList().get(0).isGuessed());
     assertFalse(restoredGame.getCardList().get(1).isGuessed());

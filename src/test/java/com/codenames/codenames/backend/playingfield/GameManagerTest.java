@@ -390,7 +390,6 @@ class GameManagerTest {
 
     assertEquals(Team.BLUE, restored.getCurrentTurn());
     assertEquals(Role.OPERATIVE, restored.getCurrentPhase());
-    assertEquals(2, restored.getRemainingGuesses());
     assertEquals("ANIMAL", restored.getCurrentClueWord());
     assertEquals(Team.RED, restored.getWinner());
     assertEquals(1, restored.getCurrentRedFound());

@@ -54,7 +54,6 @@ class GameManagerFactoryTest {
     assertEquals(Team.BLUE, recovered.getCurrentTurn());
     assertEquals(Role.OPERATIVE, recovered.getCurrentPhase());
     assertEquals("ANIMAL", recovered.getCurrentClueWord());
-    assertEquals(2, recovered.getRemainingGuesses());
     assertEquals(1, recovered.getCurrentRedFound());
     assertEquals(0, recovered.getCurrentBlueFound());
     assertEquals(Team.RED, recovered.getWinner());
