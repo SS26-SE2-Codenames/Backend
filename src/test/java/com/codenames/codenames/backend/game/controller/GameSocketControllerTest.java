@@ -2,6 +2,7 @@ package com.codenames.codenames.backend.game.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -25,63 +26,62 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 @ExtendWith(MockitoExtension.class)
 class GameSocketControllerTest {
 
+  private static final String LOBBY_CODE = "ABCDE";
+
   @Mock private GameService gameService;
 
   @Mock private SimpMessagingTemplate messagingTemplate;
+
   @Mock private SystemStatePersistenceService persistenceService;
 
   private GameSocketController controller;
 
   @BeforeEach
   void setUp() {
-
     controller = new GameSocketController(gameService, messagingTemplate, persistenceService);
   }
 
   @Test
-  void startGameShouldBroadcastState() {
-
+  void startGameShouldBroadcastStateWithoutPersisting() {
     StartGameMessage message = new StartGameMessage();
+    message.setLobbyCode(LOBBY_CODE);
 
-    message.setLobbyCode("ABCDE");
-
-    when(gameService.getCurrentGameState("ABCDE")).thenReturn(createGameStateDataTransferObject());
+    when(gameService.getCurrentGameState(LOBBY_CODE))
+        .thenReturn(createGameStateDataTransferObject());
 
     controller.startGame(message);
 
-    verify(persistenceService).persistCurrentState();
+    verify(persistenceService, never()).persistCurrentState();
     verify(messagingTemplate).convertAndSend(anyString(), any(Object.class));
   }
 
   @Test
-  void revealCardShouldBroadcastState() {
-
+  void revealCardShouldPersistAndBroadcastState() {
     RevealCardMessage message = new RevealCardMessage();
-
-    message.setLobbyCode("ABCDE");
+    message.setLobbyCode(LOBBY_CODE);
     message.setPosition(0);
     message.setCurrentTurn(Team.RED);
 
-    when(gameService.getCurrentGameState("ABCDE")).thenReturn(createGameStateDataTransferObject());
+    when(gameService.getCurrentGameState(LOBBY_CODE))
+        .thenReturn(createGameStateDataTransferObject());
 
     controller.revealCard(message);
 
-    verify(gameService).flipCard("ABCDE", 0, Team.RED);
+    verify(gameService).flipCard(LOBBY_CODE, 0, Team.RED);
     verify(persistenceService).persistCurrentState();
     verify(messagingTemplate).convertAndSend(anyString(), any(Object.class));
   }
 
   @Test
-  void submitClueShouldBroadcastState() {
-
+  void submitClueShouldPersistAndBroadcastState() {
     ClueMessage message = new ClueMessage();
-
-    message.setLobbyCode("ABCDE");
+    message.setLobbyCode(LOBBY_CODE);
     message.setWord("animal");
     message.setGuessAmount(2);
     message.setCurrentTurn(Team.RED);
 
-    when(gameService.getCurrentGameState("ABCDE")).thenReturn(createGameStateDataTransferObject());
+    when(gameService.getCurrentGameState(LOBBY_CODE))
+        .thenReturn(createGameStateDataTransferObject());
 
     controller.submitClue(message);
 
@@ -91,18 +91,17 @@ class GameSocketControllerTest {
   }
 
   @Test
-  void passTurnShouldBroadcastUpdatedState() {
-
+  void passTurnShouldPersistAndBroadcastUpdatedState() {
     PassTurnMessage message = new PassTurnMessage();
-
-    message.setLobbyCode("ABCDE");
+    message.setLobbyCode(LOBBY_CODE);
     message.setCurrentTurn(Team.RED);
 
-    when(gameService.getCurrentGameState("ABCDE")).thenReturn(createGameStateDataTransferObject());
+    when(gameService.getCurrentGameState(LOBBY_CODE))
+        .thenReturn(createGameStateDataTransferObject());
 
     controller.passTurn(message);
 
-    verify(gameService).passTurn("ABCDE", Team.RED);
+    verify(gameService).passTurn(LOBBY_CODE, Team.RED);
     verify(persistenceService).persistCurrentState();
     verify(messagingTemplate).convertAndSend(anyString(), any(Object.class));
   }

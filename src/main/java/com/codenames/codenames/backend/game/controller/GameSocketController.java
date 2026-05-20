@@ -51,7 +51,6 @@ public class GameSocketController {
    */
   @MessageMapping("/start-game")
   public void startGame(StartGameMessage message) {
-    persistenceService.persistCurrentState();
 
     messagingTemplate.convertAndSend(
         GAME_TOPIC_PREFIX + message.getLobbyCode(),

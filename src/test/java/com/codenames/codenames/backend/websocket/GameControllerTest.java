@@ -68,7 +68,7 @@ class GameControllerTest {
     controller.join(msg, accessor);
 
     verify(lobbyService).joinLobby("Max", "ABCDE");
-    verify(persistenceService).persistCurrentState();
+    verifyNoInteractions(persistenceService);
 
     assertEquals("Max", sessionRegistry.getUser("123"));
     assertEquals("ABCDE", sessionRegistry.getLobby("123"));
@@ -139,7 +139,7 @@ class GameControllerTest {
     assertEquals("ABCDE", sessionRegistry.getLobby("123"));
 
     verify(lobbyService).joinLobby("Max", "ABCDE");
-    verify(persistenceService).persistCurrentState();
+    verifyNoInteractions(persistenceService);
     verify(messagingTemplate).convertAndSend(eq("/topic/lobby/ABCDE"), any(Object.class));
     verify(messagingTemplate).convertAndSend(eq("/topic/game/ABCDE"), any(Object.class));
   }
@@ -166,7 +166,7 @@ class GameControllerTest {
     assertEquals("Max", sessionRegistry.getUser("reconnect-1"));
     assertEquals("ABCDE", sessionRegistry.getLobby("reconnect-1"));
 
-    verify(persistenceService).persistCurrentState();
+    verifyNoInteractions(persistenceService);
     verify(messagingTemplate).convertAndSend(eq("/topic/lobby/ABCDE"), any(Object.class));
     verify(messagingTemplate).convertAndSend(eq("/topic/game/ABCDE"), any(Object.class));
   }

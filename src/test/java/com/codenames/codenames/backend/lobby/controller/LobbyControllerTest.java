@@ -1,6 +1,7 @@
 package com.codenames.codenames.backend.lobby.controller;
 
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -39,7 +40,7 @@ class LobbyControllerTest {
         .andExpect(jsonPath("$.message").value("Successfully created Lobby."))
         .andExpect(jsonPath("$.lobbyCode").value("ABCDE"));
 
-    verify(persistenceService).persistCurrentState();
+    verifyNoInteractions(persistenceService);
   }
 
   @Test
@@ -72,6 +73,8 @@ class LobbyControllerTest {
         .perform(get("/lobby/ABCDE/join").param("username", "TestUser"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message").value("Joined Lobby successfully."));
+
+    verifyNoInteractions(persistenceService);
   }
 
   @Test
@@ -94,12 +97,15 @@ class LobbyControllerTest {
 
   @Test
   void leaveLobbyShouldReturn200WhenSuccess() throws Exception {
+    when(service.getIsStarted("ABCDE")).thenReturn(false);
     when(service.leaveLobby("TestUser", "ABCDE")).thenReturn(true);
 
     mockMvc
         .perform(get("/lobby/ABCDE/leave").param("username", "TestUser"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message").value("Left lobby successfully."));
+
+    verifyNoInteractions(persistenceService);
   }
 
   @Test
@@ -133,6 +139,8 @@ class LobbyControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message").value("Position selected successfully."))
         .andExpect(jsonPath("$.lobbyCode").value("ABCDE"));
+
+    verifyNoInteractions(persistenceService);
   }
 
   @Test
@@ -188,6 +196,8 @@ class LobbyControllerTest {
         .andExpect(jsonPath("$.lobbyCode").value("ABCDE"))
         .andExpect(jsonPath("$.playerList[0].username").value("Alice"))
         .andExpect(jsonPath("$.isStarted").value("true"));
+
+    verify(persistenceService).persistCurrentState();
   }
 
   @Test

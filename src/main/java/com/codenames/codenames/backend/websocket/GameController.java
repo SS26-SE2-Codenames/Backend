@@ -84,7 +84,7 @@ public class GameController {
     }
 
     sessionRegistry.register(sessionId, message.getName(), message.getCode());
-    persistenceService.persistCurrentState();
+
 
     sendPlayerUpdate(message.getCode());
     sendGameStateUpdate(message.getCode());
