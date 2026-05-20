@@ -65,7 +65,7 @@ class LobbyControllerTest {
   }
 
   @Test
-  void joinLobbyShouldReturn200_whenSuccess() throws Exception {
+  void joinLobbyShouldReturn200WhenSuccess() throws Exception {
     when(service.joinLobby("TestUser", "ABCDE")).thenReturn(true);
 
     mockMvc
@@ -83,7 +83,7 @@ class LobbyControllerTest {
   }
 
   @Test
-  void joinLobbyShouldReturn400_whenNotFound() throws Exception {
+  void joinLobbyShouldReturn400WhenNotFound() throws Exception {
     when(service.joinLobby("TestUser", "XXXXX")).thenReturn(false);
 
     mockMvc
@@ -93,7 +93,7 @@ class LobbyControllerTest {
   }
 
   @Test
-  void leaveLobbyShouldReturn200_whenSuccess() throws Exception {
+  void leaveLobbyShouldReturn200WhenSuccess() throws Exception {
     when(service.leaveLobby("TestUser", "ABCDE")).thenReturn(true);
 
     mockMvc
@@ -136,7 +136,7 @@ class LobbyControllerTest {
   }
 
   @Test
-  void selectPositionShouldReturn400whenAssignmentFails() throws Exception {
+  void selectPositionShouldReturn400WhenAssignmentFails() throws Exception {
     when(service.selectPosition("TestUser", "ABCDE", Team.RED, Role.SPYMASTER)).thenReturn(false);
 
     mockMvc
@@ -158,7 +158,7 @@ class LobbyControllerTest {
   }
 
   @Test
-  void getLobbyInfoShouldReturn200_whenLobbyExists() throws Exception {
+  void getLobbyInfoShouldReturn200WhenLobbyExists() throws Exception {
     List<PlayerDto> players =
         List.of(new PlayerDto("Alice", null, null, true), new PlayerDto("Bob", null, null, false));
 
@@ -174,7 +174,7 @@ class LobbyControllerTest {
   }
 
   @Test
-  void testStartGameReturns200_WhenConditionIsMet() throws Exception {
+  void testStartGameReturns200WhenConditionIsMet() throws Exception {
     List<PlayerDto> players =
         List.of(new PlayerDto("Alice", null, null, true), new PlayerDto("Bob", null, null, false));
 
@@ -191,7 +191,7 @@ class LobbyControllerTest {
   }
 
   @Test
-  void testStartGameReturns400_WhenServiceReturnsFalse() throws Exception {
+  void testStartGameReturns400WhenServiceReturnsFalse() throws Exception {
     List<PlayerDto> players =
         List.of(new PlayerDto("Alice", null, null, true), new PlayerDto("Bob", null, null, false));
 

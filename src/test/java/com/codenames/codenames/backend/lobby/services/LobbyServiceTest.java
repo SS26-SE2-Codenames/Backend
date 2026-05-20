@@ -291,7 +291,7 @@ class LobbyServiceTest {
   }
 
   @Test
-  void getPlayersDtoShouldReturnPlayerDTOs_whenLobbyExists() {
+  void getPlayersDtoShouldReturnPlayerDtosWhenLobbyExists() {
     lobbyService.createLobby("Host");
 
     List<PlayerDto> result = lobbyService.getPlayersDto("ABCDE");
@@ -331,7 +331,7 @@ class LobbyServiceTest {
   }
 
   @Test
-  void testGetIsStarted_GameServiceReturnsFalse() {
+  void testGetIsStartedGameServiceReturnsFalse() {
     when(gameService.isGameStarted("ABCDE")).thenReturn(false);
 
     boolean result = lobbyService.getIsStarted("ABCDE");
@@ -339,7 +339,7 @@ class LobbyServiceTest {
   }
 
   @Test
-  void testGetHost_Works() {
+  void testGetHostWorks() {
     lobbyService.createLobby("Alice");
     lobbyService.joinLobby("Bob", "ABCDE");
     lobbyService.joinLobby("Caesar", "ABCDE");
@@ -353,7 +353,7 @@ class LobbyServiceTest {
   @ParameterizedTest
   @NullAndEmptySource
   @ValueSource(strings = {"ABCDE"})
-  void testGetHost_ReturnsEmptyString(String lobbyCode) {
+  void testGetHostReturnsEmptyString(String lobbyCode) {
     String result = lobbyService.getHost(lobbyCode);
 
     assertEquals("", result);
