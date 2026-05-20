@@ -2,6 +2,8 @@ package com.codenames.codenames.backend.playingfield;
 
 import com.codenames.codenames.backend.clue.Clue;
 import com.codenames.codenames.backend.clue.ClueValidationService;
+import com.codenames.codenames.backend.serialization.CardDataTransferObject;
+import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import com.codenames.codenames.backend.utility.Color;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
@@ -62,6 +64,65 @@ public class GameManager {
 
     this.board =
         new Board(cardGenerator, TOTAL_CARDS, redCards, blueCards, WHITE_CARDS, BLACK_CARDS);
+  }
+
+  /**
+   * Constructor used by recovery logic to rebuild an already running game state.
+   *
+   * @param state bundled recovery state
+   * @param clueValidationService clue validation service
+   */
+  public GameManager(
+      GameStateDataTransferObject state, ClueValidationService clueValidationService) {
+    if (state.cardList() == null || state.cardList().isEmpty()) {
+      throw new IllegalArgumentException("cards cannot be null or empty");
+    }
+    if (state.currentTurn() == null || state.currentPhase() == null) {
+      throw new IllegalArgumentException("current turn and phase cannot be null");
+    }
+
+    this.currentTurn = state.currentTurn();
+    this.currentPhase = state.currentPhase();
+    this.winner = state.winner();
+    this.remainingGuesses = state.remainingGuesses();
+    this.currentClue =
+        state.currentClue() == null
+            ? null
+            : new Clue(state.currentClue().word(), state.currentClue().guessAmount());
+    this.clueValidationService = clueValidationService;
+
+    List<Card> cards = state.cardList().stream().map(this::toCard).toList();
+
+    this.currentRedFound = countGuessedByColor(cards, Color.RED);
+    this.currentBlueFound = countGuessedByColor(cards, Color.BLUE);
+
+    this.redCards = countCardsByColor(cards, Color.RED);
+    this.blueCards = countCardsByColor(cards, Color.BLUE);
+    this.board = new Board(cards);
+  }
+
+  private Card toCard(CardDataTransferObject cardDto) {
+    Card card = new Card(cardDto.word(), cardDto.color());
+    if (cardDto.isGuessed()) {
+      card.setIsGuessedTrue();
+    }
+    return card;
+  }
+
+  private int countGuessedByColor(List<Card> cards, Color color) {
+    return (int)
+        cards.stream().filter(card -> card.isGuessed() && card.getColor() == color).count();
+  }
+
+  /**
+   * Counts cards of a specific color within the current board snapshot.
+   *
+   * @param cards recovered cards
+   * @param color color to count
+   * @return number of cards with the requested color
+   */
+  private int countCardsByColor(List<Card> cards, Color color) {
+    return (int) cards.stream().filter(card -> card.getColor() == color).count();
   }
 
   /**

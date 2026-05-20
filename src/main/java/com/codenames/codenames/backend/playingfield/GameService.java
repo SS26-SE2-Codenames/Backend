@@ -1,7 +1,6 @@
 package com.codenames.codenames.backend.playingfield;
 
 import com.codenames.codenames.backend.clue.Clue;
-import com.codenames.codenames.backend.game.dto.GameStateDto;
 import com.codenames.codenames.backend.serialization.DataTransferObjectService;
 import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import com.codenames.codenames.backend.utility.Team;
@@ -49,6 +48,16 @@ public class GameService {
    */
   public void removeGame(String lobbyCode) {
     games.remove(lobbyCode);
+  }
+
+  /**
+   * Registers a recovered {@link GameManager} for a lobby after backend restart.
+   *
+   * @param lobbyCode lobby identifier
+   * @param gameManager recovered game manager
+   */
+  public void restoreGameManager(String lobbyCode, GameManager gameManager) {
+    games.put(lobbyCode, gameManager);
   }
 
   /**
@@ -110,25 +119,6 @@ public class GameService {
   }
 
   /**
-   * Creates a DTO representing the current game state.
-   *
-   * @param lobbyCode lobby identifier
-   * @return DTO containing board and turn information
-   */
-  public GameStateDto createGameStateDto(String lobbyCode) {
-
-    GameManager gm = getGame(lobbyCode);
-
-    return new GameStateDto(
-        gm.getCardList(),
-        gm.getCurrentClue(),
-        gm.getRemainingGuesses(),
-        gm.getWinner(),
-        gm.getCurrentTurn(),
-        gm.getCurrentPhase());
-  }
-
-  /**
    * Maps the current game state into a @link GameStateTransferObject.
    *
    * @param lobbyCode the unique lobby code
@@ -137,13 +127,12 @@ public class GameService {
   public GameStateDataTransferObject getCurrentGameState(String lobbyCode) {
     GameManager gm = getGame(lobbyCode);
     return dtoService.createGameStateDataTransferObject(
-            gm, gm.getCurrentTurn(), gm.getCurrentPhase()
-    );
+        gm, gm.getCurrentTurn(), gm.getCurrentPhase());
   }
 
   /**
-   * This method uses the private method getGame to check if a game is already started
-   *      via the existence of a game manager.
+   * This method uses the private method getGame to check if a game is already started via the
+   * existence of a game manager.
    *
    * @param lobbyCode the lobbyCode of the lobby
    * @return if the game manager for the lobby already exists aka the game is started
@@ -155,5 +144,16 @@ public class GameService {
     } catch (Exception e) {
       return false;
     }
+  }
+
+  /**
+   * Returns all active games as serializable snapshots.
+   *
+   * @return map of lobby codes to game state dto snapshots
+   */
+  public Map<String, GameStateDataTransferObject> getGameSnapshots() {
+    return games.keySet().stream()
+        .collect(
+            java.util.stream.Collectors.toMap(lobbyCode -> lobbyCode, this::getCurrentGameState));
   }
 }

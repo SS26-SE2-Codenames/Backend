@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.utility.Color;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -79,5 +80,14 @@ class BoardTest {
   void testSetIsGuessed() {
     board.setGuessed(0);
     assertTrue(board.getIsGuessed(0));
+  }
+
+  @Test
+  void testRecoveryConstructorCopiesInputList() {
+    List<Card> input = new ArrayList<>(dummyCardList);
+    Board recoveredBoard = new Board(input);
+    input.add(new Card("Extra", Color.RED));
+
+    assertEquals(4, recoveredBoard.getCardList().size());
   }
 }

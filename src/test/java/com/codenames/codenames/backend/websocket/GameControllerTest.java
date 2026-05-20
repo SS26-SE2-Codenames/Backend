@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.lobby.services.LobbyService;
 import com.codenames.codenames.backend.playingfield.GameService;
+import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,8 +58,7 @@ class GameControllerTest {
     when(lobbyService.joinLobby("Max", "ABCDE")).thenReturn(true);
 
     when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max", true)));
-    when(gameService.createGameStateDto("ABCDE"))
-        .thenReturn(mock(com.codenames.codenames.backend.game.dto.GameStateDto.class));
+    when(gameService.getCurrentGameState("ABCDE")).thenReturn(createGameStatePayload());
 
     controller.join(msg, accessor);
 
@@ -90,7 +90,6 @@ class GameControllerTest {
     controller.join(msg, accessor);
 
     verify(messagingTemplate).convertAndSend("/topic/errors/123", "Join failed");
-
     verifyNoMoreInteractions(messagingTemplate);
   }
 
@@ -124,8 +123,7 @@ class GameControllerTest {
 
     when(lobbyService.joinLobby("Max", "ABCDE")).thenReturn(true);
     when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max", true)));
-    when(gameService.createGameStateDto("ABCDE"))
-        .thenReturn(mock(com.codenames.codenames.backend.game.dto.GameStateDto.class));
+    when(gameService.getCurrentGameState("ABCDE")).thenReturn(createGameStatePayload());
 
     controller.join(msg, accessor);
 
@@ -152,8 +150,7 @@ class GameControllerTest {
 
     when(lobbyService.joinLobby("Max", "ABCDE")).thenReturn(false);
     when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max", true)));
-    when(gameService.createGameStateDto("ABCDE"))
-        .thenReturn(mock(com.codenames.codenames.backend.game.dto.GameStateDto.class));
+    when(gameService.getCurrentGameState("ABCDE")).thenReturn(createGameStatePayload());
 
     controller.join(msg, accessor);
 
@@ -162,5 +159,9 @@ class GameControllerTest {
 
     verify(messagingTemplate).convertAndSend(eq("/topic/lobby/ABCDE"), any(Object.class));
     verify(messagingTemplate).convertAndSend(eq("/topic/game/ABCDE"), any(Object.class));
+  }
+
+  private GameStateDataTransferObject createGameStatePayload() {
+    return new GameStateDataTransferObject(null, null, null, null, 0, List.of());
   }
 }

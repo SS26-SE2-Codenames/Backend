@@ -6,6 +6,7 @@ import com.codenames.codenames.backend.game.dto.PassTurnMessage;
 import com.codenames.codenames.backend.game.dto.RevealCardMessage;
 import com.codenames.codenames.backend.game.dto.StartGameMessage;
 import com.codenames.codenames.backend.playingfield.GameService;
+import com.codenames.codenames.backend.recovery.SystemStatePersistenceService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ public class GameSocketController {
   private final GameService gameService;
 
   private final SimpMessagingTemplate messagingTemplate;
+  private final SystemStatePersistenceService persistenceService;
 
   private static final String GAME_TOPIC_PREFIX = "/topic/game/";
 
@@ -30,11 +32,16 @@ public class GameSocketController {
    *
    * @param gameService service responsible for gameplay logic
    * @param messagingTemplate template used for broadcasting websocket messages
+   * @param persistenceService service used to persist current backend state
    */
-  public GameSocketController(GameService gameService, SimpMessagingTemplate messagingTemplate) {
+  public GameSocketController(
+      GameService gameService,
+      SimpMessagingTemplate messagingTemplate,
+      SystemStatePersistenceService persistenceService) {
 
     this.gameService = gameService;
     this.messagingTemplate = messagingTemplate;
+    this.persistenceService = persistenceService;
   }
 
   /**
@@ -61,6 +68,7 @@ public class GameSocketController {
   public void revealCard(RevealCardMessage message) {
 
     gameService.flipCard(message.getLobbyCode(), message.getPosition(), message.getCurrentTurn());
+    persistenceService.persistCurrentState();
 
     messagingTemplate.convertAndSend(
         GAME_TOPIC_PREFIX + message.getLobbyCode(),
@@ -81,6 +89,7 @@ public class GameSocketController {
         message.getLobbyCode(),
         new Clue(message.getWord(), message.getGuessAmount()),
         message.getCurrentTurn());
+    persistenceService.persistCurrentState();
 
     messagingTemplate.convertAndSend(
         GAME_TOPIC_PREFIX + message.getLobbyCode(),
@@ -96,6 +105,7 @@ public class GameSocketController {
   public void passTurn(PassTurnMessage message) {
 
     gameService.passTurn(message.getLobbyCode(), message.getCurrentTurn());
+    persistenceService.persistCurrentState();
 
     messagingTemplate.convertAndSend(
         GAME_TOPIC_PREFIX + message.getLobbyCode(),

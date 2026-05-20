@@ -1,6 +1,7 @@
 package com.codenames.codenames.backend.playingfield;
 
 import com.codenames.codenames.backend.clue.ClueValidationService;
+import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import com.codenames.codenames.backend.utility.Team;
 import org.springframework.stereotype.Component;
 
@@ -30,5 +31,15 @@ public class GameManagerFactory {
    */
   public GameManager create(Team startingTeam) {
     return new GameManager(startingTeam, cardGenerator, clueValidationService);
+  }
+
+  /**
+   * Recreates a {@link GameManager} from a persisted snapshot.
+   *
+   * @param snapshot persisted game state snapshot
+   * @return restored game manager
+   */
+  public GameManager createFromSnapshot(GameStateDataTransferObject snapshot) {
+    return new GameManager(snapshot, clueValidationService);
   }
 }

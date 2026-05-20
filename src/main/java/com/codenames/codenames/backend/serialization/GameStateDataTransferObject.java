@@ -10,7 +10,9 @@ import java.util.List;
  *
  * @param winner the winner
  * @param currentTurn the current team who is allowed to make a move
+ * @param currentPhase the current phase (spymaster or operative)
  * @param currentClue the current clue object, consisting of word and amount of guesses
+ * @param remainingGuesses amount of guesses left for the current turn
  * @param cardList the cards on the board
  */
 public record GameStateDataTransferObject(
@@ -18,4 +20,5 @@ public record GameStateDataTransferObject(
     Team currentTurn,
     Role currentPhase,
     ClueDto currentClue,
+    int remainingGuesses,
     List<CardDataTransferObject> cardList) {}

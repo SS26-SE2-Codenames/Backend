@@ -33,7 +33,7 @@ public class DataTransferObjectService {
    * @return a DTO of the current game state
    */
   public GameStateDataTransferObject createGameStateDataTransferObject(
-          GameManager gameManager, Team currentTurn, Role currentPhase) {
+      GameManager gameManager, Team currentTurn, Role currentPhase) {
 
     List<Card> cardList = gameManager.getCardList();
     List<CardDataTransferObject> cardDataTransferObject = new ArrayList<>();
@@ -46,6 +46,7 @@ public class DataTransferObjectService {
           currentTurn,
           currentPhase,
           null,
+          gameManager.getRemainingGuesses(),
           cardDataTransferObject);
     }
     String word = gameManager.getCurrentClue().word();
@@ -55,6 +56,7 @@ public class DataTransferObjectService {
         currentTurn,
         currentPhase,
         new ClueDto(word, guessAmount),
+        gameManager.getRemainingGuesses(),
         cardDataTransferObject);
   }
 }

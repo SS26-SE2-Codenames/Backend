@@ -91,6 +91,16 @@ public class LobbyService {
   }
 
   /**
+   * Registers a recovered lobby into in-memory lobby storage.
+   *
+   * @param lobbyCode lobby identifier
+   * @param lobby recovered lobby instance
+   */
+  public void restoreLobby(String lobbyCode, Lobby lobby) {
+    lobbyList.put(lobbyCode, lobby);
+  }
+
+  /**
    * Removes a player from a lobby.
    *
    * @param username the username of the player
@@ -256,17 +266,16 @@ public class LobbyService {
   }
 
   /**
-   * The service method for starting a game. This creates a game manager object for the lobby
-   * and checks if the requesting user is liable to start the game.
+   * The service method for starting a game. This creates a game manager object for the lobby and
+   * checks if the requesting user is liable to start the game.
    *
    * @param lobbyCode the unique lobby code
    * @param username the name of the requesting user
    * @return if starting was successful
    */
-
   public boolean startGame(String lobbyCode, String username) {
-    boolean isStarted = !lobbyCode.isBlank() && !username.isBlank()
-            && Objects.equals(getHost(lobbyCode), username);
+    boolean isStarted =
+        !lobbyCode.isBlank() && !username.isBlank() && Objects.equals(getHost(lobbyCode), username);
     Lobby lobby = lobbyList.get(lobbyCode);
     addGameManagerForLobby(lobby, lobbyCode);
 
@@ -280,7 +289,6 @@ public class LobbyService {
    * @param lobbyCode the unique lobby code
    * @return the username of the host
    */
-
   public String getHost(String lobbyCode) {
     if (lobbyCode == null || lobbyCode.isBlank()) {
       return "";
@@ -298,14 +306,22 @@ public class LobbyService {
   }
 
   /**
-   * Checks if the game is started by looking after an existing
-   * game manager object.
+   * Checks if the game is started by looking after an existing game manager object.
    *
    * @param lobbyCode the unique lobby code
    * @return whether a game manager exists (@code true or @code false)
    */
-
   public boolean getIsStarted(String lobbyCode) {
     return gameService.isGameStarted(lobbyCode);
+  }
+
+  /**
+   * Returns all lobbies as serializable snapshots.
+   *
+   * @return map of lobby codes to player dto lists
+   */
+  public Map<String, List<PlayerDto>> getLobbySnapshots() {
+    return lobbyList.keySet().stream()
+        .collect(java.util.stream.Collectors.toMap(lobbyCode -> lobbyCode, this::getPlayersDto));
   }
 }

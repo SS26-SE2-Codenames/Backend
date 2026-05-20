@@ -1,18 +1,24 @@
 package com.codenames.codenames.backend.playingfield;
 
-import com.codenames.codenames.backend.serialization.DataTransferObjectService;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.clue.Clue;
-import com.codenames.codenames.backend.game.dto.GameStateDto;
+import com.codenames.codenames.backend.game.dto.ClueDto;
+import com.codenames.codenames.backend.serialization.CardDataTransferObject;
+import com.codenames.codenames.backend.serialization.DataTransferObjectService;
+import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
+import com.codenames.codenames.backend.utility.Color;
+import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,6 +27,7 @@ class GameServiceTest {
   private GameService gameService;
   private GameManager mockGameManager;
   private GameManagerFactory mockGameManagerFactory;
+  private DataTransferObjectService mockDtoService;
 
   private final String lobbyCode = "ABCDE";
   private final Team redTeam = Team.RED;
@@ -29,7 +36,7 @@ class GameServiceTest {
   void setup() {
     mockGameManagerFactory = mock(GameManagerFactory.class);
     mockGameManager = mock(GameManager.class);
-    DataTransferObjectService mockDtoService = mock(DataTransferObjectService.class);
+    mockDtoService = mock(DataTransferObjectService.class);
 
     gameService = new GameService(mockGameManagerFactory, mockDtoService);
     when(mockGameManagerFactory.create(redTeam)).thenReturn(mockGameManager);
@@ -58,7 +65,7 @@ class GameServiceTest {
 
   @Test
   void testSubmitClue() {
-    Clue mockClue = mock(Clue.class);
+    Clue mockClue = new Clue("ANIMAL", 2);
 
     gameService.submitClue(lobbyCode, mockClue, redTeam);
     verify(mockGameManager, times(1)).submitClue(mockClue, redTeam);
@@ -88,12 +95,65 @@ class GameServiceTest {
   }
 
   @Test
-  void testCreateGameStateDto() {
+  void testRestoreGameManager() {
+    String restoredLobbyCode = "VWXYZ";
+    GameManager restoredGameManager = mock(GameManager.class);
 
-    when(mockGameManager.getCardList()).thenReturn(List.of());
+    gameService.restoreGameManager(restoredLobbyCode, restoredGameManager);
 
-    GameStateDto dto = gameService.createGameStateDto(lobbyCode);
+    assertEquals(restoredGameManager, gameService.getGameState(restoredLobbyCode));
+  }
 
-    assertNotNull(dto);
+  @Test
+  void testGetCurrentGameState() {
+    GameStateDataTransferObject expected =
+        new GameStateDataTransferObject(
+            null,
+            redTeam,
+            Role.SPYMASTER,
+            new ClueDto("ANIMAL", 2),
+            2,
+            List.of(new CardDataTransferObject("Dog", Color.RED, false)));
+    when(mockGameManager.getCurrentTurn()).thenReturn(redTeam);
+    when(mockGameManager.getCurrentPhase()).thenReturn(Role.SPYMASTER);
+    when(mockGameManager.getRemainingGuesses()).thenReturn(2);
+    when(mockDtoService.createGameStateDataTransferObject(mockGameManager, redTeam, Role.SPYMASTER))
+        .thenReturn(expected);
+
+    GameStateDataTransferObject result = gameService.getCurrentGameState(lobbyCode);
+
+    assertEquals(expected, result);
+  }
+
+  @Test
+  void testIsGameStartedWhenGameExists() {
+    assertTrue(gameService.isGameStarted(lobbyCode));
+  }
+
+  @Test
+  void testIsGameStartedWhenGameDoesNotExist() {
+    assertFalse(gameService.isGameStarted("UNKNOWN"));
+  }
+
+  @Test
+  void getGameSnapshotsShouldReturnAllCurrentGameStates() {
+    GameStateDataTransferObject expected =
+        new GameStateDataTransferObject(
+            null,
+            redTeam,
+            Role.SPYMASTER,
+            new ClueDto("ANIMAL", 2),
+            2,
+            List.of(new CardDataTransferObject("Dog", Color.RED, false)));
+
+    when(mockGameManager.getCurrentTurn()).thenReturn(redTeam);
+    when(mockGameManager.getCurrentPhase()).thenReturn(Role.SPYMASTER);
+    when(mockDtoService.createGameStateDataTransferObject(mockGameManager, redTeam, Role.SPYMASTER))
+        .thenReturn(expected);
+
+    Map<String, GameStateDataTransferObject> snapshots = gameService.getGameSnapshots();
+
+    assertEquals(1, snapshots.size());
+    assertEquals(expected, snapshots.get(lobbyCode));
   }
 }

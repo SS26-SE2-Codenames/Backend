@@ -4,3 +4,5 @@ services:
     restart: unless-stopped
     ports:
       - "53213:8080"
+    volumes:
+      - ./data:/app/data

@@ -5,9 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.junit.jupiter.params.provider.ValueSource;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -16,14 +13,19 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.chat.ChatService;
+import com.codenames.codenames.backend.lobby.Lobby;
 import com.codenames.codenames.backend.lobby.dto.PlayerDto;
 import com.codenames.codenames.backend.playingfield.GameService;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import com.codenames.codenames.backend.websocket.Player;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * Tests for {@link LobbyService}.
@@ -260,6 +262,7 @@ class LobbyServiceTest {
     lobbyService.leaveLobby("Host", "ABCDE");
     lobbyService.checkLobbyStillHasPlayers("ABCDE");
     assertFalse(lobbyService.getLobbyList().containsKey("ABCDE"));
+    verify(gameService, times(1)).removeGame("ABCDE");
   }
 
   @Test
@@ -288,7 +291,7 @@ class LobbyServiceTest {
   }
 
   @Test
-  void getPlayersDtoShouldReturnPlayerDTOs_whenLobbyExists() {
+  void getPlayersDtoShouldReturnPlayerDtosWhenLobbyExists() {
     lobbyService.createLobby("Host");
 
     List<PlayerDto> result = lobbyService.getPlayersDto("ABCDE");
@@ -328,7 +331,7 @@ class LobbyServiceTest {
   }
 
   @Test
-  void testGetIsStarted_GameServiceReturnsFalse() {
+  void testGetIsStartedGameServiceReturnsFalse() {
     when(gameService.isGameStarted("ABCDE")).thenReturn(false);
 
     boolean result = lobbyService.getIsStarted("ABCDE");
@@ -336,7 +339,7 @@ class LobbyServiceTest {
   }
 
   @Test
-  void testGetHost_Works() {
+  void testGetHostWorks() {
     lobbyService.createLobby("Alice");
     lobbyService.joinLobby("Bob", "ABCDE");
     lobbyService.joinLobby("Caesar", "ABCDE");
@@ -350,9 +353,41 @@ class LobbyServiceTest {
   @ParameterizedTest
   @NullAndEmptySource
   @ValueSource(strings = {"ABCDE"})
-  void testGetHost_ReturnsEmptyString(String lobbyCode) {
+  void testGetHostReturnsEmptyString(String lobbyCode) {
     String result = lobbyService.getHost(lobbyCode);
 
     assertEquals("", result);
+  }
+
+  @Test
+  void testRestoreLobbyAddsLobbyToLobbyList() {
+    Lobby restoredLobby = new Lobby("ABCDE", "Host");
+
+    lobbyService.restoreLobby("ABCDE", restoredLobby);
+
+    assertTrue(lobbyService.getLobbyList().containsKey("ABCDE"));
+    assertEquals(restoredLobby, lobbyService.getLobbyList().get("ABCDE"));
+  }
+
+  @Test
+  void getLobbySnapshotsShouldReturnAllLobbyPlayerDtos() {
+    lobbyService.createLobby("Host");
+    lobbyService.joinLobby("Player", "ABCDE");
+    lobbyService.selectPosition("Host", "ABCDE", Team.RED, Role.SPYMASTER);
+
+    Map<String, List<PlayerDto>> snapshots = lobbyService.getLobbySnapshots();
+
+    assertTrue(snapshots.containsKey("ABCDE"));
+    assertEquals(2, snapshots.get("ABCDE").size());
+
+    PlayerDto host =
+        snapshots.get("ABCDE").stream()
+            .filter(player -> player.username().equals("Host"))
+            .findFirst()
+            .orElseThrow();
+
+    assertEquals(Team.RED, host.team());
+    assertEquals(Role.SPYMASTER, host.role());
+    assertTrue(host.isHost());
   }
 }

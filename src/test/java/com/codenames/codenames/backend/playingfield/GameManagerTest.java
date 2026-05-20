@@ -3,6 +3,7 @@ package com.codenames.codenames.backend.playingfield;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -13,6 +14,9 @@ import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.clue.Clue;
 import com.codenames.codenames.backend.clue.ClueValidationService;
+import com.codenames.codenames.backend.game.dto.ClueDto;
+import com.codenames.codenames.backend.serialization.CardDataTransferObject;
+import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import com.codenames.codenames.backend.utility.Color;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
@@ -327,5 +331,70 @@ class GameManagerTest {
   @Test
   void testPassTurn_throwsWhenSpymaster() {
     assertThrows(IllegalStateException.class, () -> gameManager.passTurn(redTeam));
+  }
+
+  @Test
+  void recoveryConstructorThrowsWhenCardsAreNull() {
+    GameStateDataTransferObject state =
+        new GameStateDataTransferObject(null, Team.RED, Role.SPYMASTER, null, 0, null);
+
+    assertThrows(
+        IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
+  }
+
+  @Test
+  void recoveryConstructorThrowsWhenCardsAreEmpty() {
+    GameStateDataTransferObject state =
+        new GameStateDataTransferObject(null, Team.RED, Role.SPYMASTER, null, 0, List.of());
+
+    assertThrows(
+        IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
+  }
+
+  @Test
+  void recoveryConstructorThrowsWhenCurrentTurnIsNull() {
+    List<CardDataTransferObject> cards =
+        List.of(new CardDataTransferObject("Dog", Color.RED, false));
+
+    GameStateDataTransferObject state =
+        new GameStateDataTransferObject(null, null, Role.SPYMASTER, null, 0, cards);
+
+    assertThrows(
+        IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
+  }
+
+  @Test
+  void recoveryConstructorThrowsWhenCurrentPhaseIsNull() {
+    List<CardDataTransferObject> cards =
+        List.of(new CardDataTransferObject("Dog", Color.RED, false));
+
+    GameStateDataTransferObject state =
+        new GameStateDataTransferObject(null, Team.RED, null, null, 0, cards);
+
+    assertThrows(
+        IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
+  }
+
+  @Test
+  void recoveryConstructorRestoresPersistedState() {
+    List<CardDataTransferObject> cards =
+        List.of(
+            new CardDataTransferObject("Dog", Color.RED, true),
+            new CardDataTransferObject("Cat", Color.BLUE, false));
+
+    GameStateDataTransferObject state =
+        new GameStateDataTransferObject(
+            Team.RED, Team.BLUE, Role.OPERATIVE, new ClueDto("ANIMAL", 2), 2, cards);
+
+    GameManager restored = new GameManager(state, mockClueValidationService);
+
+    assertEquals(Team.BLUE, restored.getCurrentTurn());
+    assertEquals(Role.OPERATIVE, restored.getCurrentPhase());
+    assertEquals(2, restored.getRemainingGuesses());
+    assertEquals("ANIMAL", restored.getCurrentClueWord());
+    assertEquals(Team.RED, restored.getWinner());
+    assertEquals(1, restored.getCurrentRedFound());
+    assertEquals(0, restored.getCurrentBlueFound());
+    assertTrue(restored.getCardList().get(0).isGuessed());
   }
 }

@@ -1,6 +1,7 @@
 package com.codenames.codenames.backend.playingfield;
 
 import com.codenames.codenames.backend.utility.Color;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 
@@ -21,6 +22,15 @@ public class Board {
   public Board(
       CardGenerator cardGenerator, int totalWords, int red, int blue, int white, int black) {
     this.cardList = cardGenerator.generateCards(totalWords, red, blue, white, black);
+  }
+
+  /**
+   * Constructs a board from an already existing card list (recovery path).
+   *
+   * @param cards recovered cards
+   */
+  public Board(List<Card> cards) {
+    this.cardList = new ArrayList<>(cards);
   }
 
   /**
