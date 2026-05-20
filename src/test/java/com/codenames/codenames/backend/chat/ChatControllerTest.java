@@ -37,7 +37,7 @@ class ChatControllerTest {
     lobbyService = mock(LobbyService.class);
     headerAccessor = mock(SimpMessageHeaderAccessor.class);
 
-    chatController = new ChatController(chatService, lobbyService, sessionRegistry);
+    chatController = new ChatController(chatService, lobbyService);
 
     chatDto = new ChatDto("TestName", "TestMessage", ChatMessageType.CHAT);
 

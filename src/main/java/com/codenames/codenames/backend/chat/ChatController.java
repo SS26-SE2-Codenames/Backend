@@ -4,26 +4,22 @@ import com.codenames.codenames.backend.lobby.services.LobbyService;
 import com.codenames.codenames.backend.utility.ChatMessageType;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
-import com.codenames.codenames.backend.websocket.SessionRegistry;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestParam;
-
 /**
  * Controller for broadcasting client messages to the desired destination with STOMP.
  *
  * <p>The destination is based on the lobbyID or team parameters passed when the method is invoked.
  * The parameters are appended to the destination and broadcasted to all subscribers.
  */
+
 @Controller
 public class ChatController {
 
   private final ChatService chatService;
   private final LobbyService lobbyService;
-  private final SessionRegistry sessionRegistry;
 
   /**
    * Constructor for the ChatController.
@@ -31,10 +27,9 @@ public class ChatController {
    * @param chatService the service used to validate and persist chat history
    */
   public ChatController(
-      ChatService chatService, LobbyService lobbyService, SessionRegistry sessionRegistry) {
+      ChatService chatService, LobbyService lobbyService) {
     this.chatService = chatService;
     this.lobbyService = lobbyService;
-    this.sessionRegistry = sessionRegistry;
   }
 
   /**
@@ -48,7 +43,11 @@ public class ChatController {
           @DestinationVariable String lobbyId,
           @Payload ChatDto chatDto) {
 
-    ChatDto verifiedChatDto = new ChatDto(chatDto.senderUsername(), chatDto.content(), ChatMessageType.CHAT);
+    ChatDto verifiedChatDto = new ChatDto(
+            chatDto.senderUsername(),
+            chatDto.content(),
+            ChatMessageType.CHAT
+    );
     chatService.processMessage(lobbyId, "LOBBY", "", verifiedChatDto);
   }
 
@@ -70,7 +69,11 @@ public class ChatController {
       throw new IllegalStateException("You are not on team " + team.name());
     }
 
-    ChatDto verifiedDto = new ChatDto(chatDto.senderUsername(), chatDto.content(), ChatMessageType.CHAT);
+    ChatDto verifiedDto = new ChatDto(
+            chatDto.senderUsername(),
+            chatDto.content(),
+            ChatMessageType.CHAT
+    );
 
     String roomKey = "TEAM_" + team.name();
     String topicSuffix = "/" + team.name();
@@ -98,7 +101,11 @@ public class ChatController {
           "You are either not an operative or are sending to the wrong team.");
     }
 
-    ChatDto verifiedDto = new ChatDto(chatDto.senderUsername(), chatDto.content(), ChatMessageType.CHAT);
+    ChatDto verifiedDto = new ChatDto(
+            chatDto.senderUsername(),
+            chatDto.content(),
+            ChatMessageType.CHAT
+    );
 
     String roomKey = "OPERATIVE_" + team.name();
     String topicSuffix = "/" + team.name() + "/operative";
