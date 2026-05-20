@@ -51,46 +51,19 @@ class ChatControllerTest {
 
   @Test
   void testSendLobbyMessage_valid() {
-    chatController.sendLobbyMessage(lobbyId, chatDto, headerAccessor);
+    chatController.sendLobbyMessage(lobbyId, chatDto);
 
-    ChatDto verifiedChatDto = new ChatDto(realUsername, chatDto.content(), chatDto.type());
+    ChatDto verifiedChatDto = new ChatDto(chatDto.senderUsername(), chatDto.content(), chatDto.type());
     verify(chatService, times(1)).processMessage(lobbyId, "LOBBY", "", verifiedChatDto);
   }
 
   @Test
-  void testSendLobbyMessage_nullUsername() {
-    when(sessionRegistry.getUser(sessionId)).thenReturn(null);
-
-    assertThrows(
-        IllegalStateException.class,
-        () -> chatController.sendLobbyMessage(lobbyId, chatDto, headerAccessor));
-  }
-
-  @Test
-  void testSendLobbyMessage_wrongLobby() {
-    when(sessionRegistry.getLobby(sessionId)).thenReturn("differentLobby");
-
-    assertThrows(
-        IllegalStateException.class,
-        () -> chatController.sendLobbyMessage(lobbyId, chatDto, headerAccessor));
-  }
-
-  @Test
-  void testSendLobbyMessage_nullLobby() {
-    when(sessionRegistry.getLobby(sessionId)).thenReturn("differentLobby");
-
-    assertThrows(
-        IllegalStateException.class,
-        () -> chatController.sendLobbyMessage(null, chatDto, headerAccessor));
-  }
-
-  @Test
   void testSendTeamMessage_valid() {
-    when(lobbyService.getPlayerTeam(realUsername, lobbyId)).thenReturn(redTeam);
+    when(lobbyService.getPlayerTeam(chatDto.senderUsername(), lobbyId)).thenReturn(redTeam);
 
-    chatController.sendTeamMessage(lobbyId, redTeam, chatDto, headerAccessor);
+    chatController.sendTeamMessage(lobbyId, redTeam, chatDto);
 
-    ChatDto verifiedChatDto = new ChatDto(realUsername, chatDto.content(), chatDto.type());
+    ChatDto verifiedChatDto = new ChatDto(chatDto.senderUsername(), chatDto.content(), chatDto.type());
     verify(chatService, times(1)).processMessage(lobbyId, "TEAM_RED", "/RED", verifiedChatDto);
   }
 
@@ -100,38 +73,48 @@ class ChatControllerTest {
 
     assertThrows(
         IllegalStateException.class,
-        () -> chatController.sendTeamMessage(lobbyId, redTeam, chatDto, headerAccessor));
+        () -> chatController.sendTeamMessage(lobbyId, redTeam, chatDto));
   }
 
   @Test
   void testSendTeamOperativeMessage_valid() {
-    when(lobbyService.getPlayerTeam(realUsername, lobbyId)).thenReturn(blueTeam);
-    when(lobbyService.getPlayerRole(realUsername, lobbyId)).thenReturn(Role.OPERATIVE);
+    when(lobbyService.getPlayerTeam(chatDto.senderUsername(), lobbyId)).thenReturn(blueTeam);
+    when(lobbyService.getPlayerRole(chatDto.senderUsername(), lobbyId)).thenReturn(Role.OPERATIVE);
 
-    chatController.sendTeamOperativeMessage(lobbyId, blueTeam, chatDto, headerAccessor);
+    chatController.sendTeamOperativeMessage(lobbyId, blueTeam, chatDto);
 
-    ChatDto verifiedChatDto = new ChatDto(realUsername, chatDto.content(), chatDto.type());
+    ChatDto verifiedChatDto = new ChatDto(chatDto.senderUsername(), chatDto.content(), chatDto.type());
     verify(chatService, times(1))
         .processMessage(lobbyId, "OPERATIVE_BLUE", "/BLUE/operative", verifiedChatDto);
   }
 
   @Test
   void testSendTeamOperativeMessage_wrongRoleCorrectTeam() {
-    when(lobbyService.getPlayerTeam(realUsername, lobbyId)).thenReturn(blueTeam);
-    when(lobbyService.getPlayerRole(realUsername, lobbyId)).thenReturn(Role.SPYMASTER);
+    when(lobbyService.getPlayerTeam(chatDto.senderUsername(), lobbyId)).thenReturn(blueTeam);
+    when(lobbyService.getPlayerRole(chatDto.senderUsername(), lobbyId)).thenReturn(Role.SPYMASTER);
 
     assertThrows(
         IllegalStateException.class,
-        () -> chatController.sendTeamOperativeMessage(lobbyId, blueTeam, chatDto, headerAccessor));
+        () -> chatController.sendTeamOperativeMessage(lobbyId, blueTeam, chatDto));
   }
 
   @Test
   void testSendTeamOperativeMessage_wrongTeamCorrectRole() {
-    when(lobbyService.getPlayerTeam(realUsername, lobbyId)).thenReturn(redTeam);
-    when(lobbyService.getPlayerRole(realUsername, lobbyId)).thenReturn(Role.OPERATIVE);
+    when(lobbyService.getPlayerTeam(chatDto.senderUsername(), lobbyId)).thenReturn(redTeam);
+    when(lobbyService.getPlayerRole(chatDto.senderUsername(), lobbyId)).thenReturn(Role.OPERATIVE);
 
     assertThrows(
         IllegalStateException.class,
-        () -> chatController.sendTeamOperativeMessage(lobbyId, blueTeam, chatDto, headerAccessor));
+        () -> chatController.sendTeamOperativeMessage(lobbyId, blueTeam, chatDto));
+  }
+
+  @Test
+  void testSendTeamOperativeMessage_wrongRoleWrongTeam() {
+    when(lobbyService.getPlayerTeam(chatDto.senderUsername(), lobbyId)).thenReturn(redTeam);
+    when(lobbyService.getPlayerRole(chatDto.senderUsername(), lobbyId)).thenReturn(Role.SPYMASTER);
+
+    assertThrows(
+        IllegalStateException.class,
+        () -> chatController.sendTeamOperativeMessage(lobbyId, blueTeam, chatDto));
   }
 }
