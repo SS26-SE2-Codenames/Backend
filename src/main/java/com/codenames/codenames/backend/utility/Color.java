@@ -6,6 +6,6 @@ package com.codenames.codenames.backend.utility;
 public enum Color {
   RED,
   BLUE,
-  WHITE,
-  BLACK
+  NEUTRAL,
+  ASSASSIN
 }

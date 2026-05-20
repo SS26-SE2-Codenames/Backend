@@ -10,6 +10,8 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.lobby.services.LobbyService;
+import com.codenames.codenames.backend.playingfield.GameService;
+import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +26,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 class GameControllerTest {
 
   private LobbyService lobbyService;
+  private GameService gameService;
   private SessionRegistry sessionRegistry;
   private GameController controller;
   private SimpMessagingTemplate messagingTemplate;
@@ -31,10 +34,11 @@ class GameControllerTest {
   @BeforeEach
   void setup() {
     lobbyService = mock(LobbyService.class);
+    gameService = mock(GameService.class);
     messagingTemplate = mock(SimpMessagingTemplate.class);
     sessionRegistry = new SessionRegistry();
 
-    controller = new GameController(lobbyService, messagingTemplate, sessionRegistry);
+    controller = new GameController(lobbyService, gameService, messagingTemplate, sessionRegistry);
   }
 
   @Test
@@ -53,7 +57,8 @@ class GameControllerTest {
 
     when(lobbyService.joinLobby("Max", "ABCDE")).thenReturn(true);
 
-    when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max")));
+    when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max", true)));
+    when(gameService.getCurrentGameState("ABCDE")).thenReturn(createGameStatePayload());
 
     controller.join(msg, accessor);
 
@@ -63,6 +68,7 @@ class GameControllerTest {
     assertEquals("ABCDE", sessionRegistry.getLobby("123"));
 
     verify(messagingTemplate).convertAndSend(eq("/topic/lobby/ABCDE"), any(Object.class));
+    verify(messagingTemplate).convertAndSend(eq("/topic/game/ABCDE"), any(Object.class));
   }
 
   @Test
@@ -79,11 +85,11 @@ class GameControllerTest {
     accessor.setSessionAttributes(attrs);
 
     when(lobbyService.joinLobby("Max", "ABCDE")).thenReturn(false);
+    when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of());
 
     controller.join(msg, accessor);
 
     verify(messagingTemplate).convertAndSend("/topic/errors/123", "Join failed");
-
     verifyNoMoreInteractions(messagingTemplate);
   }
 
@@ -116,7 +122,8 @@ class GameControllerTest {
     accessor.setSessionAttributes(attrs);
 
     when(lobbyService.joinLobby("Max", "ABCDE")).thenReturn(true);
-    when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max")));
+    when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max", true)));
+    when(gameService.getCurrentGameState("ABCDE")).thenReturn(createGameStatePayload());
 
     controller.join(msg, accessor);
 
@@ -125,5 +132,36 @@ class GameControllerTest {
 
     verify(lobbyService).joinLobby("Max", "ABCDE");
     verify(messagingTemplate).convertAndSend(eq("/topic/lobby/ABCDE"), any(Object.class));
+    verify(messagingTemplate).convertAndSend(eq("/topic/game/ABCDE"), any(Object.class));
+  }
+
+  @Test
+  void shouldTreatExistingPlayerAsReconnectWhenJoinReturnsFalse() {
+
+    JoinMessage msg = new JoinMessage();
+    msg.setName("Max");
+    msg.setCode("ABCDE");
+
+    SimpMessageHeaderAccessor accessor = SimpMessageHeaderAccessor.create();
+
+    java.util.Map<String, Object> attrs = new java.util.HashMap<>();
+    attrs.put("sessionId", "reconnect-1");
+    accessor.setSessionAttributes(attrs);
+
+    when(lobbyService.joinLobby("Max", "ABCDE")).thenReturn(false);
+    when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max", true)));
+    when(gameService.getCurrentGameState("ABCDE")).thenReturn(createGameStatePayload());
+
+    controller.join(msg, accessor);
+
+    assertEquals("Max", sessionRegistry.getUser("reconnect-1"));
+    assertEquals("ABCDE", sessionRegistry.getLobby("reconnect-1"));
+
+    verify(messagingTemplate).convertAndSend(eq("/topic/lobby/ABCDE"), any(Object.class));
+    verify(messagingTemplate).convertAndSend(eq("/topic/game/ABCDE"), any(Object.class));
+  }
+
+  private GameStateDataTransferObject createGameStatePayload() {
+    return new GameStateDataTransferObject(null, null, null, null, List.of());
   }
 }

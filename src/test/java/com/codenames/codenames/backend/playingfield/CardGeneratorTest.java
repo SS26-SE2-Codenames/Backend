@@ -30,8 +30,8 @@ class CardGeneratorTest {
     assertEquals(total, cards.size());
     assertEquals(red, cards.stream().filter(card -> card.getColor() == Color.RED).count());
     assertEquals(blue, cards.stream().filter(card -> card.getColor() == Color.BLUE).count());
-    assertEquals(white, cards.stream().filter(card -> card.getColor() == Color.WHITE).count());
-    assertEquals(black, cards.stream().filter(card -> card.getColor() == Color.BLACK).count());
+    assertEquals(white, cards.stream().filter(card -> card.getColor() == Color.NEUTRAL).count());
+    assertEquals(black, cards.stream().filter(card -> card.getColor() == Color.ASSASSIN).count());
   }
 
   @Test

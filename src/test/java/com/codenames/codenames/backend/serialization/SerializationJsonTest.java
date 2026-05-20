@@ -6,8 +6,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.codenames.codenames.backend.game.dto.ClueDto;
 import com.codenames.codenames.backend.playingfield.Card;
 import com.codenames.codenames.backend.utility.Color;
+import com.codenames.codenames.backend.utility.Role;
+import com.codenames.codenames.backend.utility.Team;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
@@ -21,22 +24,25 @@ class SerializationJsonTest {
   List<CardDataTransferObject> dummyList;
   GameStateDataTransferObject dummyGameState;
   ObjectMapper mapper = new ObjectMapper();
+  private static final Team redTeam = Team.RED;
+  private static final Role spymaster = Role.SPYMASTER;
 
   @BeforeEach
   void setUp() {
     card = new Card("TEST", Color.RED);
     serializer = new SerializationJson(mapper);
 
-    dummyList = List.of(new CardDataTransferObject("TEST", "HIDDEN", false));
-    dummyGameState = new GameStateDataTransferObject("RED", "RED", 0, 0, "Test", 1, dummyList);
+    dummyList = List.of(new CardDataTransferObject("TEST", null, false));
+    dummyGameState =
+        new GameStateDataTransferObject(
+            redTeam, redTeam, spymaster, new ClueDto("Test", 1), dummyList);
   }
 
   @Test
   void testSerialize_pass() {
     String expectedResult =
-        "{\"winner\":\"RED\",\"currentTurn\":\"RED\",\"currentRedFound\":0,\"currentBlueFound\":0"
-            + ",\"currentClue\":\"Test\",\"remainingGuesses\":1,\"cardList\":[{\"word\":\"TEST\","
-            + "\"color\":\"HIDDEN\",\"isGuessed\":false}]}";
+        """
+            {"winner":"RED","currentTurn":"RED","currentPhase":"SPYMASTER","currentClue":{"word":"Test","guessAmount":1},"cardList":[{"word":"TEST","color":null,"isGuessed":false}]}""";
     String result = serializer.serialize(dummyGameState);
     assertEquals(expectedResult, result);
   }
