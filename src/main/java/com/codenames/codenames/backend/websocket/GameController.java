@@ -2,7 +2,6 @@ package com.codenames.codenames.backend.websocket;
 
 import com.codenames.codenames.backend.lobby.services.LobbyService;
 import com.codenames.codenames.backend.playingfield.GameService;
-import com.codenames.codenames.backend.recovery.SystemStatePersistenceService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -24,7 +23,6 @@ public class GameController {
   private final GameService gameService;
   private final SimpMessagingTemplate messagingTemplate;
   private final SessionRegistry sessionRegistry;
-  private final SystemStatePersistenceService persistenceService;
 
   /**
    * Creates a new {@code GameController}.
@@ -33,19 +31,16 @@ public class GameController {
    * @param gameService the service handling game state retrieval
    * @param messagingTemplate the messaging template used for broadcasting updates
    * @param sessionRegistry the registry managing WebSocket sessions
-   * @param persistenceService service used to persist current backend state
    */
   public GameController(
       LobbyService lobbyService,
       GameService gameService,
       SimpMessagingTemplate messagingTemplate,
-      SessionRegistry sessionRegistry,
-      SystemStatePersistenceService persistenceService) {
+      SessionRegistry sessionRegistry) {
     this.lobbyService = lobbyService;
     this.gameService = gameService;
     this.messagingTemplate = messagingTemplate;
     this.sessionRegistry = sessionRegistry;
-    this.persistenceService = persistenceService;
   }
 
   /**
