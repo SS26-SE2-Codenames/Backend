@@ -52,7 +52,7 @@ public class ChatController {
   }
 
   /**
-   * Verifies the sender's team and delegates message processing to @link ChatService.
+   * Verifies the sender's team and delegates message processing to {@link ChatService}.
    *
    * @param lobbyId the ID of the lobby the client is in
    * @param team the team the client is in (RED, BLUE)
@@ -81,7 +81,7 @@ public class ChatController {
   }
 
   /**
-   * Verifies the sender's team and role and delegates message processing to @link ChatService.
+   * Verifies the sender's team and role and delegates message processing to {@link ChatService}.
    *
    * @param lobbyId the ID of the lobby the client is in
    * @param team the team the client is in (RED, BLUE)
