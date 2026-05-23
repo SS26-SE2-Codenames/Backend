@@ -21,7 +21,7 @@ services:
       - "53213:8080"
     volumes:
       - ./data:/app/data
-    environment:
+    environment:  # Inject datasource url into application.yml when containerized
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/codenames
       SPRING_DATASOURCE_USERNAME: codenames_user
       SPRING_DATASOURCE_PASSWORD: codenames_pass
