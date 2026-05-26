@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.chat;
+package com.codenames.codenames.backend.chat.api;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
@@ -6,7 +6,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.codenames.codenames.backend.chat.api.dto.ChatDto;
 import com.codenames.codenames.backend.lobby.application.LobbyService;
+import com.codenames.codenames.backend.chat.application.ChatService;
 import com.codenames.codenames.backend.shared.websocket.SessionRegistry;
 import com.codenames.codenames.backend.chat.api.dto.ChatMessageType;
 import com.codenames.codenames.backend.lobby.domain.Role;

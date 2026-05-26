@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.chat;
+package com.codenames.codenames.backend.chat.api.dto;
 
 import com.codenames.codenames.backend.chat.api.dto.ChatMessageType;
 

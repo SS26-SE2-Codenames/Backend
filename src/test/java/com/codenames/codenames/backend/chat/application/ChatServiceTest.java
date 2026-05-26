@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.chat;
+package com.codenames.codenames.backend.chat.application;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -8,6 +8,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import com.codenames.codenames.backend.chat.api.dto.ChatDto;
 import com.codenames.codenames.backend.chat.api.dto.ChatMessageType;
 import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.stream.Stream;

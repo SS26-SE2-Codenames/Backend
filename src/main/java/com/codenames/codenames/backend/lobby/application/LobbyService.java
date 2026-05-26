@@ -1,6 +1,6 @@
 package com.codenames.codenames.backend.lobby.application;
 
-import com.codenames.codenames.backend.chat.ChatService;
+import com.codenames.codenames.backend.chat.application.ChatService;
 import com.codenames.codenames.backend.game.application.GameService;
 import com.codenames.codenames.backend.lobby.domain.Lobby;
 import com.codenames.codenames.backend.lobby.domain.Player;

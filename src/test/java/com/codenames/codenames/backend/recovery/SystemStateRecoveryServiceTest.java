@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.codenames.codenames.backend.chat.ChatService;
+import com.codenames.codenames.backend.chat.application.ChatService;
 import com.codenames.codenames.backend.clue.ClueValidationService;
 import com.codenames.codenames.backend.game.application.CardGenerator;
 import com.codenames.codenames.backend.game.application.GameService;

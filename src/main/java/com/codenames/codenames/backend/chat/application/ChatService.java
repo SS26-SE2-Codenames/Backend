@@ -1,5 +1,7 @@
-package com.codenames.codenames.backend.chat;
+package com.codenames.codenames.backend.chat.application;
 
+import com.codenames.codenames.backend.chat.api.dto.ChatDto;
+import com.codenames.codenames.backend.chat.domain.ChatHistory;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.extern.slf4j.Slf4j;

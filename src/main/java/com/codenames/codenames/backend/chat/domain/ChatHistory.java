@@ -1,5 +1,6 @@
-package com.codenames.codenames.backend.chat;
+package com.codenames.codenames.backend.chat.domain;
 
+import com.codenames.codenames.backend.chat.api.dto.ChatDto;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
