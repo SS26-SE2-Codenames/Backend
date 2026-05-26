@@ -1,8 +1,8 @@
 package com.codenames.codenames.backend.game.dto;
 
 import com.codenames.codenames.backend.game.dto.ClueDto;
-import com.codenames.codenames.backend.utility.Role;
-import com.codenames.codenames.backend.utility.Team;
+import com.codenames.codenames.backend.lobby.domain.Role;
+import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.List;
 
 /**

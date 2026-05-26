@@ -3,7 +3,7 @@ package com.codenames.codenames.backend.chat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.codenames.codenames.backend.utility.ChatMessageType;
+import com.codenames.codenames.backend.chat.api.dto.ChatMessageType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

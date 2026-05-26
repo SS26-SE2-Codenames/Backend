@@ -13,7 +13,7 @@ import com.codenames.codenames.backend.game.dto.RevealCardMessage;
 import com.codenames.codenames.backend.game.dto.StartGameMessage;
 import com.codenames.codenames.backend.recovery.SystemStatePersistenceService;
 import com.codenames.codenames.backend.game.dto.GameStateDataTransferObject;
-import com.codenames.codenames.backend.utility.Team;
+import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

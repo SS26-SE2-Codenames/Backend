@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.utility;
+package com.codenames.codenames.backend.chat.api.dto;
 
 /**
  * Enum representing the type of chat message.

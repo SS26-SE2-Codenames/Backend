@@ -1,7 +1,7 @@
 package com.codenames.codenames.backend.lobby.dto;
 
-import com.codenames.codenames.backend.utility.Role;
-import com.codenames.codenames.backend.utility.Team;
+import com.codenames.codenames.backend.lobby.domain.Role;
+import com.codenames.codenames.backend.lobby.domain.Team;
 
 /**
  * A data transfer object for communicating with the frontend, holds user-specific information.

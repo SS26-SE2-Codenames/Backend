@@ -1,6 +1,6 @@
 package com.codenames.codenames.backend.game.dto;
 
-import com.codenames.codenames.backend.utility.Team;
+import com.codenames.codenames.backend.lobby.domain.Team;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -3,7 +3,7 @@ package com.codenames.codenames.backend.game.domain;
 import com.codenames.codenames.backend.clue.ClueValidationService;
 import com.codenames.codenames.backend.game.application.CardGenerator;
 import com.codenames.codenames.backend.game.dto.GameStateDataTransferObject;
-import com.codenames.codenames.backend.utility.Team;
+import com.codenames.codenames.backend.lobby.domain.Team;
 import org.springframework.stereotype.Component;
 
 /** Generates GameManager instances to be used by GameService. */

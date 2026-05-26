@@ -5,9 +5,9 @@ import com.codenames.codenames.backend.clue.ClueValidationService;
 import com.codenames.codenames.backend.game.application.CardGenerator;
 import com.codenames.codenames.backend.game.dto.CardDataTransferObject;
 import com.codenames.codenames.backend.game.dto.GameStateDataTransferObject;
-import com.codenames.codenames.backend.utility.Color;
-import com.codenames.codenames.backend.utility.Role;
-import com.codenames.codenames.backend.utility.Team;
+import com.codenames.codenames.backend.game.domain.Color;
+import com.codenames.codenames.backend.lobby.domain.Role;
+import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.List;
 import lombok.Getter;
 

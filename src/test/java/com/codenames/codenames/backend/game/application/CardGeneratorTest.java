@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.codenames.codenames.backend.game.domain.Card;
-import com.codenames.codenames.backend.utility.Color;
+import com.codenames.codenames.backend.game.domain.Color;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

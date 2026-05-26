@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.codenames.codenames.backend.utility.Color;
+import com.codenames.codenames.backend.game.domain.Color;
 import org.junit.jupiter.api.Test;
 
 /** Unit tests for Card. */

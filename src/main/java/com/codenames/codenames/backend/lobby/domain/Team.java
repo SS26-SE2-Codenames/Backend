@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.utility;
+package com.codenames.codenames.backend.lobby.domain;
 
 /** Represents the teams. */
 public enum Team {

@@ -1,7 +1,7 @@
 package com.codenames.codenames.backend.game.domain;
 
 import com.codenames.codenames.backend.game.application.CardGenerator;
-import com.codenames.codenames.backend.utility.Color;
+import com.codenames.codenames.backend.game.domain.Color;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;

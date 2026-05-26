@@ -8,8 +8,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.codenames.codenames.backend.utility.ChatMessageType;
-import com.codenames.codenames.backend.utility.Team;
+import com.codenames.codenames.backend.chat.api.dto.ChatMessageType;
+import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

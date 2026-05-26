@@ -5,7 +5,7 @@ import com.codenames.codenames.backend.game.domain.GameManager;
 import com.codenames.codenames.backend.game.domain.GameManagerFactory;
 import com.codenames.codenames.backend.game.mapping.DataTransferObjectService;
 import com.codenames.codenames.backend.game.dto.GameStateDataTransferObject;
-import com.codenames.codenames.backend.utility.Team;
+import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Service;

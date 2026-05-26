@@ -1,7 +1,7 @@
 package com.codenames.codenames.backend.game.application;
 
 import com.codenames.codenames.backend.game.domain.Card;
-import com.codenames.codenames.backend.utility.Color;
+import com.codenames.codenames.backend.game.domain.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;

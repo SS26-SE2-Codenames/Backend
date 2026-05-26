@@ -1,6 +1,6 @@
 package com.codenames.codenames.backend.game.dto;
 
-import com.codenames.codenames.backend.utility.Color;
+import com.codenames.codenames.backend.game.domain.Color;
 
 /**
  * Represents the state of a single card, for JSON serialization.

@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.utility;
+package com.codenames.codenames.backend.game.domain;
 
 /**
  * Enum representing the color of a card on the board.
