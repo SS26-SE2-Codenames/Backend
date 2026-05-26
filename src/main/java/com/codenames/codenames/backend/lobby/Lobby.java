@@ -2,7 +2,7 @@ package com.codenames.codenames.backend.lobby;
 
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
-import com.codenames.codenames.backend.websocket.Player;
+import com.codenames.codenames.backend.lobby.domain.Player;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.List;

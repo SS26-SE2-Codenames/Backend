@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.websocket;
+package com.codenames.codenames.backend.lobby.api.dto;
 
 import lombok.Getter;
 import lombok.Setter;

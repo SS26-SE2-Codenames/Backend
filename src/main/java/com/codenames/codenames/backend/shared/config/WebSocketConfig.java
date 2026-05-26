@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.websocket;
+package com.codenames.codenames.backend.shared.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

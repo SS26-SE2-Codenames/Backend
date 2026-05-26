@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.websocket;
+package com.codenames.codenames.backend.lobby.domain;
 
 /**
  * Represents a player connected to the system.

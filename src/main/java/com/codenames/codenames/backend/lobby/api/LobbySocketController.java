@@ -1,7 +1,10 @@
-package com.codenames.codenames.backend.websocket;
+package com.codenames.codenames.backend.lobby.api;
 
+import com.codenames.codenames.backend.lobby.api.dto.JoinMessage;
+import com.codenames.codenames.backend.lobby.domain.Player;
 import com.codenames.codenames.backend.lobby.services.LobbyService;
 import com.codenames.codenames.backend.playingfield.GameService;
+import com.codenames.codenames.backend.shared.websocket.SessionRegistry;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -17,7 +20,7 @@ import org.springframework.stereotype.Controller;
  */
 @Slf4j
 @Controller
-public class GameController {
+public class LobbySocketController {
 
   private final LobbyService lobbyService;
   private final GameService gameService;
@@ -25,14 +28,14 @@ public class GameController {
   private final SessionRegistry sessionRegistry;
 
   /**
-   * Creates a new {@code GameController}.
+   * Creates a new {@code LobbySocketController}.
    *
    * @param lobbyService the service handling lobby operations
    * @param gameService the service handling game state retrieval
    * @param messagingTemplate the messaging template used for broadcasting updates
    * @param sessionRegistry the registry managing WebSocket sessions
    */
-  public GameController(
+  public LobbySocketController(
       LobbyService lobbyService,
       GameService gameService,
       SimpMessagingTemplate messagingTemplate,

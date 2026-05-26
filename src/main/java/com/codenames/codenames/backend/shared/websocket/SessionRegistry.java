@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.websocket;
+package com.codenames.codenames.backend.shared.websocket;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

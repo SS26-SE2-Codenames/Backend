@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.websocket;
+package com.codenames.codenames.backend.shared.websocket;
 
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;

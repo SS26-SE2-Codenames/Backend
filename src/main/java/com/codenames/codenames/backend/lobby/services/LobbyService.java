@@ -6,7 +6,7 @@ import com.codenames.codenames.backend.lobby.dto.PlayerDto;
 import com.codenames.codenames.backend.playingfield.GameService;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
-import com.codenames.codenames.backend.websocket.Player;
+import com.codenames.codenames.backend.lobby.domain.Player;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;

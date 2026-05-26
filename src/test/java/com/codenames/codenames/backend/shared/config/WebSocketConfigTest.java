@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.websocket;
+package com.codenames.codenames.backend.shared.config;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.websocket;
+package com.codenames.codenames.backend.lobby.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -9,26 +9,30 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import com.codenames.codenames.backend.lobby.api.dto.JoinMessage;
+import com.codenames.codenames.backend.lobby.domain.Player;
 import com.codenames.codenames.backend.lobby.services.LobbyService;
 import com.codenames.codenames.backend.playingfield.GameService;
 import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import java.util.List;
+
+import com.codenames.codenames.backend.shared.websocket.SessionRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 /**
- * Unit tests for {@link GameController}.
+ * Unit tests for {@link LobbySocketController}.
  *
  * <p>Uses mocks to verify interactions with dependencies.
  */
-class GameControllerTest {
+class LobbySocketControllerTest {
 
   private LobbyService lobbyService;
   private GameService gameService;
   private SessionRegistry sessionRegistry;
-  private GameController controller;
+  private LobbySocketController controller;
   private SimpMessagingTemplate messagingTemplate;
 
   @BeforeEach
@@ -38,7 +42,8 @@ class GameControllerTest {
     messagingTemplate = mock(SimpMessagingTemplate.class);
     sessionRegistry = new SessionRegistry();
 
-    controller = new GameController(lobbyService, gameService, messagingTemplate, sessionRegistry);
+    controller =
+        new LobbySocketController(lobbyService, gameService, messagingTemplate, sessionRegistry);
   }
 
   @Test

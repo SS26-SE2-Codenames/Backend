@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.websocket;
+package com.codenames.codenames.backend.lobby.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
