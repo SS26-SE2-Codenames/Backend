@@ -1,6 +1,6 @@
 package com.codenames.codenames.backend.chat;
 
-import com.codenames.codenames.backend.lobby.services.LobbyService;
+import com.codenames.codenames.backend.lobby.application.LobbyService;
 import com.codenames.codenames.backend.chat.api.dto.ChatMessageType;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;

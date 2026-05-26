@@ -1,8 +1,8 @@
-package com.codenames.codenames.backend.lobby.controller;
+package com.codenames.codenames.backend.lobby.api;
 
-import com.codenames.codenames.backend.lobby.dto.LobbyResponse;
-import com.codenames.codenames.backend.lobby.dto.PlayerDto;
-import com.codenames.codenames.backend.lobby.services.LobbyService;
+import com.codenames.codenames.backend.lobby.api.dto.LobbyResponse;
+import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
+import com.codenames.codenames.backend.lobby.application.LobbyService;
 import com.codenames.codenames.backend.recovery.SystemStatePersistenceService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;

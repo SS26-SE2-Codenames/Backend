@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.codenames.codenames.backend.game.dto.ClueDto;
-import com.codenames.codenames.backend.lobby.dto.PlayerDto;
+import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.recovery.snapshot.SystemSnapshot;
 import com.codenames.codenames.backend.game.dto.GameStateDataTransferObject;
 import com.codenames.codenames.backend.lobby.domain.Role;

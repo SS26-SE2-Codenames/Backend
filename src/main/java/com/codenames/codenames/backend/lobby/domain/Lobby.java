@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.lobby;
+package com.codenames.codenames.backend.lobby.domain;
 
 import com.codenames.codenames.backend.lobby.domain.Player;
 import com.codenames.codenames.backend.lobby.domain.Role;

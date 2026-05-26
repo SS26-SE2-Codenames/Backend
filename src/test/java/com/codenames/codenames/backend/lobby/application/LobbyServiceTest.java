@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.lobby.services;
+package com.codenames.codenames.backend.lobby.application;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -14,9 +14,9 @@ import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.chat.ChatService;
 import com.codenames.codenames.backend.game.application.GameService;
-import com.codenames.codenames.backend.lobby.Lobby;
+import com.codenames.codenames.backend.lobby.domain.Lobby;
 import com.codenames.codenames.backend.lobby.domain.Player;
-import com.codenames.codenames.backend.lobby.dto.PlayerDto;
+import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.List;

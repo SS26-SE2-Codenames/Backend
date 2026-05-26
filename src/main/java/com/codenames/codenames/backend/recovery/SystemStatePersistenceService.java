@@ -1,7 +1,7 @@
 package com.codenames.codenames.backend.recovery;
 
 import com.codenames.codenames.backend.game.application.GameService;
-import com.codenames.codenames.backend.lobby.services.LobbyService;
+import com.codenames.codenames.backend.lobby.application.LobbyService;
 import com.codenames.codenames.backend.recovery.snapshot.SystemSnapshot;
 import org.springframework.stereotype.Service;
 

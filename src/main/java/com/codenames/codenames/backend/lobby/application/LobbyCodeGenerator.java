@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.lobby.services;
+package com.codenames.codenames.backend.lobby.application;
 
 import java.security.SecureRandom;
 import org.springframework.stereotype.Service;

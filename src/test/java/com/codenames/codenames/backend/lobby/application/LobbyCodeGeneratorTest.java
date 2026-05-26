@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.lobby.services;
+package com.codenames.codenames.backend.lobby.application;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

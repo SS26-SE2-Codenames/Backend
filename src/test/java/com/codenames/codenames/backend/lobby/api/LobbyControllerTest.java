@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.lobby.controller;
+package com.codenames.codenames.backend.lobby.api;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -8,8 +8,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.codenames.codenames.backend.lobby.dto.PlayerDto;
-import com.codenames.codenames.backend.lobby.services.LobbyService;
+import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
+import com.codenames.codenames.backend.lobby.application.LobbyService;
 import com.codenames.codenames.backend.recovery.SystemStatePersistenceService;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;

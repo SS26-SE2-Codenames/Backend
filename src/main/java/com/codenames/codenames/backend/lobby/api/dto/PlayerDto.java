@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.lobby.dto;
+package com.codenames.codenames.backend.lobby.api.dto;
 
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
