@@ -6,8 +6,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.clue.Clue;
+import com.codenames.codenames.backend.game.dto.GameStateDataTransferObject;
 import com.codenames.codenames.backend.game.domain.Card;
 import com.codenames.codenames.backend.game.domain.GameManager;
+import com.codenames.codenames.backend.game.mapping.DataTransferObjectService;
 import com.codenames.codenames.backend.utility.Color;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;

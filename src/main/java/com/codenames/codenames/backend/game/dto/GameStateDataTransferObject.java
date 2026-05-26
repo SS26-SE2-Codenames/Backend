@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.serialization;
+package com.codenames.codenames.backend.game.dto;
 
 import com.codenames.codenames.backend.game.dto.ClueDto;
 import com.codenames.codenames.backend.utility.Role;

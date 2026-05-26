@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.codenames.codenames.backend.game.dto.ClueDto;
 import com.codenames.codenames.backend.lobby.dto.PlayerDto;
 import com.codenames.codenames.backend.recovery.snapshot.SystemSnapshot;
-import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
+import com.codenames.codenames.backend.game.dto.GameStateDataTransferObject;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import com.fasterxml.jackson.databind.ObjectMapper;

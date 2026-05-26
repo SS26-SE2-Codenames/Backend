@@ -10,7 +10,7 @@ import com.codenames.codenames.backend.game.application.GameService;
 import com.codenames.codenames.backend.lobby.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.services.LobbyService;
 import com.codenames.codenames.backend.recovery.snapshot.SystemSnapshot;
-import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
+import com.codenames.codenames.backend.game.dto.GameStateDataTransferObject;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
