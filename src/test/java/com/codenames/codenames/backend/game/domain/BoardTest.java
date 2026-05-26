@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.playingfield;
+package com.codenames.codenames.backend.game.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -10,6 +10,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.codenames.codenames.backend.game.application.CardGenerator;
 import com.codenames.codenames.backend.utility.Color;
 import java.util.ArrayList;
 import java.util.Arrays;

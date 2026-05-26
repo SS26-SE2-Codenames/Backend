@@ -1,11 +1,11 @@
 package com.codenames.codenames.backend.recovery;
 
+import com.codenames.codenames.backend.game.application.GameService;
+import com.codenames.codenames.backend.game.domain.GameManager;
+import com.codenames.codenames.backend.game.domain.GameManagerFactory;
 import com.codenames.codenames.backend.lobby.Lobby;
 import com.codenames.codenames.backend.lobby.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.services.LobbyService;
-import com.codenames.codenames.backend.playingfield.GameManager;
-import com.codenames.codenames.backend.playingfield.GameManagerFactory;
-import com.codenames.codenames.backend.playingfield.GameService;
 import com.codenames.codenames.backend.recovery.snapshot.SystemSnapshot;
 import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import java.util.Comparator;

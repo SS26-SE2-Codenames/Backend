@@ -1,8 +1,8 @@
 package com.codenames.codenames.backend.serialization;
 
 import com.codenames.codenames.backend.game.dto.ClueDto;
-import com.codenames.codenames.backend.playingfield.Card;
-import com.codenames.codenames.backend.playingfield.GameManager;
+import com.codenames.codenames.backend.game.domain.Card;
+import com.codenames.codenames.backend.game.domain.GameManager;
 import com.codenames.codenames.backend.utility.Color;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;

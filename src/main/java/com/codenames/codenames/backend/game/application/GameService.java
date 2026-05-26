@@ -1,6 +1,8 @@
-package com.codenames.codenames.backend.playingfield;
+package com.codenames.codenames.backend.game.application;
 
 import com.codenames.codenames.backend.clue.Clue;
+import com.codenames.codenames.backend.game.domain.GameManager;
+import com.codenames.codenames.backend.game.domain.GameManagerFactory;
 import com.codenames.codenames.backend.serialization.DataTransferObjectService;
 import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import com.codenames.codenames.backend.utility.Team;

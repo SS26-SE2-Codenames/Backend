@@ -1,11 +1,11 @@
 package com.codenames.codenames.backend.game.controller;
 
 import com.codenames.codenames.backend.clue.Clue;
+import com.codenames.codenames.backend.game.application.GameService;
 import com.codenames.codenames.backend.game.dto.ClueMessage;
 import com.codenames.codenames.backend.game.dto.PassTurnMessage;
 import com.codenames.codenames.backend.game.dto.RevealCardMessage;
 import com.codenames.codenames.backend.game.dto.StartGameMessage;
-import com.codenames.codenames.backend.playingfield.GameService;
 import com.codenames.codenames.backend.recovery.SystemStatePersistenceService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

@@ -9,10 +9,10 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import com.codenames.codenames.backend.game.application.GameService;
 import com.codenames.codenames.backend.lobby.api.dto.JoinMessage;
 import com.codenames.codenames.backend.lobby.domain.Player;
 import com.codenames.codenames.backend.lobby.services.LobbyService;
-import com.codenames.codenames.backend.playingfield.GameService;
 import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import com.codenames.codenames.backend.shared.websocket.SessionRegistry;
 import java.util.List;

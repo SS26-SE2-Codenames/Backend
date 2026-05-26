@@ -1,8 +1,9 @@
-package com.codenames.codenames.backend.playingfield;
+package com.codenames.codenames.backend.game.application;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.codenames.codenames.backend.game.domain.Card;
 import com.codenames.codenames.backend.utility.Color;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

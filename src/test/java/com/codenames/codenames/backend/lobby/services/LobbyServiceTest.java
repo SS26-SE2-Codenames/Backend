@@ -13,10 +13,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.chat.ChatService;
+import com.codenames.codenames.backend.game.application.GameService;
 import com.codenames.codenames.backend.lobby.Lobby;
 import com.codenames.codenames.backend.lobby.domain.Player;
 import com.codenames.codenames.backend.lobby.dto.PlayerDto;
-import com.codenames.codenames.backend.playingfield.GameService;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
 import java.util.List;

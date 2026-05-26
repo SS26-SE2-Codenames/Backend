@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.playingfield;
+package com.codenames.codenames.backend.game.application;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -10,6 +10,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.clue.Clue;
+import com.codenames.codenames.backend.game.domain.GameManager;
+import com.codenames.codenames.backend.game.domain.GameManagerFactory;
 import com.codenames.codenames.backend.game.dto.ClueDto;
 import com.codenames.codenames.backend.serialization.CardDataTransferObject;
 import com.codenames.codenames.backend.serialization.DataTransferObjectService;

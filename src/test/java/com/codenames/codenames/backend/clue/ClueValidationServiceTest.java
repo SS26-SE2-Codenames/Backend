@@ -7,9 +7,9 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.codenames.codenames.backend.playingfield.Board;
-import com.codenames.codenames.backend.playingfield.Card;
-import com.codenames.codenames.backend.playingfield.CardGenerator;
+import com.codenames.codenames.backend.game.application.CardGenerator;
+import com.codenames.codenames.backend.game.domain.Board;
+import com.codenames.codenames.backend.game.domain.Card;
 import com.codenames.codenames.backend.utility.Color;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,7 +1,7 @@
 package com.codenames.codenames.backend.clue;
 
-import com.codenames.codenames.backend.playingfield.Board;
-import com.codenames.codenames.backend.playingfield.Card;
+import com.codenames.codenames.backend.game.domain.Board;
+import com.codenames.codenames.backend.game.domain.Card;
 import java.util.List;
 import org.springframework.stereotype.Service;
 

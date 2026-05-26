@@ -1,5 +1,6 @@
-package com.codenames.codenames.backend.playingfield;
+package com.codenames.codenames.backend.game.application;
 
+import com.codenames.codenames.backend.game.domain.Card;
 import com.codenames.codenames.backend.utility.Color;
 import java.io.IOException;
 import java.util.ArrayList;

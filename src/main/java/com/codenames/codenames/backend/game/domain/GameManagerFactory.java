@@ -1,6 +1,7 @@
-package com.codenames.codenames.backend.playingfield;
+package com.codenames.codenames.backend.game.domain;
 
 import com.codenames.codenames.backend.clue.ClueValidationService;
+import com.codenames.codenames.backend.game.application.CardGenerator;
 import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import com.codenames.codenames.backend.utility.Team;
 import org.springframework.stereotype.Component;

@@ -6,11 +6,11 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.codenames.codenames.backend.game.application.GameService;
 import com.codenames.codenames.backend.game.dto.ClueMessage;
 import com.codenames.codenames.backend.game.dto.PassTurnMessage;
 import com.codenames.codenames.backend.game.dto.RevealCardMessage;
 import com.codenames.codenames.backend.game.dto.StartGameMessage;
-import com.codenames.codenames.backend.playingfield.GameService;
 import com.codenames.codenames.backend.recovery.SystemStatePersistenceService;
 import com.codenames.codenames.backend.serialization.GameStateDataTransferObject;
 import com.codenames.codenames.backend.utility.Team;
