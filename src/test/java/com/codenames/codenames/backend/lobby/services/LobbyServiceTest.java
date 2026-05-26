@@ -14,11 +14,11 @@ import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.chat.ChatService;
 import com.codenames.codenames.backend.lobby.Lobby;
+import com.codenames.codenames.backend.lobby.domain.Player;
 import com.codenames.codenames.backend.lobby.dto.PlayerDto;
 import com.codenames.codenames.backend.playingfield.GameService;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
-import com.codenames.codenames.backend.lobby.domain.Player;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;

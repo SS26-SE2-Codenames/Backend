@@ -7,10 +7,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.lobby.services.LobbyService;
+import com.codenames.codenames.backend.shared.websocket.SessionRegistry;
 import com.codenames.codenames.backend.utility.ChatMessageType;
 import com.codenames.codenames.backend.utility.Role;
 import com.codenames.codenames.backend.utility.Team;
-import com.codenames.codenames.backend.shared.websocket.SessionRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
