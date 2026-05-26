@@ -11,7 +11,7 @@ import com.codenames.codenames.backend.game.dto.ClueMessage;
 import com.codenames.codenames.backend.game.dto.PassTurnMessage;
 import com.codenames.codenames.backend.game.dto.RevealCardMessage;
 import com.codenames.codenames.backend.game.dto.StartGameMessage;
-import com.codenames.codenames.backend.recovery.SystemStatePersistenceService;
+import com.codenames.codenames.backend.recovery.application.SystemStatePersistenceService;
 import com.codenames.codenames.backend.game.dto.GameStateDataTransferObject;
 import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.List;

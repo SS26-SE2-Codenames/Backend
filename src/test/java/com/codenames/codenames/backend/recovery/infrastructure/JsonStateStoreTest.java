@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.recovery;
+package com.codenames.codenames.backend.recovery.infrastructure;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.codenames.codenames.backend.game.dto.ClueDto;
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
-import com.codenames.codenames.backend.recovery.snapshot.SystemSnapshot;
+import com.codenames.codenames.backend.recovery.domain.snapshot.SystemSnapshot;
 import com.codenames.codenames.backend.game.dto.GameStateDataTransferObject;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;

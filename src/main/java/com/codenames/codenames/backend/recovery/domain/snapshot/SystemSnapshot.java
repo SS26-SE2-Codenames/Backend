@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.recovery.snapshot;
+package com.codenames.codenames.backend.recovery.domain.snapshot;
 
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.game.dto.GameStateDataTransferObject;

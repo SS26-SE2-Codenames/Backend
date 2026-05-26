@@ -1,6 +1,6 @@
-package com.codenames.codenames.backend.recovery;
+package com.codenames.codenames.backend.recovery.infrastructure;
 
-import com.codenames.codenames.backend.recovery.snapshot.SystemSnapshot;
+import com.codenames.codenames.backend.recovery.domain.snapshot.SystemSnapshot;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.nio.file.AtomicMoveNotSupportedException;

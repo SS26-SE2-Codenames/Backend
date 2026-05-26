@@ -3,7 +3,7 @@ package com.codenames.codenames.backend.lobby.api;
 import com.codenames.codenames.backend.lobby.api.dto.LobbyResponse;
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.application.LobbyService;
-import com.codenames.codenames.backend.recovery.SystemStatePersistenceService;
+import com.codenames.codenames.backend.recovery.application.SystemStatePersistenceService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
