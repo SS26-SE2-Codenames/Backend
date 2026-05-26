@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.game.controller;
+package com.codenames.codenames.backend.game.api;
 
 import com.codenames.codenames.backend.clue.Clue;
 import com.codenames.codenames.backend.game.application.GameService;

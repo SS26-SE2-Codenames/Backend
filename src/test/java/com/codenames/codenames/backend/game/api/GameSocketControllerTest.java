@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.game.controller;
+package com.codenames.codenames.backend.game.api;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
