@@ -10,9 +10,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.application.LobbyService;
-import com.codenames.codenames.backend.recovery.application.SystemStatePersistenceService;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
+import com.codenames.codenames.backend.recovery.application.SystemStatePersistenceService;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
