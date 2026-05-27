@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.game.dto;
+package com.codenames.codenames.backend.game.api.dto;
 
 /**
  * Data transfer object for a clue, containing the clue word and the allowed number of guesses.

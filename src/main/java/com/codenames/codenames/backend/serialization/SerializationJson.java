@@ -1,6 +1,6 @@
 package com.codenames.codenames.backend.serialization;
 
-import com.codenames.codenames.backend.game.dto.GameStateDataTransferObject;
+import com.codenames.codenames.backend.game.api.dto.GameStateDataTransferObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;

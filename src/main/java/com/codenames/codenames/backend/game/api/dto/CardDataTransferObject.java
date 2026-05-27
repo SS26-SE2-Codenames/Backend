@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.game.dto;
+package com.codenames.codenames.backend.game.api.dto;
 
 import com.codenames.codenames.backend.game.domain.Color;
 

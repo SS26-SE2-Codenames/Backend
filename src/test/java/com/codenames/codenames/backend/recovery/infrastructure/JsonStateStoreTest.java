@@ -6,10 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.codenames.codenames.backend.game.dto.ClueDto;
+import com.codenames.codenames.backend.game.api.dto.ClueDto;
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.recovery.domain.snapshot.SystemSnapshot;
-import com.codenames.codenames.backend.game.dto.GameStateDataTransferObject;
+import com.codenames.codenames.backend.game.api.dto.GameStateDataTransferObject;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
 import com.fasterxml.jackson.databind.ObjectMapper;

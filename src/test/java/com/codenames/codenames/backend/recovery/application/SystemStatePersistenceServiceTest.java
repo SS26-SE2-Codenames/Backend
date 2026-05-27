@@ -11,7 +11,7 @@ import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.application.LobbyService;
 import com.codenames.codenames.backend.recovery.domain.snapshot.SystemSnapshot;
 import com.codenames.codenames.backend.recovery.infrastructure.JsonStateStore;
-import com.codenames.codenames.backend.game.dto.GameStateDataTransferObject;
+import com.codenames.codenames.backend.game.api.dto.GameStateDataTransferObject;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;

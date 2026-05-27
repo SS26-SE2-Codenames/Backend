@@ -13,7 +13,7 @@ import com.codenames.codenames.backend.game.application.GameService;
 import com.codenames.codenames.backend.lobby.api.dto.JoinMessage;
 import com.codenames.codenames.backend.lobby.domain.Player;
 import com.codenames.codenames.backend.lobby.application.LobbyService;
-import com.codenames.codenames.backend.game.dto.GameStateDataTransferObject;
+import com.codenames.codenames.backend.game.api.dto.GameStateDataTransferObject;
 import com.codenames.codenames.backend.shared.websocket.SessionRegistry;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

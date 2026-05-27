@@ -6,9 +6,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.codenames.codenames.backend.game.dto.CardDataTransferObject;
-import com.codenames.codenames.backend.game.dto.ClueDto;
-import com.codenames.codenames.backend.game.dto.GameStateDataTransferObject;
+import com.codenames.codenames.backend.game.api.dto.CardDataTransferObject;
+import com.codenames.codenames.backend.game.api.dto.ClueDto;
+import com.codenames.codenames.backend.game.api.dto.GameStateDataTransferObject;
 import com.codenames.codenames.backend.game.domain.Card;
 import com.codenames.codenames.backend.game.domain.Color;
 import com.codenames.codenames.backend.lobby.domain.Role;

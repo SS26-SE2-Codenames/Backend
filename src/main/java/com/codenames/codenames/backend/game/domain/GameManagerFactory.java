@@ -2,7 +2,7 @@ package com.codenames.codenames.backend.game.domain;
 
 import com.codenames.codenames.backend.game.application.ClueValidationService;
 import com.codenames.codenames.backend.game.application.CardGenerator;
-import com.codenames.codenames.backend.game.dto.GameStateDataTransferObject;
+import com.codenames.codenames.backend.game.api.dto.GameStateDataTransferObject;
 import com.codenames.codenames.backend.lobby.domain.Team;
 import org.springframework.stereotype.Component;
 

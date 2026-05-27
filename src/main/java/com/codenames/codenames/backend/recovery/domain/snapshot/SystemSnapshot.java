@@ -1,7 +1,7 @@
 package com.codenames.codenames.backend.recovery.domain.snapshot;
 
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
-import com.codenames.codenames.backend.game.dto.GameStateDataTransferObject;
+import com.codenames.codenames.backend.game.api.dto.GameStateDataTransferObject;
 import java.util.List;
 import java.util.Map;
 
