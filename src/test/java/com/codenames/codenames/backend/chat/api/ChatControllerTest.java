@@ -7,12 +7,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.chat.api.dto.ChatDto;
-import com.codenames.codenames.backend.lobby.application.LobbyService;
-import com.codenames.codenames.backend.chat.application.ChatService;
-import com.codenames.codenames.backend.shared.websocket.SessionRegistry;
 import com.codenames.codenames.backend.chat.api.dto.ChatMessageType;
+import com.codenames.codenames.backend.chat.application.ChatService;
+import com.codenames.codenames.backend.lobby.application.LobbyService;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
+import com.codenames.codenames.backend.shared.websocket.SessionRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
