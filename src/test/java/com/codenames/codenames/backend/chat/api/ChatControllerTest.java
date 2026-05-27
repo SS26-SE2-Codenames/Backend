@@ -55,7 +55,8 @@ class ChatControllerTest {
   void testSendLobbyMessage_valid() {
     chatController.sendLobbyMessage(lobbyId, chatDto);
 
-    ChatDto verifiedChatDto = new ChatDto(chatDto.senderUsername(), chatDto.content(), chatDto.type());
+    ChatDto verifiedChatDto =
+        new ChatDto(chatDto.senderUsername(), chatDto.content(), chatDto.type());
     verify(chatService, times(1)).processMessage(lobbyId, "LOBBY", "", verifiedChatDto);
   }
 
@@ -65,7 +66,8 @@ class ChatControllerTest {
 
     chatController.sendTeamMessage(lobbyId, redTeam, chatDto);
 
-    ChatDto verifiedChatDto = new ChatDto(chatDto.senderUsername(), chatDto.content(), chatDto.type());
+    ChatDto verifiedChatDto =
+        new ChatDto(chatDto.senderUsername(), chatDto.content(), chatDto.type());
     verify(chatService, times(1)).processMessage(lobbyId, "TEAM_RED", "/RED", verifiedChatDto);
   }
 
@@ -85,7 +87,8 @@ class ChatControllerTest {
 
     chatController.sendTeamOperativeMessage(lobbyId, blueTeam, chatDto);
 
-    ChatDto verifiedChatDto = new ChatDto(chatDto.senderUsername(), chatDto.content(), chatDto.type());
+    ChatDto verifiedChatDto =
+        new ChatDto(chatDto.senderUsername(), chatDto.content(), chatDto.type());
     verify(chatService, times(1))
         .processMessage(lobbyId, "OPERATIVE_BLUE", "/BLUE/operative", verifiedChatDto);
   }
