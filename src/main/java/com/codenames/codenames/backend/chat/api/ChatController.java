@@ -1,9 +1,9 @@
 package com.codenames.codenames.backend.chat.api;
 
 import com.codenames.codenames.backend.chat.api.dto.ChatDto;
-import com.codenames.codenames.backend.lobby.application.LobbyService;
-import com.codenames.codenames.backend.chat.application.ChatService;
 import com.codenames.codenames.backend.chat.api.dto.ChatMessageType;
+import com.codenames.codenames.backend.chat.application.ChatService;
+import com.codenames.codenames.backend.lobby.application.LobbyService;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
