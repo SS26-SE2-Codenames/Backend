@@ -14,9 +14,9 @@ import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.chat.application.ChatService;
 import com.codenames.codenames.backend.game.application.GameService;
+import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.domain.Lobby;
 import com.codenames.codenames.backend.lobby.domain.Player;
-import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.List;
