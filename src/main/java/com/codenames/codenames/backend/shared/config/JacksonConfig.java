@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.config;
+package com.codenames.codenames.backend.shared.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;

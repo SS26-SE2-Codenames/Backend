@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.clue;
+package com.codenames.codenames.backend.game.application;
 
 import com.codenames.codenames.backend.game.domain.Board;
 import com.codenames.codenames.backend.game.domain.Card;

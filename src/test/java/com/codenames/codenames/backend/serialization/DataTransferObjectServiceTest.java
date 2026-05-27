@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.codenames.codenames.backend.clue.Clue;
+import com.codenames.codenames.backend.game.domain.Clue;
 import com.codenames.codenames.backend.game.dto.GameStateDataTransferObject;
 import com.codenames.codenames.backend.game.domain.Card;
 import com.codenames.codenames.backend.game.domain.GameManager;

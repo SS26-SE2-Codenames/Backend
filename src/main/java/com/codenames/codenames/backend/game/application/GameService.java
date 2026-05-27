@@ -1,6 +1,6 @@
 package com.codenames.codenames.backend.game.application;
 
-import com.codenames.codenames.backend.clue.Clue;
+import com.codenames.codenames.backend.game.domain.Clue;
 import com.codenames.codenames.backend.game.domain.GameManager;
 import com.codenames.codenames.backend.game.domain.GameManagerFactory;
 import com.codenames.codenames.backend.game.mapping.DataTransferObjectService;

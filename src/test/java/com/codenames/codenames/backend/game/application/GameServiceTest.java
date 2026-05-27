@@ -9,7 +9,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.codenames.codenames.backend.clue.Clue;
+import com.codenames.codenames.backend.game.domain.Clue;
 import com.codenames.codenames.backend.game.domain.GameManager;
 import com.codenames.codenames.backend.game.domain.GameManagerFactory;
 import com.codenames.codenames.backend.game.dto.ClueDto;

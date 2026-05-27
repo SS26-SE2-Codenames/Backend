@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
-import com.codenames.codenames.backend.clue.ClueValidationService;
+import com.codenames.codenames.backend.game.application.ClueValidationService;
 import com.codenames.codenames.backend.game.application.CardGenerator;
 import com.codenames.codenames.backend.game.dto.ClueDto;
 import com.codenames.codenames.backend.game.dto.CardDataTransferObject;

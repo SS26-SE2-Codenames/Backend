@@ -1,6 +1,6 @@
 package com.codenames.codenames.backend.game.api;
 
-import com.codenames.codenames.backend.clue.Clue;
+import com.codenames.codenames.backend.game.domain.Clue;
 import com.codenames.codenames.backend.game.application.GameService;
 import com.codenames.codenames.backend.game.dto.ClueMessage;
 import com.codenames.codenames.backend.game.dto.PassTurnMessage;

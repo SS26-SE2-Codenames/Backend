@@ -1,7 +1,7 @@
 package com.codenames.codenames.backend.game.domain;
 
-import com.codenames.codenames.backend.clue.Clue;
-import com.codenames.codenames.backend.clue.ClueValidationService;
+import com.codenames.codenames.backend.game.domain.Clue;
+import com.codenames.codenames.backend.game.application.ClueValidationService;
 import com.codenames.codenames.backend.game.application.CardGenerator;
 import com.codenames.codenames.backend.game.dto.CardDataTransferObject;
 import com.codenames.codenames.backend.game.dto.GameStateDataTransferObject;

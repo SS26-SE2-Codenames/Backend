@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.clue;
+package com.codenames.codenames.backend.game.application;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
