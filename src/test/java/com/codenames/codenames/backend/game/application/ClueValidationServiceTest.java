@@ -7,7 +7,6 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.codenames.codenames.backend.game.application.CardGenerator;
 import com.codenames.codenames.backend.game.domain.Board;
 import com.codenames.codenames.backend.game.domain.Card;
 import com.codenames.codenames.backend.game.domain.Color;

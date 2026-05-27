@@ -1,7 +1,5 @@
 package com.codenames.codenames.backend.chat.api.dto;
 
-import com.codenames.codenames.backend.chat.api.dto.ChatMessageType;
-
 /**
  * Record class for messages that is used in controller.
  *

@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.codenames.codenames.backend.lobby.domain.Role;
-import com.codenames.codenames.backend.lobby.domain.Team;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -14,7 +12,6 @@ import org.junit.jupiter.api.Test;
  *
  * <p>Validates player management and lobby constraints.
  */
-
 class LobbyTest {
 
   @Test

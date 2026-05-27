@@ -1,8 +1,5 @@
 package com.codenames.codenames.backend.lobby.domain;
 
-import com.codenames.codenames.backend.lobby.domain.Player;
-import com.codenames.codenames.backend.lobby.domain.Role;
-import com.codenames.codenames.backend.lobby.domain.Team;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.List;
@@ -13,9 +10,8 @@ import lombok.Getter;
 /**
  * Represents a game lobby containing a limited number of playerList.
  *
- * <p>Supports adding and removing playerList
- * while enforcing constraints such as maximum player count
- * and unique usernames.
+ * <p>Supports adding and removing playerList while enforcing constraints such as maximum player
+ * count and unique usernames.
  */
 @Getter
 public class Lobby {
@@ -25,21 +21,18 @@ public class Lobby {
   private final String lobbyCode;
   private final List<Player> playerList = new CopyOnWriteArrayList<>();
   private final SecureRandom random = new SecureRandom();
-  /**
-   * Maps a username to the selected team.
-   */
+
+  /** Maps a username to the selected team. */
   private final Map<String, Team> playerTeams;
 
-  /**
-   * Maps a username to the selected role.
-   */
+  /** Maps a username to the selected role. */
   private final Map<String, Role> playerRoles;
 
   /**
    * Creates a new lobby and adds the initial player.
    *
    * @param lobbyCode the unique code identifying the lobby
-   * @param username  the username of the player creating the lobby
+   * @param username the username of the player creating the lobby
    */
   public Lobby(String lobbyCode, String username) {
     this.lobbyCode = lobbyCode;
@@ -52,7 +45,7 @@ public class Lobby {
    * Adds a player to the lobby if capacity allows and the username is unique.
    *
    * @param username the username of the player
-   * @param isHost   whether the player is the host of the lobby
+   * @param isHost whether the player is the host of the lobby
    * @return {@code true} if the player was added, {@code false} otherwise
    */
   public boolean addPlayer(String username, boolean isHost) {
@@ -67,8 +60,8 @@ public class Lobby {
   }
 
   /**
-   * Adds a player to the lobby if capacity allows and the username is unique.
-   * Calls {@link #addPlayer(String, boolean)} with {@code false} as the second argument
+   * Adds a player to the lobby if capacity allows and the username is unique. Calls {@link
+   * #addPlayer(String, boolean)} with {@code false} as the second argument
    *
    * @param username the username of the player
    * @return {@code true} if the player was added, {@code false} otherwise
@@ -102,7 +95,7 @@ public class Lobby {
    * Sets the team for a player.
    *
    * @param username the username of the player
-   * @param team     the team to assign
+   * @param team the team to assign
    */
   public void setPlayerTeam(String username, Team team) {
     playerTeams.put(username, team);
@@ -112,7 +105,7 @@ public class Lobby {
    * Sets the role for a player.
    *
    * @param username the username of the player
-   * @param role     the role to assign
+   * @param role the role to assign
    */
   public void setPlayerRole(String username, Role role) {
     playerRoles.put(username, role);

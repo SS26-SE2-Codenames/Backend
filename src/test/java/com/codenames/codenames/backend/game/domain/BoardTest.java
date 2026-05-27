@@ -11,7 +11,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.game.application.CardGenerator;
-import com.codenames.codenames.backend.game.domain.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
