@@ -1,11 +1,11 @@
 package com.codenames.codenames.backend.game.mapping;
 
-import com.codenames.codenames.backend.game.api.dto.ClueDto;
 import com.codenames.codenames.backend.game.api.dto.CardDto;
+import com.codenames.codenames.backend.game.api.dto.ClueDto;
 import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.codenames.codenames.backend.game.domain.Card;
-import com.codenames.codenames.backend.game.domain.GameManager;
 import com.codenames.codenames.backend.game.domain.Color;
+import com.codenames.codenames.backend.game.domain.GameManager;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.ArrayList;

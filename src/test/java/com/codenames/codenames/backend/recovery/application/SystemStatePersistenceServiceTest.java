@@ -6,12 +6,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.codenames.codenames.backend.game.application.GameService;
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.application.LobbyService;
 import com.codenames.codenames.backend.recovery.domain.snapshot.SystemSnapshot;
 import com.codenames.codenames.backend.recovery.infrastructure.JsonStateStore;
-import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;

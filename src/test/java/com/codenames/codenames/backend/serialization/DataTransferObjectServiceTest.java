@@ -5,12 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.codenames.codenames.backend.game.domain.Clue;
 import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.codenames.codenames.backend.game.domain.Card;
+import com.codenames.codenames.backend.game.domain.Clue;
+import com.codenames.codenames.backend.game.domain.Color;
 import com.codenames.codenames.backend.game.domain.GameManager;
 import com.codenames.codenames.backend.game.mapping.DataTransferObjectService;
-import com.codenames.codenames.backend.game.domain.Color;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.List;

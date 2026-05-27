@@ -12,13 +12,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.codenames.codenames.backend.game.domain.Clue;
-import com.codenames.codenames.backend.game.application.ClueValidationService;
-import com.codenames.codenames.backend.game.application.CardGenerator;
-import com.codenames.codenames.backend.game.api.dto.ClueDto;
 import com.codenames.codenames.backend.game.api.dto.CardDto;
+import com.codenames.codenames.backend.game.api.dto.ClueDto;
 import com.codenames.codenames.backend.game.api.dto.GameStateDto;
-import com.codenames.codenames.backend.game.domain.Color;
+import com.codenames.codenames.backend.game.application.CardGenerator;
+import com.codenames.codenames.backend.game.application.ClueValidationService;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.ArrayList;

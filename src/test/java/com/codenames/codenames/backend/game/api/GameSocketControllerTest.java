@@ -6,14 +6,14 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.codenames.codenames.backend.game.application.GameService;
 import com.codenames.codenames.backend.game.api.dto.ClueMessage;
+import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.codenames.codenames.backend.game.api.dto.PassTurnMessage;
 import com.codenames.codenames.backend.game.api.dto.RevealCardMessage;
 import com.codenames.codenames.backend.game.api.dto.StartGameMessage;
-import com.codenames.codenames.backend.recovery.application.SystemStatePersistenceService;
-import com.codenames.codenames.backend.game.api.dto.GameStateDto;
+import com.codenames.codenames.backend.game.application.GameService;
 import com.codenames.codenames.backend.lobby.domain.Team;
+import com.codenames.codenames.backend.recovery.application.SystemStatePersistenceService;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

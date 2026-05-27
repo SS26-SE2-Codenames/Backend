@@ -6,12 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
-import com.codenames.codenames.backend.game.application.ClueValidationService;
-import com.codenames.codenames.backend.game.application.CardGenerator;
-import com.codenames.codenames.backend.game.api.dto.ClueDto;
 import com.codenames.codenames.backend.game.api.dto.CardDto;
+import com.codenames.codenames.backend.game.api.dto.ClueDto;
 import com.codenames.codenames.backend.game.api.dto.GameStateDto;
-import com.codenames.codenames.backend.game.domain.Color;
+import com.codenames.codenames.backend.game.application.CardGenerator;
+import com.codenames.codenames.backend.game.application.ClueValidationService;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.List;
@@ -45,9 +44,7 @@ class GameManagerFactoryTest {
             Team.BLUE,
             Role.OPERATIVE,
             new ClueDto("ANIMAL", 2),
-                List.of(
-                new CardDto("Dog", Color.RED, true),
-                new CardDto("Cat", Color.BLUE, false)));
+            List.of(new CardDto("Dog", Color.RED, true), new CardDto("Cat", Color.BLUE, false)));
 
     GameManager recovered = gameManagerFactory.createFromSnapshot(snapshot);
 
@@ -65,11 +62,7 @@ class GameManagerFactoryTest {
   void testCreateFromSnapshotWithoutClue() {
     GameStateDto snapshot =
         new GameStateDto(
-            null,
-            Team.BLUE,
-            Role.SPYMASTER,
-            null,
-                List.of(new CardDto("Tree", Color.BLUE, false)));
+            null, Team.BLUE, Role.SPYMASTER, null, List.of(new CardDto("Tree", Color.BLUE, false)));
 
     GameManager recovered = gameManagerFactory.createFromSnapshot(snapshot);
 
@@ -82,16 +75,16 @@ class GameManagerFactoryTest {
   @Test
   void testCreateFromSnapshotMapsCardsAndCountsGuessedCardsByColor() {
     GameStateDto snapshot =
-            new GameStateDto(
-                    null,
-                    Team.RED,
-                    Role.OPERATIVE,
-                    null,
-                    List.of(
-                            new CardDto("Dog", Color.RED, true),
-                            new CardDto("Cat", Color.RED, false),
-                            new CardDto("Tree", Color.BLUE, true),
-                            new CardDto("Sun", Color.NEUTRAL, true)));
+        new GameStateDto(
+            null,
+            Team.RED,
+            Role.OPERATIVE,
+            null,
+            List.of(
+                new CardDto("Dog", Color.RED, true),
+                new CardDto("Cat", Color.RED, false),
+                new CardDto("Tree", Color.BLUE, true),
+                new CardDto("Sun", Color.NEUTRAL, true)));
 
     GameManager recovered = gameManagerFactory.createFromSnapshot(snapshot);
 
