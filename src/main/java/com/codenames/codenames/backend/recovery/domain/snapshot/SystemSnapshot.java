@@ -1,7 +1,7 @@
 package com.codenames.codenames.backend.recovery.domain.snapshot;
 
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
-import com.codenames.codenames.backend.game.api.dto.GameStateDataTransferObject;
+import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +15,7 @@ import java.util.Map;
 public record SystemSnapshot(
     int schemaVersion,
     Map<String, List<PlayerDto>> lobbies,
-    Map<String, GameStateDataTransferObject> games) {
+    Map<String, GameStateDto> games) {
 
   public static final int CURRENT_SCHEMA_VERSION = 2;
 }

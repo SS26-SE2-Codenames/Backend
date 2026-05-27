@@ -4,7 +4,7 @@ import com.codenames.codenames.backend.game.domain.Clue;
 import com.codenames.codenames.backend.game.domain.GameManager;
 import com.codenames.codenames.backend.game.domain.GameManagerFactory;
 import com.codenames.codenames.backend.game.mapping.DataTransferObjectService;
-import com.codenames.codenames.backend.game.api.dto.GameStateDataTransferObject;
+import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -126,9 +126,9 @@ public class GameService {
    * @param lobbyCode the unique lobby code
    * @return the mapped game state transfer object
    */
-  public GameStateDataTransferObject getCurrentGameState(String lobbyCode) {
+  public GameStateDto getCurrentGameState(String lobbyCode) {
     GameManager gm = getGame(lobbyCode);
-    return dtoService.createGameStateDataTransferObject(
+    return dtoService.createGameStateDto(
         gm, gm.getCurrentTurn(), gm.getCurrentPhase());
   }
 
@@ -153,7 +153,7 @@ public class GameService {
    *
    * @return map of lobby codes to game state dto snapshots
    */
-  public Map<String, GameStateDataTransferObject> getGameSnapshots() {
+  public Map<String, GameStateDto> getGameSnapshots() {
     return games.keySet().stream()
         .collect(
             java.util.stream.Collectors.toMap(lobbyCode -> lobbyCode, this::getCurrentGameState));

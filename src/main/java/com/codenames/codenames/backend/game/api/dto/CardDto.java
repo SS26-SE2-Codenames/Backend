@@ -9,4 +9,4 @@ import com.codenames.codenames.backend.game.domain.Color;
  * @param color the color of the card (could also be "hidden")
  * @param isGuessed the guess state of the card
  */
-public record CardDataTransferObject(String word, Color color, boolean isGuessed) {}
+public record CardDto(String word, Color color, boolean isGuessed) {}

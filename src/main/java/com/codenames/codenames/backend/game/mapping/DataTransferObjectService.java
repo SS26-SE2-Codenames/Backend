@@ -1,8 +1,8 @@
 package com.codenames.codenames.backend.game.mapping;
 
 import com.codenames.codenames.backend.game.api.dto.ClueDto;
-import com.codenames.codenames.backend.game.api.dto.CardDataTransferObject;
-import com.codenames.codenames.backend.game.api.dto.GameStateDataTransferObject;
+import com.codenames.codenames.backend.game.api.dto.CardDto;
+import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.codenames.codenames.backend.game.domain.Card;
 import com.codenames.codenames.backend.game.domain.GameManager;
 import com.codenames.codenames.backend.game.domain.Color;
@@ -22,9 +22,9 @@ public class DataTransferObjectService {
    * @param card card object from the board
    * @return the card DTO for the game state DTO
    */
-  private CardDataTransferObject createCardDataTransferObject(Card card) {
+  private CardDto createCardDto(Card card) {
     Color displayColor = card.getColor();
-    return new CardDataTransferObject(card.getWord(), displayColor, card.isGuessed());
+    return new CardDto(card.getWord(), displayColor, card.isGuessed());
   }
 
   /**
@@ -34,16 +34,16 @@ public class DataTransferObjectService {
    * @param currentTurn the current turn
    * @return a DTO of the current game state
    */
-  public GameStateDataTransferObject createGameStateDataTransferObject(
+  public GameStateDto createGameStateDto(
       GameManager gameManager, Team currentTurn, Role currentPhase) {
 
     List<Card> cardList = gameManager.getCardList();
-    List<CardDataTransferObject> cardDataTransferObject = new ArrayList<>();
+    List<CardDto> cardDataTransferObject = new ArrayList<>();
     for (Card card : cardList) {
-      cardDataTransferObject.add(createCardDataTransferObject(card));
+      cardDataTransferObject.add(createCardDto(card));
     }
     if (gameManager.getCurrentClue() == null) {
-      return new GameStateDataTransferObject(
+      return new GameStateDto(
           gameManager.getWinner(),
           currentTurn,
           currentPhase,
@@ -52,7 +52,7 @@ public class DataTransferObjectService {
     }
     String word = gameManager.getCurrentClue().word();
     int guessAmount = gameManager.getCurrentClue().guessAmount();
-    return new GameStateDataTransferObject(
+    return new GameStateDto(
         gameManager.getWinner(),
         currentTurn,
         currentPhase,

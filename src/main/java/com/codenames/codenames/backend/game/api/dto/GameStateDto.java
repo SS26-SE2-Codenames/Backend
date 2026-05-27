@@ -14,9 +14,9 @@ import java.util.List;
  * @param currentClue  the current clue object, consisting of word and amount of guesses
  * @param cardList     the cards on the board
  */
-public record GameStateDataTransferObject(
+public record GameStateDto(
     Team winner,
     Team currentTurn,
     Role currentPhase,
     ClueDto currentClue,
-    List<CardDataTransferObject> cardList) {}
+    List<CardDto> cardList) {}

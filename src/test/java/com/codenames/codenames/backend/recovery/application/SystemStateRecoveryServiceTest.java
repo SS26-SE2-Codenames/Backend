@@ -18,9 +18,9 @@ import com.codenames.codenames.backend.lobby.application.LobbyCodeGenerator;
 import com.codenames.codenames.backend.lobby.application.LobbyService;
 import com.codenames.codenames.backend.recovery.domain.snapshot.SystemSnapshot;
 import com.codenames.codenames.backend.recovery.infrastructure.JsonStateStore;
-import com.codenames.codenames.backend.game.api.dto.CardDataTransferObject;
+import com.codenames.codenames.backend.game.api.dto.CardDto;
 import com.codenames.codenames.backend.game.mapping.DataTransferObjectService;
-import com.codenames.codenames.backend.game.api.dto.GameStateDataTransferObject;
+import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.codenames.codenames.backend.game.domain.Color;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
@@ -66,15 +66,15 @@ class SystemStateRecoveryServiceTest {
         List.of(
             new PlayerDto("Host", Team.RED, Role.SPYMASTER, true),
             new PlayerDto("Player", Team.BLUE, Role.OPERATIVE, false));
-    GameStateDataTransferObject gameSnapshot =
-        new GameStateDataTransferObject(
+    GameStateDto gameSnapshot =
+        new GameStateDto(
             null,
             Team.RED,
             Role.OPERATIVE,
             new ClueDto("ANIMAL", 2),
                 List.of(
-                new CardDataTransferObject("Dog", Color.RED, true),
-                new CardDataTransferObject("Cat", Color.BLUE, false)));
+                new CardDto("Dog", Color.RED, true),
+                new CardDto("Cat", Color.BLUE, false)));
     SystemSnapshot snapshot =
         new SystemSnapshot(
             SystemSnapshot.CURRENT_SCHEMA_VERSION,
@@ -208,13 +208,13 @@ class SystemStateRecoveryServiceTest {
   @Test
   void recoverOnStartupRestoresOnlyGamesWhenLobbiesMapIsNull() {
     TestContext context = createContext(tempDir.resolve("state-lobbies-null-games-present.json"));
-    GameStateDataTransferObject gameSnapshot =
-        new GameStateDataTransferObject(
+    GameStateDto gameSnapshot =
+        new GameStateDto(
             null,
             Team.BLUE,
             Role.SPYMASTER,
             null,
-                List.of(new CardDataTransferObject("Tree", Color.BLUE, false)));
+                List.of(new CardDto("Tree", Color.BLUE, false)));
     SystemSnapshot snapshot =
         new SystemSnapshot(
             SystemSnapshot.CURRENT_SCHEMA_VERSION, null, Map.of("ABCDE", gameSnapshot));

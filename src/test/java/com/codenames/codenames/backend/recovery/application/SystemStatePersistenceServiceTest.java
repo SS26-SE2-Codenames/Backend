@@ -11,7 +11,7 @@ import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.application.LobbyService;
 import com.codenames.codenames.backend.recovery.domain.snapshot.SystemSnapshot;
 import com.codenames.codenames.backend.recovery.infrastructure.JsonStateStore;
-import com.codenames.codenames.backend.game.api.dto.GameStateDataTransferObject;
+import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ class SystemStatePersistenceServiceTest {
 
     Map<String, List<PlayerDto>> lobbySnapshots = Map.of("ABCDE", List.of());
 
-    Map<String, GameStateDataTransferObject> gameSnapshots = Map.of();
+    Map<String, GameStateDto> gameSnapshots = Map.of();
 
     when(lobbyService.getLobbySnapshots()).thenReturn(lobbySnapshots);
     when(gameService.getGameSnapshots()).thenReturn(gameSnapshots);

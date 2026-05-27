@@ -16,8 +16,8 @@ import com.codenames.codenames.backend.game.domain.Clue;
 import com.codenames.codenames.backend.game.application.ClueValidationService;
 import com.codenames.codenames.backend.game.application.CardGenerator;
 import com.codenames.codenames.backend.game.api.dto.ClueDto;
-import com.codenames.codenames.backend.game.api.dto.CardDataTransferObject;
-import com.codenames.codenames.backend.game.api.dto.GameStateDataTransferObject;
+import com.codenames.codenames.backend.game.api.dto.CardDto;
+import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.codenames.codenames.backend.game.domain.Color;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
@@ -336,8 +336,8 @@ class GameManagerTest {
 
   @Test
   void recoveryConstructorThrowsWhenCardsAreNull() {
-    GameStateDataTransferObject state =
-        new GameStateDataTransferObject(null, Team.RED, Role.SPYMASTER, null, null);
+    GameStateDto state =
+        new GameStateDto(null, Team.RED, Role.SPYMASTER, null, null);
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -345,8 +345,8 @@ class GameManagerTest {
 
   @Test
   void recoveryConstructorThrowsWhenCardsAreEmpty() {
-    GameStateDataTransferObject state =
-        new GameStateDataTransferObject(null, Team.RED, Role.SPYMASTER, null, List.of());
+    GameStateDto state =
+        new GameStateDto(null, Team.RED, Role.SPYMASTER, null, List.of());
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -354,11 +354,11 @@ class GameManagerTest {
 
   @Test
   void recoveryConstructorThrowsWhenCurrentTurnIsNull() {
-    List<CardDataTransferObject> cards =
-        List.of(new CardDataTransferObject("Dog", Color.RED, false));
+    List<CardDto> cards =
+        List.of(new CardDto("Dog", Color.RED, false));
 
-    GameStateDataTransferObject state =
-        new GameStateDataTransferObject(null, null, Role.SPYMASTER, null, cards);
+    GameStateDto state =
+        new GameStateDto(null, null, Role.SPYMASTER, null, cards);
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -366,11 +366,11 @@ class GameManagerTest {
 
   @Test
   void recoveryConstructorThrowsWhenCurrentPhaseIsNull() {
-    List<CardDataTransferObject> cards =
-        List.of(new CardDataTransferObject("Dog", Color.RED, false));
+    List<CardDto> cards =
+        List.of(new CardDto("Dog", Color.RED, false));
 
-    GameStateDataTransferObject state =
-        new GameStateDataTransferObject(null, Team.RED, null, null, cards);
+    GameStateDto state =
+        new GameStateDto(null, Team.RED, null, null, cards);
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -378,13 +378,13 @@ class GameManagerTest {
 
   @Test
   void recoveryConstructorRestoresPersistedState() {
-    List<CardDataTransferObject> cards =
+    List<CardDto> cards =
         List.of(
-            new CardDataTransferObject("Dog", Color.RED, true),
-            new CardDataTransferObject("Cat", Color.BLUE, false));
+            new CardDto("Dog", Color.RED, true),
+            new CardDto("Cat", Color.BLUE, false));
 
-    GameStateDataTransferObject state =
-        new GameStateDataTransferObject(
+    GameStateDto state =
+        new GameStateDto(
             Team.RED, Team.BLUE, Role.OPERATIVE, new ClueDto("ANIMAL", 2), cards);
 
     GameManager restored = new GameManager(state, mockClueValidationService);

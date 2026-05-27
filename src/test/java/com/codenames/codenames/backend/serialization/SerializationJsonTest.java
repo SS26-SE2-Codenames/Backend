@@ -6,9 +6,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.codenames.codenames.backend.game.api.dto.CardDataTransferObject;
+import com.codenames.codenames.backend.game.api.dto.CardDto;
 import com.codenames.codenames.backend.game.api.dto.ClueDto;
-import com.codenames.codenames.backend.game.api.dto.GameStateDataTransferObject;
+import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.codenames.codenames.backend.game.domain.Card;
 import com.codenames.codenames.backend.game.domain.Color;
 import com.codenames.codenames.backend.lobby.domain.Role;
@@ -23,8 +23,8 @@ class SerializationJsonTest {
 
   SerializationJson serializer;
   Card card;
-  List<CardDataTransferObject> dummyList;
-  GameStateDataTransferObject dummyGameState;
+  List<CardDto> dummyList;
+  GameStateDto dummyGameState;
   ObjectMapper mapper = new ObjectMapper();
   private static final Team redTeam = Team.RED;
   private static final Role spymaster = Role.SPYMASTER;
@@ -34,9 +34,9 @@ class SerializationJsonTest {
     card = new Card("TEST", Color.RED);
     serializer = new SerializationJson(mapper);
 
-    dummyList = List.of(new CardDataTransferObject("TEST", null, false));
+    dummyList = List.of(new CardDto("TEST", null, false));
     dummyGameState =
-        new GameStateDataTransferObject(
+        new GameStateDto(
             redTeam, redTeam, spymaster, new ClueDto("Test", 1), dummyList);
   }
 

@@ -9,8 +9,8 @@ import static org.mockito.Mockito.mock;
 import com.codenames.codenames.backend.game.application.ClueValidationService;
 import com.codenames.codenames.backend.game.application.CardGenerator;
 import com.codenames.codenames.backend.game.api.dto.ClueDto;
-import com.codenames.codenames.backend.game.api.dto.CardDataTransferObject;
-import com.codenames.codenames.backend.game.api.dto.GameStateDataTransferObject;
+import com.codenames.codenames.backend.game.api.dto.CardDto;
+import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.codenames.codenames.backend.game.domain.Color;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
@@ -39,15 +39,15 @@ class GameManagerFactoryTest {
 
   @Test
   void testCreateFromSnapshotWithClue() {
-    GameStateDataTransferObject snapshot =
-        new GameStateDataTransferObject(
+    GameStateDto snapshot =
+        new GameStateDto(
             Team.RED,
             Team.BLUE,
             Role.OPERATIVE,
             new ClueDto("ANIMAL", 2),
                 List.of(
-                new CardDataTransferObject("Dog", Color.RED, true),
-                new CardDataTransferObject("Cat", Color.BLUE, false)));
+                new CardDto("Dog", Color.RED, true),
+                new CardDto("Cat", Color.BLUE, false)));
 
     GameManager recovered = gameManagerFactory.createFromSnapshot(snapshot);
 
@@ -63,13 +63,13 @@ class GameManagerFactoryTest {
 
   @Test
   void testCreateFromSnapshotWithoutClue() {
-    GameStateDataTransferObject snapshot =
-        new GameStateDataTransferObject(
+    GameStateDto snapshot =
+        new GameStateDto(
             null,
             Team.BLUE,
             Role.SPYMASTER,
             null,
-                List.of(new CardDataTransferObject("Tree", Color.BLUE, false)));
+                List.of(new CardDto("Tree", Color.BLUE, false)));
 
     GameManager recovered = gameManagerFactory.createFromSnapshot(snapshot);
 
@@ -81,17 +81,17 @@ class GameManagerFactoryTest {
 
   @Test
   void testCreateFromSnapshotMapsCardsAndCountsGuessedCardsByColor() {
-    GameStateDataTransferObject snapshot =
-            new GameStateDataTransferObject(
+    GameStateDto snapshot =
+            new GameStateDto(
                     null,
                     Team.RED,
                     Role.OPERATIVE,
                     null,
                     List.of(
-                            new CardDataTransferObject("Dog", Color.RED, true),
-                            new CardDataTransferObject("Cat", Color.RED, false),
-                            new CardDataTransferObject("Tree", Color.BLUE, true),
-                            new CardDataTransferObject("Sun", Color.NEUTRAL, true)));
+                            new CardDto("Dog", Color.RED, true),
+                            new CardDto("Cat", Color.RED, false),
+                            new CardDto("Tree", Color.BLUE, true),
+                            new CardDto("Sun", Color.NEUTRAL, true)));
 
     GameManager recovered = gameManagerFactory.createFromSnapshot(snapshot);
 

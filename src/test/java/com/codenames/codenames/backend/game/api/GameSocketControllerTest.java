@@ -12,7 +12,7 @@ import com.codenames.codenames.backend.game.api.dto.PassTurnMessage;
 import com.codenames.codenames.backend.game.api.dto.RevealCardMessage;
 import com.codenames.codenames.backend.game.api.dto.StartGameMessage;
 import com.codenames.codenames.backend.recovery.application.SystemStatePersistenceService;
-import com.codenames.codenames.backend.game.api.dto.GameStateDataTransferObject;
+import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +47,7 @@ class GameSocketControllerTest {
     message.setLobbyCode(LOBBY_CODE);
 
     when(gameService.getCurrentGameState(LOBBY_CODE))
-        .thenReturn(createGameStateDataTransferObject());
+        .thenReturn(createGameStateDto());
 
     controller.startGame(message);
 
@@ -63,7 +63,7 @@ class GameSocketControllerTest {
     message.setCurrentTurn(Team.RED);
 
     when(gameService.getCurrentGameState(LOBBY_CODE))
-        .thenReturn(createGameStateDataTransferObject());
+        .thenReturn(createGameStateDto());
 
     controller.revealCard(message);
 
@@ -81,7 +81,7 @@ class GameSocketControllerTest {
     message.setCurrentTurn(Team.RED);
 
     when(gameService.getCurrentGameState(LOBBY_CODE))
-        .thenReturn(createGameStateDataTransferObject());
+        .thenReturn(createGameStateDto());
 
     controller.submitClue(message);
 
@@ -97,7 +97,7 @@ class GameSocketControllerTest {
     message.setCurrentTurn(Team.RED);
 
     when(gameService.getCurrentGameState(LOBBY_CODE))
-        .thenReturn(createGameStateDataTransferObject());
+        .thenReturn(createGameStateDto());
 
     controller.passTurn(message);
 
@@ -106,7 +106,7 @@ class GameSocketControllerTest {
     verify(messagingTemplate).convertAndSend(anyString(), any(Object.class));
   }
 
-  private GameStateDataTransferObject createGameStateDataTransferObject() {
-    return new GameStateDataTransferObject(null, Team.RED, null, null, List.of());
+  private GameStateDto createGameStateDto() {
+    return new GameStateDto(null, Team.RED, null, null, List.of());
   }
 }

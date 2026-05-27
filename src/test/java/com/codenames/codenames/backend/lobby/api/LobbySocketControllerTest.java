@@ -13,7 +13,7 @@ import com.codenames.codenames.backend.game.application.GameService;
 import com.codenames.codenames.backend.lobby.api.dto.JoinMessage;
 import com.codenames.codenames.backend.lobby.domain.Player;
 import com.codenames.codenames.backend.lobby.application.LobbyService;
-import com.codenames.codenames.backend.game.api.dto.GameStateDataTransferObject;
+import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.codenames.codenames.backend.shared.websocket.SessionRegistry;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -165,7 +165,7 @@ class LobbySocketControllerTest {
     verify(messagingTemplate).convertAndSend(eq("/topic/game/ABCDE"), any(Object.class));
   }
 
-  private GameStateDataTransferObject createGameStatePayload() {
-    return new GameStateDataTransferObject(null, null, null, null, List.of());
+  private GameStateDto createGameStatePayload() {
+    return new GameStateDto(null, null, null, null, List.of());
   }
 }

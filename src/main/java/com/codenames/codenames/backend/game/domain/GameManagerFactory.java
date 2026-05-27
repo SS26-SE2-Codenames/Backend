@@ -2,7 +2,7 @@ package com.codenames.codenames.backend.game.domain;
 
 import com.codenames.codenames.backend.game.application.ClueValidationService;
 import com.codenames.codenames.backend.game.application.CardGenerator;
-import com.codenames.codenames.backend.game.api.dto.GameStateDataTransferObject;
+import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.codenames.codenames.backend.lobby.domain.Team;
 import org.springframework.stereotype.Component;
 
@@ -40,7 +40,7 @@ public class GameManagerFactory {
    * @param snapshot persisted game state snapshot
    * @return restored game manager
    */
-  public GameManager createFromSnapshot(GameStateDataTransferObject snapshot) {
+  public GameManager createFromSnapshot(GameStateDto snapshot) {
     return new GameManager(snapshot, clueValidationService);
   }
 }

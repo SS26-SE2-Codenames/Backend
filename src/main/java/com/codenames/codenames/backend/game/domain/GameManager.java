@@ -3,8 +3,8 @@ package com.codenames.codenames.backend.game.domain;
 import com.codenames.codenames.backend.game.domain.Clue;
 import com.codenames.codenames.backend.game.application.ClueValidationService;
 import com.codenames.codenames.backend.game.application.CardGenerator;
-import com.codenames.codenames.backend.game.api.dto.CardDataTransferObject;
-import com.codenames.codenames.backend.game.api.dto.GameStateDataTransferObject;
+import com.codenames.codenames.backend.game.api.dto.CardDto;
+import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.codenames.codenames.backend.game.domain.Color;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
@@ -74,7 +74,7 @@ public class GameManager {
    * @param clueValidationService clue validation service
    */
   public GameManager(
-      GameStateDataTransferObject state, ClueValidationService clueValidationService) {
+      GameStateDto state, ClueValidationService clueValidationService) {
     if (state.cardList() == null || state.cardList().isEmpty()) {
       throw new IllegalArgumentException("cards cannot be null or empty");
     }
@@ -101,7 +101,7 @@ public class GameManager {
     this.board = new Board(cards);
   }
 
-  private Card toCard(CardDataTransferObject cardDto) {
+  private Card toCard(CardDto cardDto) {
     Card card = new Card(cardDto.word(), cardDto.color());
     if (cardDto.isGuessed()) {
       card.setIsGuessedTrue();
