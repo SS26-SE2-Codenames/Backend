@@ -2,5 +2,23 @@ spring:
   application:
     name: Codenames_Backend
 
+  datasource:
+    url: jdbc:postgresql://localhost:5432/codenames # When we containerize docker compose will change localhost -> postgresql
+    username: codenames_user
+    password: codenames_pass
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+
 app:
   allowed-origins: "http://localhost:8080,http://10.0.2.2:8080"
