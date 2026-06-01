@@ -1,5 +1,6 @@
 package com.codenames.codenames.backend.serialization;
 
+import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
@@ -25,7 +26,7 @@ public class SerializationJson {
    * @return the string JSON containing: winner, points, list of cards and their information
    * @throws IllegalStateException if serialization fails
    */
-  public String serialize(GameStateDataTransferObject gameStateDataTransferObject) {
+  public String serialize(GameStateDto gameStateDataTransferObject) {
     try {
       return mapper.writeValueAsString(gameStateDataTransferObject);
     } catch (JsonProcessingException e) {
