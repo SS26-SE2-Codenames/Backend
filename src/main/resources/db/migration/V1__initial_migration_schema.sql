@@ -2,14 +2,14 @@
 
 CREATE TABLE lobby
 (
-    lobby_code  VARCHAR(255)    PRIMARY KEY,
-    status      VARCHAR(255)    NOT NULL,
-    created_at  TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW() NOT NULL
+    lobby_code  VARCHAR(255)                    PRIMARY KEY,
+    status      VARCHAR(255)                    NOT NULL,
+    created_at  TIMESTAMP WITHOUT TIME ZONE     DEFAULT NOW() NOT NULL -- plan is to use this to delete stale lobbies
 );
 
 CREATE TABLE player
 (
-    id          SERIAL          PRIMARY KEY,
+    id          BIGSERIAL       PRIMARY KEY,
     lobby_code  VARCHAR(255)    NOT NULL REFERENCES lobby (lobby_code) ON DELETE CASCADE,
     username    VARCHAR(255)    NOT NULL,
     is_host     BOOLEAN         DEFAULT FALSE NOT NULL,
@@ -24,9 +24,10 @@ CREATE TABLE player
         UNIQUE (lobby_code, username)
 );
 
+
 CREATE TABLE game_state
 (
-    id                  SERIAL          PRIMARY KEY,
+    id                  BIGSERIAL       PRIMARY KEY,
     lobby_code          VARCHAR(255)    NOT NULL REFERENCES lobby (lobby_code) ON DELETE CASCADE,
     current_turn        VARCHAR(255)    NOT NULL,
     current_phase       VARCHAR(255)    NOT NULL,
