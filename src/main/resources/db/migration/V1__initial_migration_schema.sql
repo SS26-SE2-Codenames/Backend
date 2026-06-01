@@ -42,3 +42,22 @@ CREATE TABLE game_state
     CONSTRAINT unique_game_per_lobby
         UNIQUE (lobby_code)
 );
+
+-- each lobby will have 25 entries in the card table
+CREATE TABLE card
+(
+    id              BIGINT          GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    lobby_code      VARCHAR(255)    NOT NULL REFERENCES lobby (lobby_code) ON DELETE CASCADE,
+    position        INT             NOT NULL,
+    word            VARCHAR(255)    NOT NULL,
+    color           VARCHAR(255)    NOT NULL,
+    is_guessed      BOOLEAN         DEFAULT FALSE NOT NULL,
+
+    CONSTRAINT check_card_position
+        CHECK (position BETWEEN 0 AND 24),
+    CONSTRAINT check_card_color
+        CHECK (color IN ('RED', 'BLUE', 'NEUTRAL', 'ASSASSIN')),
+    CONSTRAINT unique_card_position_per_game
+        UNIQUE (lobby_code, position)
+);
+
