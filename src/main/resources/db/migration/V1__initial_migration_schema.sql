@@ -23,3 +23,21 @@ CREATE TABLE player
     CONSTRAINT unique_player_per_lobby -- ask team if username in lobby has to be unique or not
         UNIQUE (lobby_code, username)
 );
+
+CREATE TABLE game_state
+(
+    id                  SERIAL          PRIMARY KEY,
+    lobby_code          VARCHAR(255)    NOT NULL REFERENCES lobby (lobby_code) ON DELETE CASCADE,
+    current_turn        VARCHAR(255)    NOT NULL,
+    current_phase       VARCHAR(255)    NOT NULL,
+    clue_word           VARCHAR(255),
+    clue_guess_amount   INT             DEFAULT 0,
+    remaining_guesses   INT             DEFAULT 0,
+
+    CONSTRAINT check_game_turn
+        CHECK (current_turn IN ('RED', 'BLUE')),
+    CONSTRAINT check_game_phase
+        CHECK (current_phase IN ('SPYMASTER', 'OPERATIVE')),
+    CONSTRAINT unique_game_per_lobby
+        UNIQUE (lobby_code)
+);
