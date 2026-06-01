@@ -9,7 +9,7 @@ CREATE TABLE lobby
 
 CREATE TABLE player
 (
-    id          BIGSERIAL       PRIMARY KEY,
+    id          BIGINT          GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     lobby_code  VARCHAR(255)    NOT NULL REFERENCES lobby (lobby_code) ON DELETE CASCADE,
     username    VARCHAR(255)    NOT NULL,
     is_host     BOOLEAN         DEFAULT FALSE NOT NULL,
@@ -27,7 +27,7 @@ CREATE TABLE player
 
 CREATE TABLE game_state
 (
-    id                  BIGSERIAL       PRIMARY KEY,
+    id                  BIGINT          GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     lobby_code          VARCHAR(255)    NOT NULL REFERENCES lobby (lobby_code) ON DELETE CASCADE,
     current_turn        VARCHAR(255)    NOT NULL,
     current_phase       VARCHAR(255)    NOT NULL,
