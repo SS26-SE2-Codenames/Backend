@@ -2,19 +2,18 @@
 
 CREATE TABLE lobby
 (
-    lobby_code  VARCHAR(255)                    PRIMARY KEY,
-    status      VARCHAR(255)                    NOT NULL,
+    lobby_code  VARCHAR(5)                      PRIMARY KEY,
     created_at  TIMESTAMP WITHOUT TIME ZONE     DEFAULT NOW() NOT NULL -- plan is to use this to delete stale lobbies
 );
 
 CREATE TABLE player
 (
     id          BIGINT          GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    lobby_code  VARCHAR(255)    NOT NULL REFERENCES lobby (lobby_code) ON DELETE CASCADE,
-    username    VARCHAR(255)    NOT NULL,
+    lobby_code  VARCHAR(5)      NOT NULL REFERENCES lobby (lobby_code) ON DELETE CASCADE,
+    username    VARCHAR(20)     NOT NULL,
     is_host     BOOLEAN         DEFAULT FALSE NOT NULL,
-    team        VARCHAR(255)    NOT NULL,
-    role        VARCHAR(255)    NOT NULL,
+    team        VARCHAR(4)      NOT NULL,
+    role        VARCHAR(9)      NOT NULL,
 
     CONSTRAINT check_player_team
         CHECK (team IN ('RED', 'BLUE')),
@@ -27,10 +26,10 @@ CREATE TABLE player
 
 CREATE TABLE game_state
 (
-    lobby_code          VARCHAR(255)    PRIMARY KEY REFERENCES lobby (lobby_code) ON DELETE CASCADE,
-    current_turn        VARCHAR(255)    NOT NULL,
-    current_phase       VARCHAR(255)    NOT NULL,
-    clue_word           VARCHAR(255),
+    lobby_code          VARCHAR(5)      PRIMARY KEY REFERENCES lobby (lobby_code) ON DELETE CASCADE,
+    current_turn        VARCHAR(4)      NOT NULL,
+    current_phase       VARCHAR(9)      NOT NULL,
+    clue_word           VARCHAR(20),
     clue_guess_amount   INT             DEFAULT 0,
     remaining_guesses   INT             DEFAULT 0,
 
@@ -44,10 +43,10 @@ CREATE TABLE game_state
 CREATE TABLE card
 (
     id              BIGINT          GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    lobby_code      VARCHAR(255)    NOT NULL REFERENCES lobby (lobby_code) ON DELETE CASCADE,
+    lobby_code      VARCHAR(5)      NOT NULL REFERENCES lobby (lobby_code) ON DELETE CASCADE,
     position        INT             NOT NULL,
-    word            VARCHAR(255)    NOT NULL,
-    color           VARCHAR(255)    NOT NULL,
+    word            VARCHAR(11)     NOT NULL,
+    color           VARCHAR(8)      NOT NULL,
     is_guessed      BOOLEAN         DEFAULT FALSE NOT NULL,
 
     CONSTRAINT check_card_position
@@ -63,10 +62,10 @@ CREATE TABLE card
 CREATE TABLE chat_message
 (
     id              BIGINT                          GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    lobby_code      VARCHAR(255)                    NOT NULL REFERENCES lobby (lobby_code) ON DELETE CASCADE,
-    room_key        VARCHAR(255)                    NOT NULL,
-    sender_username VARCHAR(255)                    NOT NULL,
+    lobby_code      VARCHAR(5)                      NOT NULL REFERENCES lobby (lobby_code) ON DELETE CASCADE,
+    room_key        VARCHAR(20)                     NOT NULL,
+    sender_username VARCHAR(20)                     NOT NULL,
     content         TEXT                            NOT NULL,
-    message_type    VARCHAR(255)                    NOT NULL,
+    message_type    VARCHAR(10)                     NOT NULL,
     sent_at         TIMESTAMP WITHOUT TIME ZONE     DEFAULT NOW() -- iirc, frontend plans on saving this?? backend might need to be refactored to store it as well if we decide to have chat logs in DB for retrieval... we would likely need to store time if we want frontend to display correct time
 );
