@@ -27,8 +27,7 @@ CREATE TABLE player
 
 CREATE TABLE game_state
 (
-    id                  BIGINT          GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    lobby_code          VARCHAR(255)    NOT NULL REFERENCES lobby (lobby_code) ON DELETE CASCADE,
+    lobby_code          VARCHAR(255)    PRIMARY KEY REFERENCES lobby (lobby_code) ON DELETE CASCADE,
     current_turn        VARCHAR(255)    NOT NULL,
     current_phase       VARCHAR(255)    NOT NULL,
     clue_word           VARCHAR(255),
@@ -39,8 +38,6 @@ CREATE TABLE game_state
         CHECK (current_turn IN ('RED', 'BLUE')),
     CONSTRAINT check_game_phase
         CHECK (current_phase IN ('SPYMASTER', 'OPERATIVE')),
-    CONSTRAINT unique_game_per_lobby
-        UNIQUE (lobby_code)
 );
 
 -- each lobby will have 25 entries in the card table
@@ -71,5 +68,5 @@ CREATE TABLE chat_message
     sender_username VARCHAR(255)                    NOT NULL,
     content         TEXT                            NOT NULL,
     message_type    VARCHAR(255)                    NOT NULL,
-    sent_at         TIMESTAMP WITHOUT TIME ZONE     DEFAULT NOW() NOT NULL, -- iirc, frontend plans on saving this?? backend might need to be refactored to store it as well if we decide to have chat logs in DB for retrieval... we would likely need to store time if we want frontend to display correct time
+    sent_at         TIMESTAMP WITHOUT TIME ZONE     DEFAULT NOW() -- iirc, frontend plans on saving this?? backend might need to be refactored to store it as well if we decide to have chat logs in DB for retrieval... we would likely need to store time if we want frontend to display correct time
 );
