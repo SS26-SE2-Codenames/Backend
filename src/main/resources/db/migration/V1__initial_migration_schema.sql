@@ -37,7 +37,7 @@ CREATE TABLE game_state
     CONSTRAINT check_game_turn
         CHECK (current_turn IN ('RED', 'BLUE')),
     CONSTRAINT check_game_phase
-        CHECK (current_phase IN ('SPYMASTER', 'OPERATIVE')),
+        CHECK (current_phase IN ('SPYMASTER', 'OPERATIVE'))
 );
 
 -- each lobby will have 25 entries in the card table
