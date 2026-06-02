@@ -56,16 +56,3 @@ CREATE TABLE card
     CONSTRAINT unique_card_position_per_game
         UNIQUE (lobby_code, position)
 );
-
--- debatable if we even need this, will need to ask team
--- room_key is what ChatHistory uses as the map key (e.g. "lobby", "TEAM_RED", "OPERATIVE_BLUE").
-CREATE TABLE chat_message
-(
-    id              BIGINT                          GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    lobby_code      VARCHAR(5)                      NOT NULL REFERENCES lobby (lobby_code) ON DELETE CASCADE,
-    room_key        VARCHAR(20)                     NOT NULL,
-    sender_username VARCHAR(20)                     NOT NULL,
-    content         TEXT                            NOT NULL,
-    message_type    VARCHAR(10)                     NOT NULL,
-    sent_at         TIMESTAMP WITHOUT TIME ZONE     DEFAULT NOW() -- iirc, frontend plans on saving this?? backend might need to be refactored to store it as well if we decide to have chat logs in DB for retrieval... we would likely need to store time if we want frontend to display correct time
-);
