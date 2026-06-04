@@ -1,4 +1,4 @@
-package com.sample;
+package com.codenames.codenames.backend.database;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
