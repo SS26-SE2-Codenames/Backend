@@ -19,14 +19,14 @@ public class Player {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  @Column(name = "lobby_code", nullable = false)
+  @Column(name = "lobby_code", length = 5, nullable = false)
   private String lobbyCode;
-  @Column(nullable = false)
+  @Column(length = 20, nullable = false)
   private String username;
   @Column(name = "is_host", nullable = false)
   private Boolean isHost;
-  @Column(nullable = false)
+  @Column(length = 4, nullable = false)
   private String team;
-  @Column(nullable = false)
+  @Column(length = 9, nullable = false)
   private String role;
 }
