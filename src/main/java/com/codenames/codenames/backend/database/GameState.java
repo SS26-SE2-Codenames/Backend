@@ -20,7 +20,6 @@ import lombok.Setter;
 @Table(name = "game_state")
 public class GameState {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private String lobbyCode;
   @Column(name = "current_turn", length = 4, nullable = false)
   private String currentTurn;
