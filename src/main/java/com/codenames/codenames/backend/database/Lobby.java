@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Persistent entity representing a lobby record within the database schema.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

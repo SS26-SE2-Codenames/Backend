@@ -10,6 +10,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Persistent entity representing a gameState record within the database schema.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
