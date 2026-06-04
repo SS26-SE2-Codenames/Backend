@@ -29,7 +29,7 @@ public class GameState {
   @Column(name = "clue_word", length = 20)
   private String clueWord;
   @Column(name = "clue_guess_amount")
-  private long clueGuessAmount;
+  private int clueGuessAmount;
   @Column(name = "remaining_guesses")
-  private long remainingGuesses;
+  private int remainingGuesses;
 }

@@ -21,7 +21,7 @@ import lombok.Setter;
 public class Card {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+  private Long id;
   @Column(name = "lobby_code", length = 5, nullable = false)
   private String lobbyCode;
   @Column(nullable = false)
