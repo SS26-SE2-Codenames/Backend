@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.database;
+package com.codenames.codenames.backend.database.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
