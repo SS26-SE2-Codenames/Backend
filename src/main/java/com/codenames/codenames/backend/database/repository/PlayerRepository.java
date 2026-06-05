@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
  * Repository class for Lobby that has the default available methods needed to perform SQL queries.
  */
 @Repository
-public interface PlayerRepository extends JpaRepository<Player, String> {
+public interface PlayerRepository extends JpaRepository<Player, Long> {
 
   /**
    * Custom SQL query that is not included in the JpaRepository interface.
