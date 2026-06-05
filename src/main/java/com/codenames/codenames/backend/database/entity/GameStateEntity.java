@@ -19,14 +19,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "game_state")
-public class GameState {
+public class GameStateEntity {
   @Id
   @Column(name = "lobby_code")
   private String lobbyCode;
   @OneToOne
   @MapsId
   @JoinColumn(name = "lobby_code")
-  private Lobby lobby;
+  private LobbyEntity lobbyEntity;
   @Column(name = "current_turn", length = 4, nullable = false)
   private String currentTurn;
   @Column(name = "current_phase", length = 9, nullable = false)

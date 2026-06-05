@@ -20,13 +20,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "card")
-public class Card {
+public class CardEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   @ManyToOne
   @JoinColumn(name = "lobby_code", nullable = false)
-  private Lobby lobby;
+  private LobbyEntity lobbyEntity;
   @Column(nullable = false)
   private int position;
   @Column(length = 11, nullable = false)

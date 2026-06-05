@@ -1,6 +1,6 @@
 package com.codenames.codenames.backend.database.repository;
 
-import com.codenames.codenames.backend.database.entity.Player;
+import com.codenames.codenames.backend.database.entity.PlayerEntity;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
  * Repository class for Lobby that has the default available methods needed to perform SQL queries.
  */
 @Repository
-public interface PlayerRepository extends JpaRepository<Player, Long> {
+public interface PlayerRepository extends JpaRepository<PlayerEntity, Long> {
 
   /**
    * Custom SQL query that is not included in the JpaRepository interface.
@@ -20,5 +20,5 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
    */
   // First Lobby is the Lobby object inside the entity where we can find the lobby_code String.
   // And "resets" the SQL search back to the root table Player
-  Optional<Player> findByLobbyLobbyCodeAndUsername(String lobbyCode, String username);
+  Optional<PlayerEntity> findByLobbyLobbyCodeAndUsername(String lobbyCode, String username);
 }

@@ -22,19 +22,19 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "lobby")
-public class Lobby {
+public class LobbyEntity {
   @Id
   @Column(name = "lobby_code", length = 5, nullable = false)
   private String lobbyCode;
   @Column(name = "created_at", insertable = false, updatable = false, nullable = false)
   private Timestamp createdAt;
 
-  @OneToOne(mappedBy = "lobby", cascade = CascadeType.ALL, orphanRemoval = true)
-  private GameState gameState;
+  @OneToOne(mappedBy = "lobbyEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+  private GameStateEntity gameStateEntity;
 
-  @OneToMany(mappedBy = "lobby", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Player> players = new ArrayList<>();
+  @OneToMany(mappedBy = "lobbyEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<PlayerEntity> playerEntities = new ArrayList<>();
 
-  @OneToMany(mappedBy = "lobby", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Card> cards = new ArrayList<>();
+  @OneToMany(mappedBy = "lobbyEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<CardEntity> cardEntities = new ArrayList<>();
 }
