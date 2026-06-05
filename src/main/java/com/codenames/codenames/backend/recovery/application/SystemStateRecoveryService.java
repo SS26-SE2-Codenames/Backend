@@ -60,8 +60,10 @@ public class SystemStateRecoveryService {
               }
               restoreLobbies(snapshot.lobbies());
               restoreGames(snapshot.games());
+              int lobbyCount = (snapshot.lobbies() == null) ? 0 : snapshot.lobbies().size();
+              int gameCount = (snapshot.games() == null) ? 0 : snapshot.games().size();
               log.info("Restoring of {} lobbies and {} games successful.",
-                      snapshot.lobbies().size(), snapshot.games().size()
+                      lobbyCount, gameCount
               );
             });
   }
