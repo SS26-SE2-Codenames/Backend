@@ -7,7 +7,6 @@ import com.codenames.codenames.backend.game.domain.GameManager;
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.application.LobbyService;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,12 +14,27 @@ import org.springframework.transaction.annotation.Transactional;
 /** Service class for storing a snapshot into the database. */
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class PersistenceService {
   private final LobbyService lobbyService;
   private final GameService gameService;
   private final PersistenceMapper persistenceMapper;
   private final LobbyRepository lobbyRepository;
+
+  /**
+   * Constructor for the PersistenceService class.
+   *
+   * @param lobbyService the service class for lobby, from which we derive playerDto
+   * @param gameService the service class for game, from which we derive gameManager
+   * @param persistenceMapper the helper class used for ORM (Object Relational Mapping)
+   * @param lobbyRepository the repository for saving to DB with cascade
+   */
+  public PersistenceService(LobbyService lobbyService, GameService gameService,
+      PersistenceMapper persistenceMapper, LobbyRepository lobbyRepository) {
+    this.lobbyService = lobbyService;
+    this.gameService = gameService;
+    this.persistenceMapper = persistenceMapper;
+    this.lobbyRepository = lobbyRepository;
+  }
 
   // according to spring docs I might need to configure it somewhere, will check later
   // default setting is that it triggers rollback on error, should act as transaction from DBMS
