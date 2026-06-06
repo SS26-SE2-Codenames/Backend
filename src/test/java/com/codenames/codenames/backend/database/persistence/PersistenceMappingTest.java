@@ -28,15 +28,17 @@ import org.junit.jupiter.api.Test;
 class PersistenceMappingTest {
   private PersistenceMapper persistenceMapper;
   private String lobbyCode;
-  CardGenerator mockCardGenerator;
-  ClueValidationService mockClueValidationService;
-  GameManager gameManager;
-  PlayerDto player1;
-  PlayerDto player2;
-  List<PlayerDto> playerDtoList;
-  LobbyEntity lobbyEntity;
-  Color redColor = Color.RED;
-  Team redTeam = Team.RED;
+  private CardGenerator mockCardGenerator;
+  private ClueValidationService mockClueValidationService;
+  private GameManager gameManager;
+  private PlayerDto player1;
+  private PlayerDto player2;
+  private List<PlayerDto> playerDtoList;
+  private LobbyEntity lobbyEntity;
+  private final Color redColor = Color.RED;
+  private final Team redTeam = Team.RED;
+  private final Role spymaster =  Role.SPYMASTER;
+  private final Role operative =  Role.OPERATIVE;
   int maxCardAmount = 25;
 
   @BeforeEach
@@ -47,9 +49,9 @@ class PersistenceMappingTest {
     mockCardGenerator = mock(CardGenerator.class);
 
     mockClueValidationService = mock(ClueValidationService.class);
-    gameManager = new GameManager(Team.RED, mockCardGenerator, mockClueValidationService);
-    player1 = new PlayerDto("Test1", Team.RED, Role.SPYMASTER, true);
-    player2 = new PlayerDto("Test2", Team.RED, Role.OPERATIVE, false);
+    gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
+    player1 = new PlayerDto("Test1", redTeam, spymaster, true);
+    player2 = new PlayerDto("Test2", redTeam, operative, false);
     playerDtoList = List.of(player1, player2);
 
     lobbyEntity =
