@@ -133,13 +133,13 @@ class PersistenceServiceTest {
     List<PlayerEntity> playerList = lobbyEntity.getPlayerEntities();
     assertEquals(2, playerList.size());
 
-    PlayerEntity player1 = playerList.get(0);
+    PlayerEntity playerEntity = playerList.get(0);
 
-    assertEquals(lobbyCode, player1.getLobbyEntity().getLobbyCode());
-    assertEquals("Test1", player1.getUsername());
-    assertTrue(player1.getIsHost());
-    assertEquals("RED", player1.getTeam());
-    assertEquals("SPYMASTER", player1.getRole());
+    assertEquals(lobbyCode, playerEntity.getLobbyEntity().getLobbyCode());
+    assertEquals("Test1", playerEntity.getUsername());
+    assertTrue(playerEntity.getIsHost());
+    assertEquals("RED", playerEntity.getTeam());
+    assertEquals("SPYMASTER", playerEntity.getRole());
   }
 
   @Test
