@@ -6,6 +6,7 @@ import com.codenames.codenames.backend.database.entity.LobbyEntity;
 import com.codenames.codenames.backend.database.entity.PlayerEntity;
 import com.codenames.codenames.backend.game.domain.Card;
 
+import com.codenames.codenames.backend.game.domain.Clue;
 import com.codenames.codenames.backend.game.domain.GameManager;
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import java.util.ArrayList;
@@ -71,8 +72,15 @@ public class PersistenceMapper {
     gameStateEntity.setCurrentTurn(gameManager.getCurrentTurn().name());
     gameStateEntity.setCurrentPhase(gameManager.getCurrentPhase().name());
     gameStateEntity.setClueWord(gameManager.getCurrentClueWord());
-    gameStateEntity.setClueGuessAmount(gameStateEntity.getClueGuessAmount());
-    gameStateEntity.setRemainingGuesses(gameStateEntity.getRemainingGuesses());
+
+    Clue currentClue = gameManager.getCurrentClue();
+    if (currentClue != null) {
+      gameStateEntity.setClueGuessAmount(gameManager.getCurrentClue().guessAmount());
+      gameStateEntity.setRemainingGuesses(gameManager.getRemainingGuesses());
+    } else {
+      gameStateEntity.setClueGuessAmount(0);
+      gameStateEntity.setRemainingGuesses(0);
+    }
     return gameStateEntity;
   }
 
