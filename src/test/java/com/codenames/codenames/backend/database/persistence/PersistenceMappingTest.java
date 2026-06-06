@@ -39,8 +39,8 @@ class PersistenceMappingTest {
   private LobbyEntity lobbyEntity;
   private final Color redColor = Color.RED;
   private final Team redTeam = Team.RED;
-  private final Role spymaster =  Role.SPYMASTER;
-  private final Role operative =  Role.OPERATIVE;
+  private final Role spymaster = Role.SPYMASTER;
+  private final Role operative = Role.OPERATIVE;
   int maxCardAmount = 25;
 
   @BeforeEach
