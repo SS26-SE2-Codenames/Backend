@@ -38,14 +38,14 @@ public class PersistenceMapper {
     List<Card> cardList = gameManager.getCardList();
 
     lobbyEntity.setGameStateEntity(mapGameState(lobbyEntity, lobbyCode, gameManager));
-    lobbyEntity.setCardEntities(mapCard(lobbyEntity, lobbyCode, cardList));
-    lobbyEntity.setPlayerEntities(mapPlayer(lobbyEntity, lobbyCode, players));
+    lobbyEntity.setCardEntities(mapCard(lobbyEntity, cardList));
+    lobbyEntity.setPlayerEntities(mapPlayer(lobbyEntity, players));
 
     return lobbyEntity;
   }
 
   private List<PlayerEntity> mapPlayer(
-      LobbyEntity lobbyEntity, String lobbyCode, List<PlayerDto> players) {
+      LobbyEntity lobbyEntity, List<PlayerDto> players) {
     List<PlayerEntity> playerList = new ArrayList<>();
 
     for (int i = 0; i < players.size(); i++) {
@@ -76,7 +76,7 @@ public class PersistenceMapper {
     return gameStateEntity;
   }
 
-  private List<CardEntity> mapCard(LobbyEntity lobbyEntity, String lobbyCode, List<Card> cards) {
+  private List<CardEntity> mapCard(LobbyEntity lobbyEntity, List<Card> cards) {
     List<CardEntity> cardList = new ArrayList<>();
     for (int i = 0; i < cards.size(); i++) {
       CardEntity cardEntity = new CardEntity();
