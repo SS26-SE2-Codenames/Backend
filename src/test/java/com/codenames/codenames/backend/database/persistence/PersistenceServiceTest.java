@@ -31,7 +31,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-
 // (Spring Docs)
 // By default, tests annotated with @DataJpaTest are transactional and roll back at the end of each
 // test.
@@ -70,7 +69,8 @@ class PersistenceServiceTest {
     PersistenceMapper persistenceMapper = new PersistenceMapper();
 
     persistenceService =
-        new PersistenceService(mockLobbyService, mockGameService, persistenceMapper, lobbyRepository);
+        new PersistenceService(
+            mockLobbyService, mockGameService, persistenceMapper, lobbyRepository);
 
     mockCardGenerator = mock(CardGenerator.class);
     mockClueValidationService = mock(ClueValidationService.class);
@@ -153,13 +153,13 @@ class PersistenceServiceTest {
     assertEquals(lobbyCode, cardList.get(0).getLobbyEntity().getLobbyCode());
 
     assertEquals(0, cardList.get(0).getPosition());
-    assertEquals("Test1", cardList.get(0).getWord());
-    assertEquals("RED",  cardList.get(0).getColor());
+    assertEquals("Test0", cardList.get(0).getWord());
+    assertEquals("RED", cardList.get(0).getColor());
     assertFalse(cardList.get(0).getIsGuessed());
 
     assertEquals(24, cardList.get(24).getPosition());
     assertEquals("Test24", cardList.get(24).getWord());
-    assertEquals("RED",  cardList.get(24).getColor());
+    assertEquals("RED", cardList.get(24).getColor());
     assertFalse(cardList.get(24).getIsGuessed());
   }
 }
