@@ -1,6 +1,7 @@
 package com.codenames.codenames.backend.database.persistence;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -14,10 +15,12 @@ import com.codenames.codenames.backend.database.entity.PlayerEntity;
 import com.codenames.codenames.backend.game.application.CardGenerator;
 import com.codenames.codenames.backend.game.application.ClueValidationService;
 import com.codenames.codenames.backend.game.domain.Card;
+import com.codenames.codenames.backend.game.domain.Color;
 import com.codenames.codenames.backend.game.domain.GameManager;
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,8 +28,8 @@ import org.junit.jupiter.api.Test;
 class PersistenceMappingTest {
   private PersistenceMapper persistenceMapper;
   private String lobbyCode;
-  CardGenerator cardGenerator;
-  ClueValidationService clueValidationService;
+  CardGenerator mockCardGenerator;
+  ClueValidationService mockClueValidationService;
   GameManager gameManager;
   PlayerDto player1;
   PlayerDto player2;
@@ -38,10 +41,10 @@ class PersistenceMappingTest {
     persistenceMapper = new PersistenceMapper();
     lobbyCode = "ABCDE";
 
-    cardGenerator = mock(CardGenerator.class);
+    mockCardGenerator = mock(CardGenerator.class);
 
-    clueValidationService = mock(ClueValidationService.class);
-    gameManager = new GameManager(Team.RED, cardGenerator, clueValidationService);
+    mockClueValidationService = mock(ClueValidationService.class);
+    gameManager = new GameManager(Team.RED, mockCardGenerator, mockClueValidationService);
     player1 = new PlayerDto("Test1", Team.RED, Role.SPYMASTER, true);
     player2 = new PlayerDto("Test2", Team.RED, Role.OPERATIVE, false);
     playerDtoList = List.of(player1, player2);
@@ -50,17 +53,34 @@ class PersistenceMappingTest {
         persistenceMapper.mapAggregateParentLobbyEntity(lobbyCode, gameManager, playerDtoList);
   }
 
+  // Modified helper methods from GameManager to generate a game with full cards
+  private void mockCardGeneration(List<Card> cardList) {
+    when(mockCardGenerator.generateCards(anyInt(), anyInt(), anyInt(), anyInt(), anyInt()))
+        .thenReturn(cardList);
+  }
+
+  private GameManager helperMethodGenerateFullCardList(Color cardColor, Team startingTeam) {
+    List<Card> cardList = new ArrayList<>();
+    for (int i = 0; i < 25; i++) {
+      cardList.add(new Card("Test" + i, cardColor));
+    }
+    mockCardGeneration(cardList);
+    GameManager fullListGameManager =
+        new GameManager(startingTeam, mockCardGenerator, mockClueValidationService);
+    return fullListGameManager;
+  }
+
   @Test
   void testMapPlayer() {
     List<PlayerEntity> playerEntities = lobbyEntity.getPlayerEntities();
 
-    PlayerEntity player1 = playerEntities.get(0);
+    PlayerEntity retrievedPlayer1 = playerEntities.get(0);
 
-    assertEquals(lobbyEntity, player1.getLobbyEntity());
-    assertEquals("Test1", player1.getUsername());
-    assertTrue(player1.getIsHost());
-    assertEquals("RED", player1.getTeam());
-    assertEquals("SPYMASTER", player1.getRole());
+    assertEquals(lobbyEntity, retrievedPlayer1.getLobbyEntity());
+    assertEquals("Test1", retrievedPlayer1.getUsername());
+    assertTrue(retrievedPlayer1.getIsHost());
+    assertEquals("RED", retrievedPlayer1.getTeam());
+    assertEquals("SPYMASTER", retrievedPlayer1.getRole());
   }
 
   @Test
@@ -73,5 +93,23 @@ class PersistenceMappingTest {
     assertNull(gameStateEntity.getClueWord());
     assertEquals(0, gameStateEntity.getClueGuessAmount());
     assertEquals(0, gameStateEntity.getRemainingGuesses());
+  }
+
+  @Test
+  void testMapCard() {
+    GameManager fullCardGameManager = helperMethodGenerateFullCardList(Color.RED, Team.RED);
+    LobbyEntity fullCardLobbyEntity =
+        persistenceMapper.mapAggregateParentLobbyEntity(
+            lobbyCode, fullCardGameManager, playerDtoList);
+    List<CardEntity> cardEntities = fullCardLobbyEntity.getCardEntities();
+
+    for (int i = 0; i < 25; i++) {
+      CardEntity cardEntity = cardEntities.get(i);
+      assertEquals(fullCardLobbyEntity, cardEntity.getLobbyEntity());
+      assertEquals(i, cardEntity.getPosition());
+      assertEquals("Test" + i, cardEntity.getWord());
+      assertEquals("RED", cardEntity.getColor());
+      assertFalse(cardEntity.getIsGuessed());
+    }
   }
 }
