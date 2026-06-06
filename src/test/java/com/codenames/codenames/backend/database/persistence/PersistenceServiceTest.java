@@ -1,6 +1,7 @@
 package com.codenames.codenames.backend.database.persistence;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -8,6 +9,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.codenames.codenames.backend.database.entity.CardEntity;
 import com.codenames.codenames.backend.database.entity.GameStateEntity;
 import com.codenames.codenames.backend.database.entity.LobbyEntity;
 import com.codenames.codenames.backend.database.entity.PlayerEntity;
@@ -135,6 +137,31 @@ class PersistenceServiceTest {
     assertTrue(player1.getIsHost());
     assertEquals("RED", player1.getTeam());
     assertEquals("SPYMASTER", player1.getRole());
+  }
+
+  @Test
+  void testSaveSnapshot_card() {
+    persistenceService.saveSnapShot(lobbyCode);
+
+    LobbyEntity lobbyEntity = lobbyRepository.findById(lobbyCode).get();
+    List<CardEntity> cardList = lobbyEntity.getCardEntities();
+
+    assertEquals(25, cardList.size());
+    assertEquals(lobbyCode, cardList.getFirst().getLobbyEntity().getLobbyCode());
+
+    assertEquals(0, cardList.getFirst().getPosition());
+    assertEquals("Test1", cardList.getFirst().getWord());
+    assertEquals("RED",  cardList.getFirst().getColor());
+    assertFalse(cardList.getFirst().getIsGuessed());
+
+    assertEquals(24, cardList.getLast().getPosition());
+    assertEquals("Test24", cardList.getLast().getWord());
+    assertEquals("RED",  cardList.getFirst().getColor());
+    assertFalse(cardList.getLast().getIsGuessed());
+
+
+
+
   }
 
 }
