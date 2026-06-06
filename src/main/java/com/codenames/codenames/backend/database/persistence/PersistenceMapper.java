@@ -18,9 +18,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PersistenceMapper {
-  // Should be possible to just call save on Lobby object due to cascade. Will find out in the
-  // future when this feature/ ticket is finished.
-
   /**
    * This method creates and returns a lobby entity that is to be stored into the DB.
    *

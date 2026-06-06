@@ -36,9 +36,6 @@ public class PersistenceService {
     this.lobbyRepository = lobbyRepository;
   }
 
-  // according to spring docs I might need to configure it somewhere, will check later
-  // default setting is that it triggers rollback on error, should act as transaction from DBMS
-
   /**
    * Method to create a snapshot and save it to the database.
    *
