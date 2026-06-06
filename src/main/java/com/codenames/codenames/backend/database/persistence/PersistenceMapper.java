@@ -10,11 +10,13 @@ import com.codenames.codenames.backend.game.domain.GameManager;
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 /**
  * Helper class that is called by the PersistenceService to map all the tables when a snapshot is
  * created.
  */
+@Component
 public class PersistenceMapper {
   // Should be possible to just call save on Lobby object due to cascade. Will find out in the
   // future when this feature/ ticket is finished.
