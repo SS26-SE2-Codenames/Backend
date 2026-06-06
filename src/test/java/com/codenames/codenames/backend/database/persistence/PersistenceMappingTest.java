@@ -1,18 +1,19 @@
 package com.codenames.codenames.backend.database.persistence;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.database.entity.CardEntity;
+import com.codenames.codenames.backend.database.entity.GameStateEntity;
 import com.codenames.codenames.backend.database.entity.LobbyEntity;
 import com.codenames.codenames.backend.database.entity.PlayerEntity;
 import com.codenames.codenames.backend.game.application.CardGenerator;
 import com.codenames.codenames.backend.game.application.ClueValidationService;
 import com.codenames.codenames.backend.game.domain.Card;
-import com.codenames.codenames.backend.game.domain.Color;
 import com.codenames.codenames.backend.game.domain.GameManager;
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.domain.Role;
@@ -30,7 +31,7 @@ class PersistenceMappingTest {
   PlayerDto player1;
   PlayerDto player2;
   List<PlayerDto> playerDtoList;
-  List<Card> dummyCardList;
+  LobbyEntity lobbyEntity;
 
   @BeforeEach
   void setup() {
@@ -44,12 +45,13 @@ class PersistenceMappingTest {
     player1 = new PlayerDto("Test1", Team.RED, Role.SPYMASTER, true);
     player2 = new PlayerDto("Test2", Team.RED, Role.OPERATIVE, false);
     playerDtoList = List.of(player1, player2);
+
+    lobbyEntity =
+        persistenceMapper.mapAggregateParentLobbyEntity(lobbyCode, gameManager, playerDtoList);
   }
 
   @Test
   void testMapPlayer() {
-    LobbyEntity lobbyEntity =
-        persistenceMapper.mapAggregateParentLobbyEntity(lobbyCode, gameManager, playerDtoList);
     List<PlayerEntity> playerEntities = lobbyEntity.getPlayerEntities();
 
     PlayerEntity player1 = playerEntities.get(0);
