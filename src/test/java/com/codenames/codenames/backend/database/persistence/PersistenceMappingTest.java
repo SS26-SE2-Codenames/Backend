@@ -102,7 +102,6 @@ class PersistenceMappingTest {
 
   @Test
   void testMapGameState_notNullClue() {
-    GameManager gameManagerWithClue = helperMethodGenerateFullCardList(redColor, redTeam);
     when(mockClueValidationService.validateWord(any(), any())).thenReturn(true);
     gameManager.submitClue(new Clue("TestWord", 1), redTeam);
     lobbyEntity =
