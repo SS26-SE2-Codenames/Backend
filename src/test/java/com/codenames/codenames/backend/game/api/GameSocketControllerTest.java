@@ -6,6 +6,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.codenames.codenames.backend.database.persistence.PersistenceService;
 import com.codenames.codenames.backend.game.api.dto.ClueMessage;
 import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.codenames.codenames.backend.game.api.dto.PassTurnMessage;
@@ -13,7 +14,6 @@ import com.codenames.codenames.backend.game.api.dto.RevealCardMessage;
 import com.codenames.codenames.backend.game.api.dto.StartGameMessage;
 import com.codenames.codenames.backend.game.application.GameService;
 import com.codenames.codenames.backend.lobby.domain.Team;
-import com.codenames.codenames.backend.recovery.application.SystemStatePersistenceService;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ class GameSocketControllerTest {
 
   @Mock private SimpMessagingTemplate messagingTemplate;
 
-  @Mock private SystemStatePersistenceService persistenceService;
+  @Mock private PersistenceService persistenceService;
 
   private GameSocketController controller;
 
@@ -51,7 +51,7 @@ class GameSocketControllerTest {
 
     controller.startGame(message);
 
-    verify(persistenceService, never()).persistCurrentState();
+    verify(persistenceService, never()).saveSnapShot(LOBBY_CODE);
     verify(messagingTemplate).convertAndSend(anyString(), any(Object.class));
   }
 
@@ -68,7 +68,7 @@ class GameSocketControllerTest {
     controller.revealCard(message);
 
     verify(gameService).flipCard(LOBBY_CODE, 0, Team.RED);
-    verify(persistenceService).persistCurrentState();
+    verify(persistenceService).saveSnapShot(LOBBY_CODE);
     verify(messagingTemplate).convertAndSend(anyString(), any(Object.class));
   }
 
@@ -86,7 +86,7 @@ class GameSocketControllerTest {
     controller.submitClue(message);
 
     verify(gameService).submitClue(anyString(), any(), any());
-    verify(persistenceService).persistCurrentState();
+    verify(persistenceService).saveSnapShot(LOBBY_CODE);
     verify(messagingTemplate).convertAndSend(anyString(), any(Object.class));
   }
 
@@ -102,7 +102,7 @@ class GameSocketControllerTest {
     controller.passTurn(message);
 
     verify(gameService).passTurn(LOBBY_CODE, Team.RED);
-    verify(persistenceService).persistCurrentState();
+    verify(persistenceService).saveSnapShot(LOBBY_CODE);
     verify(messagingTemplate).convertAndSend(anyString(), any(Object.class));
   }
 
