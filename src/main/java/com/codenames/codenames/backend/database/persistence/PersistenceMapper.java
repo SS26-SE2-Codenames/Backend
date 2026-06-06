@@ -11,9 +11,22 @@ import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Helper class that is called by the PersistenceService to map all the tables when a snapshot is
+ * created.
+ */
 public class PersistenceMapper {
   // Should be possible to just call save on Lobby object due to cascade. Will find out in the
   // future when this feature/ ticket is finished.
+
+  /**
+   * This method creates and returns a lobby entity that is to be stored into the DB.
+   *
+   * @param lobbyCode the code to act as PK and FK for other tables
+   * @param gameManager the gameManager of an active game to derive information for other tables
+   * @param players the list of players in an active game
+   * @return the lobby entity to be stored into dp
+   */
   public LobbyEntity mapAggregateParentLobbyEntity(
       String lobbyCode, GameManager gameManager, List<PlayerDto> players) {
 
@@ -46,7 +59,6 @@ public class PersistenceMapper {
   }
 
   // Since we are using ORM we always need to map the object as well.
-
 
   private GameStateEntity mapGameState(
       LobbyEntity lobbyEntity, String lobbyCode, GameManager gameManager) {
