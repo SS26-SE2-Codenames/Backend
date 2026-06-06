@@ -8,6 +8,7 @@ import com.codenames.codenames.backend.game.domain.Card;
 
 import com.codenames.codenames.backend.game.domain.GameManager;
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PersistenceMapper {
@@ -19,6 +20,9 @@ public class PersistenceMapper {
     lobbyEntity.setLobbyCode(lobbyCode);
 
     lobbyEntity.setGameStateEntity(mapGameState(lobbyEntity, lobbyCode, gameManager));
+    List<Card> cardList = gameManager.getCardList();
+    lobbyEntity.setCardEntities(mapCard(lobbyEntity, lobbyCode, cardList));
+
 
     return lobbyEntity;
   }
@@ -37,7 +41,19 @@ public class PersistenceMapper {
     return gameStateEntity;
   }
 
-  private CardEntity mapCard(List<Card> cards) {}
+  private List<CardEntity> mapCard(LobbyEntity lobbyEntity, String lobbyCode, List<Card> cards) {
+    List<CardEntity> cardList = new ArrayList<>();
+    for(int i = 0; i < cards.size(); i++) {
+      CardEntity cardEntity = new CardEntity();
+      cardEntity.setLobbyEntity(lobbyEntity);
+      cardEntity.setPosition(i);
+      cardEntity.setWord(cards.get(i).getWord());
+      cardEntity.setColor(cards.get(i).getColor().name());
+      cardEntity.setIsGuessed(cards.get(i).isGuessed());
+      cardList.add(cardEntity);
+    }
+    return cardList;
+  }
 
   private PlayerEntity mapPlayer(List<PlayerDto> players) {}
 }
