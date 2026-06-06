@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 
@@ -55,7 +56,9 @@ class PersistenceServiceTest {
   private final Role spymaster = Role.SPYMASTER;
   private final Role operative = Role.OPERATIVE;
 
-  // Cant use new to instantiate Interfaces, Spring will automatically use dependency injection here
+  // Cant use new to instantiate Interfaces --> use @Autowired
+  // Spring checks their active beans (@Repository in this case) and upon matching injects it here
+  @Autowired
   public PersistenceServiceTest(LobbyRepository lobbyRepository) {
     this.lobbyRepository = lobbyRepository;
   }
