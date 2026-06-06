@@ -3,12 +3,14 @@ package com.codenames.codenames.backend.database.persistence;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.database.entity.GameStateEntity;
 import com.codenames.codenames.backend.database.entity.LobbyEntity;
+import com.codenames.codenames.backend.database.entity.PlayerEntity;
 import com.codenames.codenames.backend.database.repository.LobbyRepository;
 import com.codenames.codenames.backend.game.application.CardGenerator;
 import com.codenames.codenames.backend.game.application.ClueValidationService;
@@ -116,6 +118,23 @@ class PersistenceServiceTest {
     assertNull(gameStateEntity.getClueWord());
     assertEquals(0, gameStateEntity.getClueGuessAmount());
     assertEquals(0, gameStateEntity.getRemainingGuesses());
+  }
+
+  @Test
+  void testSaveSnapshot_player() {
+    persistenceService.saveSnapShot(lobbyCode);
+
+    LobbyEntity lobbyEntity = lobbyRepository.findById(lobbyCode).get();
+    List<PlayerEntity> playerList = lobbyEntity.getPlayerEntities();
+    assertEquals(2, playerList.size());
+
+    PlayerEntity player1 = playerList.get(0);
+
+    assertEquals(lobbyCode, player1.getLobbyEntity().getLobbyCode());
+    assertEquals("Test1", player1.getUsername());
+    assertTrue(player1.getIsHost());
+    assertEquals("RED", player1.getTeam());
+    assertEquals("SPYMASTER", player1.getRole());
   }
 
 }
