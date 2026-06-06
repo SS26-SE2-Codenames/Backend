@@ -103,11 +103,19 @@ class PersistenceServiceTest {
   }
 
   @Test
-  void testSaveSnapshot() {
+  void testSaveSnapshot_gameStateEntity() {
     persistenceService.saveSnapShot(lobbyCode);
 
+    LobbyEntity lobbyEntity = lobbyRepository.findById(lobbyCode).get();
+    GameStateEntity gameStateEntity = lobbyEntity.getGameStateEntity();
+
+    assertNotNull(gameStateEntity);
+    assertEquals(lobbyCode, gameStateEntity.getLobbyCode());
+    assertEquals("RED", gameStateEntity.getCurrentTurn());
+    assertEquals("SPYMASTER", gameStateEntity.getCurrentPhase());
+    assertNull(gameStateEntity.getClueWord());
+    assertEquals(0, gameStateEntity.getClueGuessAmount());
+    assertEquals(0, gameStateEntity.getRemainingGuesses());
   }
-
-
 
 }
