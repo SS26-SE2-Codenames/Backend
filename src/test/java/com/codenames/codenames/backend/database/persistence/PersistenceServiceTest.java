@@ -147,21 +147,16 @@ class PersistenceServiceTest {
     List<CardEntity> cardList = lobbyEntity.getCardEntities();
 
     assertEquals(25, cardList.size());
-    assertEquals(lobbyCode, cardList.getFirst().getLobbyEntity().getLobbyCode());
+    assertEquals(lobbyCode, cardList.get(0).getLobbyEntity().getLobbyCode());
 
-    assertEquals(0, cardList.getFirst().getPosition());
-    assertEquals("Test1", cardList.getFirst().getWord());
-    assertEquals("RED",  cardList.getFirst().getColor());
-    assertFalse(cardList.getFirst().getIsGuessed());
+    assertEquals(0, cardList.get(0).getPosition());
+    assertEquals("Test1", cardList.get(0).getWord());
+    assertEquals("RED",  cardList.get(0).getColor());
+    assertFalse(cardList.get(0).getIsGuessed());
 
-    assertEquals(24, cardList.getLast().getPosition());
-    assertEquals("Test24", cardList.getLast().getWord());
-    assertEquals("RED",  cardList.getFirst().getColor());
-    assertFalse(cardList.getLast().getIsGuessed());
-
-
-
-
+    assertEquals(24, cardList.get(24).getPosition());
+    assertEquals("Test24", cardList.get(24).getWord());
+    assertEquals("RED",  cardList.get(24).getColor());
+    assertFalse(cardList.get(24).getIsGuessed());
   }
-
 }
