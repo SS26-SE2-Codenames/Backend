@@ -13,6 +13,8 @@ import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SourceType;
 
 /**
  * Persistent entity representing a lobby record within the database schema.
@@ -27,6 +29,7 @@ public class LobbyEntity {
   @Column(name = "lobby_code", length = 5, nullable = false)
   private String lobbyCode;
   @Column(name = "created_at", insertable = false, updatable = false, nullable = false)
+  @CreationTimestamp(source = SourceType.DB)
   private Timestamp createdAt;
 
   @OneToOne(mappedBy = "lobbyEntity", cascade = CascadeType.ALL, orphanRemoval = true)
