@@ -13,18 +13,31 @@ import java.util.List;
 public class PersistenceMapper {
   // Should be possible to just call save on Lobby object due to cascade. Will find out in the
   // future when this feature/ ticket is finished.
-  public LobbyEntity mapLobbyEntity(String lobbyCode, GameManager gameManager, List<PlayerDto> players) {
-    LobbyEntity lobby = new LobbyEntity();
-    lobby.setLobbyCode(lobbyCode);
+  public LobbyEntity mapLobbyEntity(
+      String lobbyCode, GameManager gameManager, List<PlayerDto> players) {
+    LobbyEntity lobbyEntity = new LobbyEntity();
+    lobbyEntity.setLobbyCode(lobbyCode);
 
-    return lobby;
-  }
-  private GameStateEntity mapGameState(GameManager gameManager) {
+    lobbyEntity.setGameStateEntity(mapGameState(lobbyEntity, lobbyCode, gameManager));
+
+    return lobbyEntity;
   }
 
-  private CardEntity mapCard(List<Card> cards) {
+  private GameStateEntity mapGameState(
+      LobbyEntity lobbyEntity, String lobbyCode, GameManager gameManager) {
+    GameStateEntity gameStateEntity = new GameStateEntity();
+    // Since we are using ORM we need to map the object as well.
+    gameStateEntity.setLobbyEntity(lobbyEntity);
+    gameStateEntity.setLobbyCode(lobbyCode);
+    gameStateEntity.setCurrentTurn(gameManager.getCurrentTurn().name());
+    gameStateEntity.setCurrentPhase(gameManager.getCurrentPhase().name());
+    gameStateEntity.setClueWord(gameManager.getCurrentClueWord());
+    gameStateEntity.setClueGuessAmount(gameStateEntity.getClueGuessAmount());
+    gameStateEntity.setRemainingGuesses(gameStateEntity.getRemainingGuesses());
+    return gameStateEntity;
   }
-  private PlayerEntity mapPlayer(List<PlayerDto> players) {
 
-  }
+  private CardEntity mapCard(List<Card> cards) {}
+
+  private PlayerEntity mapPlayer(List<PlayerDto> players) {}
 }
