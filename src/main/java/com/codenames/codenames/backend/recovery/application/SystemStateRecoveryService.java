@@ -60,6 +60,11 @@ public class SystemStateRecoveryService {
               }
               restoreLobbies(snapshot.lobbies());
               restoreGames(snapshot.games());
+              int lobbyCount = (snapshot.lobbies() == null) ? 0 : snapshot.lobbies().size();
+              int gameCount = (snapshot.games() == null) ? 0 : snapshot.games().size();
+              log.info("Restoring of {} lobbies and {} games successful.",
+                      lobbyCount, gameCount
+              );
             });
   }
 
@@ -70,6 +75,7 @@ public class SystemStateRecoveryService {
    */
   private void restoreLobbies(Map<String, List<PlayerDto>> lobbySnapshots) {
     if (lobbySnapshots == null || lobbySnapshots.isEmpty()) {
+      log.info("There were no lobbies to restore.");
       return;
     }
     for (Map.Entry<String, List<PlayerDto>> entry : lobbySnapshots.entrySet()) {
@@ -87,6 +93,7 @@ public class SystemStateRecoveryService {
    */
   private void restoreGames(Map<String, GameStateDto> gameSnapshots) {
     if (gameSnapshots == null || gameSnapshots.isEmpty()) {
+      log.info("There were no games to restore.");
       return;
     }
     for (Map.Entry<String, GameStateDto> entry : gameSnapshots.entrySet()) {
@@ -115,6 +122,7 @@ public class SystemStateRecoveryService {
             .toList();
 
     if (validPlayers.isEmpty()) {
+      log.warn("Skipping restore for lobby {} due to invalid player data.", lobbyCode);
       return null;
     }
 

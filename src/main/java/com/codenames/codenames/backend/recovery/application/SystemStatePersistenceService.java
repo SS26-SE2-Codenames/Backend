@@ -4,6 +4,7 @@ import com.codenames.codenames.backend.game.application.GameService;
 import com.codenames.codenames.backend.lobby.application.LobbyService;
 import com.codenames.codenames.backend.recovery.domain.snapshot.SystemSnapshot;
 import com.codenames.codenames.backend.recovery.infrastructure.JsonStateStore;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
  * <p>Collects lobby and game snapshots and stores them through the configured {@link
  * JsonStateStore} to enable recovery after application restart.
  */
+@Slf4j
 @Service
 public class SystemStatePersistenceService {
 
@@ -49,5 +51,6 @@ public class SystemStatePersistenceService {
             gameService.getGameSnapshots());
 
     stateStore.save(snapshot);
+    log.info("Saving a new system snapshot.");
   }
 }

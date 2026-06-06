@@ -10,9 +10,11 @@ import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /** Service to create the DTO for the game state, which is then serialized into JSON. */
+@Slf4j
 @Service
 public class DataTransferObjectService {
 
@@ -41,6 +43,9 @@ public class DataTransferObjectService {
     List<CardDto> cardDataTransferObject = new ArrayList<>();
     for (Card card : cardList) {
       cardDataTransferObject.add(createCardDto(card));
+    }
+    if (gameManager.getWinner() != null) {
+      log.info("A Game is over. Winner is {}.", gameManager.getWinner());
     }
     if (gameManager.getCurrentClue() == null) {
       return new GameStateDto(

@@ -8,6 +8,7 @@ import com.codenames.codenames.backend.game.mapping.DataTransferObjectService;
 import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
  * exposes the methods of the GameManager, so that the websocket controllers can have message
  * mappings to allow frontend to interact with the backend.
  */
+@Slf4j
 @Service
 public class GameService {
 
@@ -41,6 +43,7 @@ public class GameService {
    */
   public void createGameManager(String lobbyCode, Team startingTeam) {
     games.computeIfAbsent(lobbyCode, key -> gameManagerFactory.create(startingTeam));
+    log.info("{}: a new game manager has been created.", lobbyCode);
   }
 
   /**
@@ -50,6 +53,7 @@ public class GameService {
    */
   public void removeGame(String lobbyCode) {
     games.remove(lobbyCode);
+    log.info("{}: Game has been removed from list.", lobbyCode);
   }
 
   /**
