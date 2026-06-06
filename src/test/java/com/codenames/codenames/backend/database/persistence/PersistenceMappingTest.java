@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -15,6 +16,7 @@ import com.codenames.codenames.backend.database.entity.PlayerEntity;
 import com.codenames.codenames.backend.game.application.CardGenerator;
 import com.codenames.codenames.backend.game.application.ClueValidationService;
 import com.codenames.codenames.backend.game.domain.Card;
+import com.codenames.codenames.backend.game.domain.Clue;
 import com.codenames.codenames.backend.game.domain.Color;
 import com.codenames.codenames.backend.game.domain.GameManager;
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
@@ -96,6 +98,20 @@ class PersistenceMappingTest {
     assertNull(gameStateEntity.getClueWord());
     assertEquals(0, gameStateEntity.getClueGuessAmount());
     assertEquals(0, gameStateEntity.getRemainingGuesses());
+  }
+
+  @Test
+  void testMapGameState_notNullClue() {
+    GameManager gameManagerWithClue = helperMethodGenerateFullCardList(redColor, redTeam);
+    when(mockClueValidationService.validateWord(any(), any())).thenReturn(true);
+    gameManager.submitClue(new Clue("TestWord", 1), redTeam);
+    lobbyEntity =
+        persistenceMapper.mapAggregateParentLobbyEntity(lobbyCode, gameManager, playerDtoList);
+
+    GameStateEntity gameStateEntity = lobbyEntity.getGameStateEntity();
+    assertEquals("TestWord", gameStateEntity.getClueWord());
+    assertEquals(2, gameStateEntity.getClueGuessAmount());
+    assertEquals(2, gameStateEntity.getRemainingGuesses());
   }
 
   @Test
