@@ -20,5 +20,5 @@ public interface PlayerRepository extends JpaRepository<PlayerEntity, Long> {
    */
   // First Lobby is the Lobby object inside the entity where we can find the lobby_code String.
   // And "resets" the SQL search back to the root table Player
-  Optional<PlayerEntity> findByLobbyLobbyCodeAndUsername(String lobbyCode, String username);
+  Optional<PlayerEntity> findByLobbyEntityLobbyCodeAndUsername(String lobbyCode, String username);
 }
