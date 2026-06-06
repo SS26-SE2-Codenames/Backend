@@ -63,5 +63,15 @@ class PersistenceMappingTest {
     assertEquals("SPYMASTER", player1.getRole());
   }
 
-  
+  @Test
+  void testMapGameState() {
+    GameStateEntity gameStateEntity = lobbyEntity.getGameStateEntity();
+    assertEquals(lobbyEntity, gameStateEntity.getLobbyEntity());
+    assertEquals(lobbyCode, gameStateEntity.getLobbyCode());
+    assertEquals("RED", gameStateEntity.getCurrentTurn());
+    assertEquals("SPYMASTER", gameStateEntity.getCurrentPhase());
+    assertNull(gameStateEntity.getClueWord());
+    assertEquals(0, gameStateEntity.getClueGuessAmount());
+    assertEquals(0, gameStateEntity.getRemainingGuesses());
+  }
 }
