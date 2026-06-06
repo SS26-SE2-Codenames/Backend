@@ -105,8 +105,9 @@ class PersistenceServiceTest {
   void testSaveSnapshot_lobbyEntity() {
     persistenceService.saveSnapShot(lobbyCode);
 
-    assertNotNull(lobbyRepository.findById(lobbyCode));
-    assertEquals(lobbyCode, lobbyRepository.findById(lobbyCode).get().getLobbyCode());
+    LobbyEntity lobbyEntity = lobbyRepository.findById(lobbyCode).get();
+    assertNotNull(lobbyEntity);
+    assertEquals(lobbyCode, lobbyEntity.getLobbyCode());
   }
 
   @Test
