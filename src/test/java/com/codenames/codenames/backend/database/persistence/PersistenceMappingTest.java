@@ -35,6 +35,9 @@ class PersistenceMappingTest {
   PlayerDto player2;
   List<PlayerDto> playerDtoList;
   LobbyEntity lobbyEntity;
+  Color redColor = Color.RED;
+  Team redTeam = Team.RED;
+  int maxCardAmount = 25;
 
   @BeforeEach
   void setup() {
@@ -61,13 +64,11 @@ class PersistenceMappingTest {
 
   private GameManager helperMethodGenerateFullCardList(Color cardColor, Team startingTeam) {
     List<Card> cardList = new ArrayList<>();
-    for (int i = 0; i < 25; i++) {
+    for (int i = 0; i < maxCardAmount; i++) {
       cardList.add(new Card("Test" + i, cardColor));
     }
     mockCardGeneration(cardList);
-    GameManager fullListGameManager =
-        new GameManager(startingTeam, mockCardGenerator, mockClueValidationService);
-    return fullListGameManager;
+    return new GameManager(startingTeam, mockCardGenerator, mockClueValidationService);
   }
 
   @Test
@@ -97,13 +98,13 @@ class PersistenceMappingTest {
 
   @Test
   void testMapCard() {
-    GameManager fullCardGameManager = helperMethodGenerateFullCardList(Color.RED, Team.RED);
+    GameManager fullCardGameManager = helperMethodGenerateFullCardList(redColor, redTeam);
     LobbyEntity fullCardLobbyEntity =
         persistenceMapper.mapAggregateParentLobbyEntity(
             lobbyCode, fullCardGameManager, playerDtoList);
     List<CardEntity> cardEntities = fullCardLobbyEntity.getCardEntities();
 
-    for (int i = 0; i < 25; i++) {
+    for (int i = 0; i < maxCardAmount; i++) {
       CardEntity cardEntity = cardEntities.get(i);
       assertEquals(fullCardLobbyEntity, cardEntity.getLobbyEntity());
       assertEquals(i, cardEntity.getPosition());
