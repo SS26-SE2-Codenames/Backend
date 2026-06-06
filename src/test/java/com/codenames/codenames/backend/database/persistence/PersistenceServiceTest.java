@@ -1,9 +1,14 @@
 package com.codenames.codenames.backend.database.persistence;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.codenames.codenames.backend.database.entity.GameStateEntity;
+import com.codenames.codenames.backend.database.entity.LobbyEntity;
 import com.codenames.codenames.backend.database.repository.LobbyRepository;
 import com.codenames.codenames.backend.game.application.CardGenerator;
 import com.codenames.codenames.backend.game.application.ClueValidationService;
@@ -89,6 +94,13 @@ class PersistenceServiceTest {
     return new GameManager(startingTeam, mockCardGenerator, mockClueValidationService);
   }
 
+  @Test
+  void testSaveSnapshot_lobbyEntity() {
+    persistenceService.saveSnapShot(lobbyCode);
+
+    assertNotNull(lobbyRepository.findById(lobbyCode));
+    assertEquals(lobbyCode, lobbyRepository.findById(lobbyCode).get().getLobbyCode());
+  }
 
   @Test
   void testSaveSnapshot() {
