@@ -1,4 +1,4 @@
-package com.codenames.codenames.backend.database;
+package com.codenames.codenames.backend.database.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,13 +20,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "player")
-public class Player {
+public class PlayerEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   @ManyToOne
   @JoinColumn(name = "lobby_code", nullable = false)
-  private Lobby lobby;
+  private LobbyEntity lobbyEntity;
   @Column(length = 20, nullable = false)
   private String username;
   @Column(name = "is_host", nullable = false)
