@@ -1,12 +1,12 @@
 package com.codenames.codenames.backend.game.api;
 
+import com.codenames.codenames.backend.database.persistence.PersistenceService;
 import com.codenames.codenames.backend.game.api.dto.ClueMessage;
 import com.codenames.codenames.backend.game.api.dto.PassTurnMessage;
 import com.codenames.codenames.backend.game.api.dto.RevealCardMessage;
 import com.codenames.codenames.backend.game.api.dto.StartGameMessage;
 import com.codenames.codenames.backend.game.application.GameService;
 import com.codenames.codenames.backend.game.domain.Clue;
-import com.codenames.codenames.backend.recovery.application.SystemStatePersistenceService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -23,7 +23,7 @@ public class GameSocketController {
   private final GameService gameService;
 
   private final SimpMessagingTemplate messagingTemplate;
-  private final SystemStatePersistenceService persistenceService;
+  private final PersistenceService persistenceService;
 
   private static final String GAME_TOPIC_PREFIX = "/topic/game/";
 
@@ -37,7 +37,7 @@ public class GameSocketController {
   public GameSocketController(
       GameService gameService,
       SimpMessagingTemplate messagingTemplate,
-      SystemStatePersistenceService persistenceService) {
+      PersistenceService persistenceService) {
 
     this.gameService = gameService;
     this.messagingTemplate = messagingTemplate;
@@ -68,7 +68,6 @@ public class GameSocketController {
   public void revealCard(RevealCardMessage message) {
 
     gameService.flipCard(message.getLobbyCode(), message.getPosition(), message.getCurrentTurn());
-    persistenceService.persistCurrentState();
 
     messagingTemplate.convertAndSend(
         GAME_TOPIC_PREFIX + message.getLobbyCode(),
@@ -89,7 +88,7 @@ public class GameSocketController {
         message.getLobbyCode(),
         new Clue(message.getWord(), message.getGuessAmount()),
         message.getCurrentTurn());
-    persistenceService.persistCurrentState();
+    persistenceService.saveSnapShot(message.getLobbyCode());
 
     messagingTemplate.convertAndSend(
         GAME_TOPIC_PREFIX + message.getLobbyCode(),
@@ -105,7 +104,7 @@ public class GameSocketController {
   public void passTurn(PassTurnMessage message) {
 
     gameService.passTurn(message.getLobbyCode(), message.getCurrentTurn());
-    persistenceService.persistCurrentState();
+    persistenceService.saveSnapShot(message.getLobbyCode());
 
     messagingTemplate.convertAndSend(
         GAME_TOPIC_PREFIX + message.getLobbyCode(),
