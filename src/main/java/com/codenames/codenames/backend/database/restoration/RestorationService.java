@@ -9,9 +9,11 @@ import com.codenames.codenames.backend.game.domain.GameManagerFactory;
 import com.codenames.codenames.backend.lobby.application.LobbyService;
 import com.codenames.codenames.backend.lobby.domain.Lobby;
 import jakarta.annotation.PostConstruct;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional(readOnly = true)
 public class RestorationService {
   private final RestorationMapper restorationMapper;
   private final LobbyRepository lobbyRepository;
