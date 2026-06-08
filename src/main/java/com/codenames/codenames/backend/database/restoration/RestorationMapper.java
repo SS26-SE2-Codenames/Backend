@@ -8,6 +8,7 @@ import com.codenames.codenames.backend.game.api.dto.CardDto;
 import com.codenames.codenames.backend.game.api.dto.ClueDto;
 import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.codenames.codenames.backend.game.domain.Color;
+import com.codenames.codenames.backend.game.domain.GameManager;
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.domain.Lobby;
 import com.codenames.codenames.backend.lobby.domain.Role;
@@ -26,7 +27,7 @@ public class RestorationMapper {
     return lobby;
   }
 
-  private GameStateDto mapToGameStateDto(LobbyEntity lobbyEntity) {
+  public GameStateDto mapToGameStateDto(LobbyEntity lobbyEntity) {
     GameStateEntity gameStateEntity = lobbyEntity.getGameStateEntity();
     if (gameStateEntity == null) {
       throw new RuntimeException("Game state entity is null");
