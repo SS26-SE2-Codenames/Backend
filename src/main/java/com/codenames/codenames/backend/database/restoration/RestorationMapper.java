@@ -20,13 +20,12 @@ import org.springframework.stereotype.Component;
 public class RestorationMapper {
 
   public Lobby mapToLobby(LobbyEntity lobbyEntity) {
-    Lobby lobby = new Lobby("", "");
-    GameStateDto gameStateDto = mapToGameStateDto(lobbyEntity);
+    String lobbyCode = lobbyEntity.getLobbyCode();
+    List<PlayerDto> playerDtoList = mapToPlayerDto(lobbyEntity);
+    Lobby lobby = buildLobby(lobbyCode, playerDtoList);
     return lobby;
   }
 
-  // TODO: I need to create a HashMap with lobbyCode:GameStateDto for this method i want to copy
-  // TODO: from JSON Recovery ```gameService.restoreGameManager(lobbyCode, gameStateManager);```
   private GameStateDto mapToGameStateDto(LobbyEntity lobbyEntity) {
     GameStateEntity gameStateEntity = lobbyEntity.getGameStateEntity();
     if (gameStateEntity == null) {
