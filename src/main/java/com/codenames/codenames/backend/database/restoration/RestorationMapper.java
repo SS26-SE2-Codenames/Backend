@@ -1,11 +1,13 @@
 package com.codenames.codenames.backend.database.restoration;
 
+import com.codenames.codenames.backend.database.entity.CardEntity;
 import com.codenames.codenames.backend.database.entity.GameStateEntity;
 import com.codenames.codenames.backend.database.entity.LobbyEntity;
 import com.codenames.codenames.backend.game.api.dto.CardDto;
 import com.codenames.codenames.backend.game.api.dto.ClueDto;
 import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.codenames.codenames.backend.game.domain.Card;
+import com.codenames.codenames.backend.game.domain.Color;
 import com.codenames.codenames.backend.lobby.domain.Lobby;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
@@ -33,16 +35,26 @@ public class RestorationMapper {
     Team currentTeam = Team.valueOf(gameStateEntity.getCurrentTurn());
     Role currentPhase = Role.valueOf(gameStateEntity.getCurrentPhase());
     ClueDto clueDto = null;
-    if(gameStateEntity.getClueWord() != null) {
+    if (gameStateEntity.getClueWord() != null) {
       clueDto = new ClueDto(gameStateEntity.getClueWord(), gameStateEntity.getClueGuessAmount());
     }
-    List<CardDto> cardList = new ArrayList<>(25);
-
+    List<CardDto> cardList = mapToCardDto(lobbyEntity);
+    mapToCardDto(lobbyEntity);
     return new GameStateDto(winner, currentTeam, currentPhase, clueDto, cardList);
-
   }
 
   private List<CardDto> mapToCardDto(LobbyEntity lobbyEntity) {
+    List<CardDto> cardList = new ArrayList<>(25);
 
+    for (int i = 0; i < 25; i++) {
+      CardEntity currentCardEntity = lobbyEntity.getCardEntities().get(i);
+      CardDto cardDto =
+          new CardDto(
+              currentCardEntity.getWord(),
+              Color.valueOf(currentCardEntity.getColor()),
+              currentCardEntity.getIsGuessed());
+      cardList.add(cardDto);
+    }
+    return cardList;
   }
 }
