@@ -3,11 +3,13 @@ package com.codenames.codenames.backend.database.restoration;
 import com.codenames.codenames.backend.database.entity.CardEntity;
 import com.codenames.codenames.backend.database.entity.GameStateEntity;
 import com.codenames.codenames.backend.database.entity.LobbyEntity;
+import com.codenames.codenames.backend.database.entity.PlayerEntity;
 import com.codenames.codenames.backend.game.api.dto.CardDto;
 import com.codenames.codenames.backend.game.api.dto.ClueDto;
 import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.codenames.codenames.backend.game.domain.Card;
 import com.codenames.codenames.backend.game.domain.Color;
+import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.domain.Lobby;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
@@ -24,6 +26,8 @@ public class RestorationMapper {
     return lobby;
   }
 
+  // TODO: I need to create a HashMap with lobbyCode:GameStateDto for this method i want to copy
+  // TODO: from JSON Recovery ```gameService.restoreGameManager(lobbyCode, gameStateManager);```
   private GameStateDto mapToGameStateDto(LobbyEntity lobbyEntity) {
     GameStateEntity gameStateEntity = lobbyEntity.getGameStateEntity();
     if (gameStateEntity == null) {
@@ -56,5 +60,21 @@ public class RestorationMapper {
       cardList.add(cardDto);
     }
     return cardList;
+  }
+
+  private List<PlayerDto> mapToPlayerDto(LobbyEntity lobbyEntity) {
+    List<PlayerDto> playerList = new ArrayList<>();
+
+    for (int i = 0; i < lobbyEntity.getPlayerEntities().size(); i++) {
+      PlayerEntity playerEntity = lobbyEntity.getPlayerEntities().get(i);
+      PlayerDto playerDto =
+          new PlayerDto(
+              playerEntity.getUsername(),
+              Team.valueOf(playerEntity.getTeam()),
+              Role.valueOf(playerEntity.getRole()),
+              playerEntity.getIsHost());
+      playerList.add(playerDto);
+    }
+    return playerList;
   }
 }
