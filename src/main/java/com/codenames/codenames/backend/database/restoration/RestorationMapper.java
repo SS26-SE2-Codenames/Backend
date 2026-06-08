@@ -7,7 +7,6 @@ import com.codenames.codenames.backend.database.entity.PlayerEntity;
 import com.codenames.codenames.backend.game.api.dto.CardDto;
 import com.codenames.codenames.backend.game.api.dto.ClueDto;
 import com.codenames.codenames.backend.game.api.dto.GameStateDto;
-import com.codenames.codenames.backend.game.domain.Card;
 import com.codenames.codenames.backend.game.domain.Color;
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.domain.Lobby;
@@ -21,7 +20,7 @@ import org.springframework.stereotype.Component;
 public class RestorationMapper {
 
   public Lobby mapToLobby(LobbyEntity lobbyEntity) {
-    Lobby lobby = new Lobby("sd", "d");
+    Lobby lobby = new Lobby("", "");
     GameStateDto gameStateDto = mapToGameStateDto(lobbyEntity);
     return lobby;
   }
@@ -76,5 +75,35 @@ public class RestorationMapper {
       playerList.add(playerDto);
     }
     return playerList;
+  }
+
+  private Lobby buildLobby(String lobbyCode, List<PlayerDto> players) {
+    String hostUsername = findHostUsername(players);
+
+    Lobby lobby = new Lobby(lobbyCode, hostUsername);
+
+    for (PlayerDto player : players) {
+      if (!player.username().equals(hostUsername)) {
+        lobby.addPlayer(player.username(), player.isHost());
+      }
+      if (player.team() != null) {
+        lobby.setPlayerTeam(player.username(), player.team());
+      }
+      if (player.role() != null) {
+        lobby.setPlayerRole(player.username(), player.role());
+      }
+    }
+
+    return lobby;
+  }
+
+  private static String findHostUsername(List<PlayerDto> players) {
+    String hostUsername = "";
+    for (PlayerDto playerDto : players) {
+      if (playerDto.isHost()){
+        hostUsername = playerDto.username();
+      }
+    }
+    return hostUsername;
   }
 }
