@@ -9,9 +9,12 @@ import com.codenames.codenames.backend.game.domain.GameManagerFactory;
 import com.codenames.codenames.backend.lobby.application.LobbyService;
 import com.codenames.codenames.backend.lobby.domain.Lobby;
 import jakarta.annotation.PostConstruct;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Service class responsible for re-creating all lobbies and game managers.
+ */
 @Service
 @Transactional(readOnly = true)
 public class RestorationService {
@@ -22,6 +25,15 @@ public class RestorationService {
   private final GameService gameService;
   private final GameManagerFactory gameManagerFactory;
 
+  /**
+   * Constructor for the service class.
+   *
+   * @param restorationMapper the helper class used to create Lobby and GameStateDto
+   * @param lobbyRepository the lobby entry from the database
+   * @param lobbyService service class responsible for adding a lobby to a list of active lobbies
+   * @param gameService service class responsible for binding a gameManager to a lobby
+   * @param gameManagerFactory factory class responsible for creating a gameManager
+   */
   public RestorationService(RestorationMapper restorationMapper, LobbyRepository lobbyRepository,
       LobbyService lobbyService, GameService gameService, GameManagerFactory gameManagerFactory) {
     this.restorationMapper = restorationMapper;
@@ -31,6 +43,10 @@ public class RestorationService {
     this.gameManagerFactory = gameManagerFactory;
   }
 
+  /**
+   * Using PostConstruct we automatically call this method when the container restarts.
+   */
+  // @PostConstruct methods technically gets called right after the beans are initialized
   @PostConstruct
   public void restoreOnContainerStart() {
     for (LobbyEntity lobbyEntity : lobbyRepository.findAll()) {

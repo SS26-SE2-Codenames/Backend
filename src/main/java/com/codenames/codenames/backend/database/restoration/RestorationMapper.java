@@ -8,7 +8,6 @@ import com.codenames.codenames.backend.game.api.dto.CardDto;
 import com.codenames.codenames.backend.game.api.dto.ClueDto;
 import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.codenames.codenames.backend.game.domain.Color;
-import com.codenames.codenames.backend.game.domain.GameManager;
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.domain.Lobby;
 import com.codenames.codenames.backend.lobby.domain.Role;
@@ -17,20 +16,34 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
+/**
+ * Helper class responsible for creating Lobby and GameStateDto, used by RestorationService.
+ */
 @Component
 public class RestorationMapper {
 
+  /**
+   * Exposed method to generate a Lobby object.
+   *
+   * @param lobbyEntity the lobby entry from the database
+   * @return a Lobby object to be used by RestorationService
+   */
   public Lobby mapToLobby(LobbyEntity lobbyEntity) {
     String lobbyCode = lobbyEntity.getLobbyCode();
     List<PlayerDto> playerDtoList = mapToPlayerDto(lobbyEntity);
-    Lobby lobby = buildLobby(lobbyCode, playerDtoList);
-    return lobby;
+    return buildLobby(lobbyCode, playerDtoList);
   }
 
+  /**
+   * Exposed method to generate a GameStateDto object.
+   *
+   * @param lobbyEntity the lobby entry from the database
+   * @return a Lobby object to be used by RestorationService
+   */
   public GameStateDto mapToGameStateDto(LobbyEntity lobbyEntity) {
     GameStateEntity gameStateEntity = lobbyEntity.getGameStateEntity();
     if (gameStateEntity == null) {
-      throw new RuntimeException("Game state entity is null");
+      throw new IllegalStateException("Game state entity is null");
     }
 
     Team winner = null;
@@ -99,7 +112,7 @@ public class RestorationMapper {
   private static String findHostUsername(List<PlayerDto> players) {
     String hostUsername = "";
     for (PlayerDto playerDto : players) {
-      if (playerDto.isHost()){
+      if (playerDto.isHost()) {
         hostUsername = playerDto.username();
       }
     }
