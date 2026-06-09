@@ -77,4 +77,13 @@ class RestorationMapperTest {
     assertEquals("TestCardWord", gameStateDto.cardList().get(0).word());
     assertEquals(redColor, gameStateDto.cardList().get(0).color());
   }
+
+  @Test
+  void testMapToGameDto_null() {
+    when(lobbyEntity.getCardEntities()).thenReturn(null);
+    assertThrows(
+        IllegalStateException.class, () -> restorationMapper.mapToGameStateDto(lobbyEntity));
+  }
+
+
 }
