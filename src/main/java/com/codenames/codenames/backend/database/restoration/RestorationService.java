@@ -9,6 +9,7 @@ import com.codenames.codenames.backend.game.domain.GameManagerFactory;
 import com.codenames.codenames.backend.lobby.application.LobbyService;
 import com.codenames.codenames.backend.lobby.domain.Lobby;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -16,6 +17,7 @@ import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
 /** Service class responsible for re-creating all lobbies and game managers. */
+@Slf4j
 @Service
 public class RestorationService {
   private final RestorationMapper restorationMapper;
@@ -69,11 +71,15 @@ public class RestorationService {
               String lobbyCode = lobbyEntity.getLobbyCode();
 
               Lobby lobbyObj = restorationMapper.mapToLobby(lobbyEntity);
+              log.info("Attempting to restore lobby: {}", lobbyCode);
               lobbyService.restoreLobby(lobbyCode, lobbyObj);
+              log.info("Lobby has been restored: {}", lobbyCode);
 
               GameStateDto gameStateDtoObj = restorationMapper.mapToGameStateDto(lobbyEntity);
               GameManager gameManagerObj = gameManagerFactory.createFromSnapshot(gameStateDtoObj);
+              log.info("Attempting to restore game: {}", lobbyCode);
               gameService.restoreGameManager(lobbyCode, gameManagerObj);
+              log.info("Game  has been restored: {}", lobbyCode);
             }
           }
         });
