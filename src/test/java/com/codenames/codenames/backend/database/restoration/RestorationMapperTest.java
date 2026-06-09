@@ -80,9 +80,22 @@ class RestorationMapperTest {
 
   @Test
   void testMapToGameDto_null() {
-    when(lobbyEntity.getCardEntities()).thenReturn(null);
+    when(lobbyEntity.getGameStateEntity()).thenReturn(null);
     assertThrows(
         IllegalStateException.class, () -> restorationMapper.mapToGameStateDto(lobbyEntity));
+  }
+
+  @Test
+  void testMapToGameDto_nullClueWord() {
+    GameStateEntity gameStateEntity = new GameStateEntity();
+    gameStateEntity.setCurrentTurn("RED");
+    gameStateEntity.setCurrentPhase("OPERATIVE");
+    gameStateEntity.setClueWord(null);
+    gameStateEntity.setClueGuessAmount(3);
+    lobbyEntity.setGameStateEntity(gameStateEntity);
+
+    GameStateDto gameStateDto = restorationMapper.mapToGameStateDto(lobbyEntity);
+    assertNull(gameStateDto.currentClue());
   }
 
 
