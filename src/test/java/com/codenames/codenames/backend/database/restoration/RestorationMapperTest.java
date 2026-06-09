@@ -80,7 +80,6 @@ class RestorationMapperTest {
 
   @Test
   void testMapToGameDto_null() {
-    when(lobbyEntity.getGameStateEntity()).thenReturn(null);
     assertThrows(
         IllegalStateException.class, () -> restorationMapper.mapToGameStateDto(lobbyEntity));
   }
