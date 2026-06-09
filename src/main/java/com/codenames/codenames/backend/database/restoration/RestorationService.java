@@ -10,13 +10,13 @@ import com.codenames.codenames.backend.lobby.application.LobbyService;
 import com.codenames.codenames.backend.lobby.domain.Lobby;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
 
-/**
- * Service class responsible for re-creating all lobbies and game managers.
- */
+/** Service class responsible for re-creating all lobbies and game managers. */
 @Service
-@Transactional(readOnly = true)
 public class RestorationService {
   private final RestorationMapper restorationMapper;
   private final LobbyRepository lobbyRepository;
@@ -24,6 +24,8 @@ public class RestorationService {
   private final LobbyService lobbyService;
   private final GameService gameService;
   private final GameManagerFactory gameManagerFactory;
+
+  private final PlatformTransactionManager transactionManager;
 
   /**
    * Constructor for the service class.
@@ -34,30 +36,46 @@ public class RestorationService {
    * @param gameService service class responsible for binding a gameManager to a lobby
    * @param gameManagerFactory factory class responsible for creating a gameManager
    */
-  public RestorationService(RestorationMapper restorationMapper, LobbyRepository lobbyRepository,
-      LobbyService lobbyService, GameService gameService, GameManagerFactory gameManagerFactory) {
+  public RestorationService(
+      RestorationMapper restorationMapper,
+      LobbyRepository lobbyRepository,
+      LobbyService lobbyService,
+      GameService gameService,
+      GameManagerFactory gameManagerFactory,
+      PlatformTransactionManager transactionManager) {
     this.restorationMapper = restorationMapper;
     this.lobbyRepository = lobbyRepository;
     this.lobbyService = lobbyService;
     this.gameService = gameService;
     this.gameManagerFactory = gameManagerFactory;
+    this.transactionManager = transactionManager;
   }
 
-  /**
-   * Using PostConstruct we automatically call this method when the container restarts.
-   */
+  /** Using PostConstruct we automatically call this method when the container restarts. */
   // @PostConstruct methods technically gets called right after the beans are initialized
+  // Turns out you cannot have PostConstruct and Transactional annotation together
+  // Solution is to use Transaction Template --> Solution found on StackOverflow
   @PostConstruct
   public void restoreOnContainerStart() {
-    for (LobbyEntity lobbyEntity : lobbyRepository.findAll()) {
-      String lobbyCode = lobbyEntity.getLobbyCode();
 
-      Lobby lobbyObj = restorationMapper.mapToLobby(lobbyEntity);
-      lobbyService.restoreLobby(lobbyCode, lobbyObj);
+    TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
+    transactionTemplate.setReadOnly(true);
 
-      GameStateDto gameStateDtoObj = restorationMapper.mapToGameStateDto(lobbyEntity);
-      GameManager gameManagerObj = gameManagerFactory.createFromSnapshot(gameStateDtoObj);
-      gameService.restoreGameManager(lobbyCode, gameManagerObj);
-    }
+    transactionTemplate.execute(
+        new TransactionCallbackWithoutResult() {
+          @Override
+          protected void doInTransactionWithoutResult(TransactionStatus status) {
+            for (LobbyEntity lobbyEntity : lobbyRepository.findAll()) {
+              String lobbyCode = lobbyEntity.getLobbyCode();
+
+              Lobby lobbyObj = restorationMapper.mapToLobby(lobbyEntity);
+              lobbyService.restoreLobby(lobbyCode, lobbyObj);
+
+              GameStateDto gameStateDtoObj = restorationMapper.mapToGameStateDto(lobbyEntity);
+              GameManager gameManagerObj = gameManagerFactory.createFromSnapshot(gameStateDtoObj);
+              gameService.restoreGameManager(lobbyCode, gameManagerObj);
+            }
+          }
+        });
   }
 }
