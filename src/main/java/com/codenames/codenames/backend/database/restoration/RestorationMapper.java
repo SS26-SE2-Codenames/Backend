@@ -77,11 +77,19 @@ public class RestorationMapper {
 
     for (int i = 0; i < lobbyEntity.getPlayerEntities().size(); i++) {
       PlayerEntity playerEntity = lobbyEntity.getPlayerEntities().get(i);
+      Team team = null;
+      if (playerEntity.getTeam() != null) {
+        team = Team.valueOf(playerEntity.getTeam());
+      }
+      Role role = null;
+      if (playerEntity.getRole() != null) {
+        role = Role.valueOf(playerEntity.getRole());
+      }
       PlayerDto playerDto =
           new PlayerDto(
               playerEntity.getUsername(),
-              Team.valueOf(playerEntity.getTeam()),
-              Role.valueOf(playerEntity.getRole()),
+              team,
+              role,
               playerEntity.getIsHost());
       playerList.add(playerDto);
     }
