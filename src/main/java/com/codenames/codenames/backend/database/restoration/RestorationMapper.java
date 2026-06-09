@@ -61,8 +61,7 @@ public class RestorationMapper {
   private List<CardDto> mapToCardDto(LobbyEntity lobbyEntity) {
     List<CardDto> cardList = new ArrayList<>(25);
 
-    for (int i = 0; i < 25; i++) {
-      CardEntity currentCardEntity = lobbyEntity.getCardEntities().get(i);
+    for (CardEntity currentCardEntity : lobbyEntity.getCardEntities()) {
       CardDto cardDto =
           new CardDto(
               currentCardEntity.getWord(),
