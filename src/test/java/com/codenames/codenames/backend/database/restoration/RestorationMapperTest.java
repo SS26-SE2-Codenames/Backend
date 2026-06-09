@@ -122,4 +122,28 @@ class RestorationMapperTest {
     assertNull(lobby.getPlayerTeam("TestPlayer2"));
   }
 
+  @Test
+  void testBuildLobby_nullRole() {
+    PlayerEntity playerEntity = new PlayerEntity();
+    playerEntity.setLobbyEntity(lobbyEntity);
+    playerEntity.setUsername("TestPlayer");
+    playerEntity.setIsHost(true);
+    playerEntity.setTeam(redTeam.toString());
+    playerEntity.setRole(operativeRole.toString());
+
+    PlayerEntity playerEntity2 = new PlayerEntity();
+    playerEntity2.setLobbyEntity(lobbyEntity);
+    playerEntity2.setUsername("TestPlayer2");
+    playerEntity2.setIsHost(false);
+    playerEntity2.setTeam(redTeam.toString());
+    playerEntity2.setRole(null);
+    List<PlayerEntity> playerList = List.of(playerEntity, playerEntity2);
+
+    lobbyEntity.setPlayerEntities(playerList);
+
+    Lobby lobby = restorationMapper.mapToLobby(lobbyEntity);
+
+    assertNull(lobby.getPlayerRole("TestPlayer2"));
+  }
+
 }
