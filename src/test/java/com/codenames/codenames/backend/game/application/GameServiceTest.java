@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 import com.codenames.codenames.backend.game.api.dto.CardDto;
 import com.codenames.codenames.backend.game.api.dto.ClueDto;
 import com.codenames.codenames.backend.game.api.dto.GameStateDto;
+import com.codenames.codenames.backend.game.domain.CheatResult;
 import com.codenames.codenames.backend.game.domain.Clue;
 import com.codenames.codenames.backend.game.domain.Color;
 import com.codenames.codenames.backend.game.domain.GameManager;
@@ -114,7 +115,7 @@ class GameServiceTest {
             redTeam,
             Role.SPYMASTER,
             new ClueDto("ANIMAL", 2),
-                List.of(new CardDto("Dog", Color.RED, false)));
+                List.of(new CardDto("Dog", Color.RED, false)), false, false);
     when(mockGameManager.getCurrentTurn()).thenReturn(redTeam);
     when(mockGameManager.getCurrentPhase()).thenReturn(Role.SPYMASTER);
     when(mockGameManager.getRemainingGuesses()).thenReturn(2);
@@ -144,7 +145,7 @@ class GameServiceTest {
             redTeam,
             Role.SPYMASTER,
             new ClueDto("ANIMAL", 2),
-                List.of(new CardDto("Dog", Color.RED, false)));
+                List.of(new CardDto("Dog", Color.RED, false)), false, false);
 
     when(mockGameManager.getCurrentTurn()).thenReturn(redTeam);
     when(mockGameManager.getCurrentPhase()).thenReturn(Role.SPYMASTER);
@@ -155,5 +156,18 @@ class GameServiceTest {
 
     assertEquals(1, snapshots.size());
     assertEquals(expected, snapshots.get(lobbyCode));
+  }
+
+  @Test
+  void testUseCheat() {
+    List<Integer> positions = List.of(0, 1);
+    CheatResult expected = new CheatResult("Die Karte \"Dog\" ist richtig.");
+
+    when(mockGameManager.useCheat(positions, redTeam)).thenReturn(expected);
+
+    CheatResult result = gameService.useCheat(lobbyCode, positions, redTeam);
+
+    assertEquals(expected, result);
+    verify(mockGameManager, times(1)).useCheat(positions, redTeam);
   }
 }

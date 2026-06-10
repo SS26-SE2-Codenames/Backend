@@ -59,7 +59,7 @@ class JsonStateStoreTest {
 
     GameStateDto gameSnapshot =
         new GameStateDto(
-            null, Team.RED, Role.OPERATIVE, new ClueDto("ANIMAL", 2), List.of());
+            null, Team.RED, Role.OPERATIVE, new ClueDto("ANIMAL", 2), List.of(), false, false);
 
     SystemSnapshot expectedSnapshot =
         new SystemSnapshot(

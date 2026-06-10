@@ -335,7 +335,7 @@ class GameManagerTest {
   @Test
   void recoveryConstructorThrowsWhenCardsAreNull() {
     GameStateDto state =
-        new GameStateDto(null, Team.RED, Role.SPYMASTER, null, null);
+        new GameStateDto(null, Team.RED, Role.SPYMASTER, null, null, false, false);
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -344,7 +344,7 @@ class GameManagerTest {
   @Test
   void recoveryConstructorThrowsWhenCardsAreEmpty() {
     GameStateDto state =
-        new GameStateDto(null, Team.RED, Role.SPYMASTER, null, List.of());
+        new GameStateDto(null, Team.RED, Role.SPYMASTER, null, List.of(), false, false);
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -356,7 +356,7 @@ class GameManagerTest {
         List.of(new CardDto("Dog", Color.RED, false));
 
     GameStateDto state =
-        new GameStateDto(null, null, Role.SPYMASTER, null, cards);
+        new GameStateDto(null, null, Role.SPYMASTER, null, cards, false, false);
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -368,7 +368,7 @@ class GameManagerTest {
         List.of(new CardDto("Dog", Color.RED, false));
 
     GameStateDto state =
-        new GameStateDto(null, Team.RED, null, null, cards);
+        new GameStateDto(null, Team.RED, null, null, cards, false, false);
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -383,7 +383,7 @@ class GameManagerTest {
 
     GameStateDto state =
         new GameStateDto(
-            Team.RED, Team.BLUE, Role.OPERATIVE, new ClueDto("ANIMAL", 2), cards);
+            Team.RED, Team.BLUE, Role.OPERATIVE, new ClueDto("ANIMAL", 2), cards, false, false);
 
     GameManager restored = new GameManager(state, mockClueValidationService);
 
@@ -394,5 +394,74 @@ class GameManagerTest {
     assertEquals(1, restored.getCurrentRedFound());
     assertEquals(0, restored.getCurrentBlueFound());
     assertTrue(restored.getCardList().get(0).isGuessed());
+  }
+
+  @Test
+  void useCheatReturnsNullWhenNoCardsSelected() {
+    helperMethodAdvanceTurns(gameManager, 1);
+
+    CheatResult result = gameManager.useCheat(List.of(), redTeam);
+
+    assertNull(result);
+  }
+
+  @Test
+  void useCheatReturnsNullWhenNotOperativePhase() {
+    CheatResult result = gameManager.useCheat(List.of(0), redTeam);
+
+    assertNull(result);
+  }
+
+  @Test
+  void useCheatReturnsCorrectCardNameWhenSelectedCardsContainTeamCard() {
+    mockCardGeneration(
+        List.of(
+            new Card("Dog", Color.BLUE),
+            new Card("Cat", Color.RED),
+            new Card("Tree", Color.NEUTRAL)));
+    gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
+    helperMethodAdvanceTurns(gameManager, 1);
+
+    CheatResult result = gameManager.useCheat(List.of(0, 1, 2), redTeam);
+
+    assertEquals("Die Karte \"Cat\" ist richtig.", result.message());
+    assertTrue(gameManager.isRedTeamCheatUsed());
+  }
+
+  @Test
+  void useCheatReturnsNoCorrectCardMessageWhenNoSelectedCardIsCorrect() {
+    mockCardGeneration(
+        List.of(
+            new Card("Dog", Color.BLUE),
+            new Card("Tree", Color.NEUTRAL)));
+    gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
+    helperMethodAdvanceTurns(gameManager, 1);
+
+    CheatResult result = gameManager.useCheat(List.of(0, 1), redTeam);
+
+    assertEquals("Keine der ausgewählten Karten ist richtig.", result.message());
+    assertTrue(gameManager.isRedTeamCheatUsed());
+  }
+
+  @Test
+  void useCheatCanOnlyBeUsedOncePerTeam() {
+    mockCardGeneration(List.of(new Card("Dog", Color.RED)));
+    gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
+    helperMethodAdvanceTurns(gameManager, 1);
+
+    CheatResult firstResult = gameManager.useCheat(List.of(0), redTeam);
+    CheatResult secondResult = gameManager.useCheat(List.of(0), redTeam);
+
+    assertEquals("Die Karte \"Dog\" ist richtig.", firstResult.message());
+    assertNull(secondResult);
+  }
+
+  @Test
+  void useCheatReturnsNullWhenOnlyInvalidPositionsAreSelected() {
+    helperMethodAdvanceTurns(gameManager, 1);
+
+    CheatResult result = gameManager.useCheat(List.of(-1, 99), redTeam);
+
+    assertNull(result);
   }
 }

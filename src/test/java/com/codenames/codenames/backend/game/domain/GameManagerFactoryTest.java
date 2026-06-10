@@ -44,7 +44,7 @@ class GameManagerFactoryTest {
             Team.BLUE,
             Role.OPERATIVE,
             new ClueDto("ANIMAL", 2),
-            List.of(new CardDto("Dog", Color.RED, true), new CardDto("Cat", Color.BLUE, false)));
+            List.of(new CardDto("Dog", Color.RED, true), new CardDto("Cat", Color.BLUE, false)), false, false);
 
     GameManager recovered = gameManagerFactory.createFromSnapshot(snapshot);
 
@@ -62,7 +62,7 @@ class GameManagerFactoryTest {
   void testCreateFromSnapshotWithoutClue() {
     GameStateDto snapshot =
         new GameStateDto(
-            null, Team.BLUE, Role.SPYMASTER, null, List.of(new CardDto("Tree", Color.BLUE, false)));
+            null, Team.BLUE, Role.SPYMASTER, null, List.of(new CardDto("Tree", Color.BLUE, false)), false, false);
 
     GameManager recovered = gameManagerFactory.createFromSnapshot(snapshot);
 
@@ -84,7 +84,7 @@ class GameManagerFactoryTest {
                 new CardDto("Dog", Color.RED, true),
                 new CardDto("Cat", Color.RED, false),
                 new CardDto("Tree", Color.BLUE, true),
-                new CardDto("Sun", Color.NEUTRAL, true)));
+                new CardDto("Sun", Color.NEUTRAL, true)), false, false);
 
     GameManager recovered = gameManagerFactory.createFromSnapshot(snapshot);
 

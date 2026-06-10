@@ -2,17 +2,24 @@ package com.codenames.codenames.backend.game.api;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.codenames.codenames.backend.chat.api.dto.ChatDto;
+import com.codenames.codenames.backend.chat.api.dto.ChatMessageType;
 import com.codenames.codenames.backend.database.persistence.PersistenceService;
+import com.codenames.codenames.backend.game.api.dto.CheatCardMessage;
 import com.codenames.codenames.backend.game.api.dto.ClueMessage;
 import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.codenames.codenames.backend.game.api.dto.PassTurnMessage;
 import com.codenames.codenames.backend.game.api.dto.RevealCardMessage;
 import com.codenames.codenames.backend.game.api.dto.StartGameMessage;
 import com.codenames.codenames.backend.game.application.GameService;
+import com.codenames.codenames.backend.game.domain.CheatResult;
+import com.codenames.codenames.backend.lobby.application.LobbyService;
+import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,11 +41,18 @@ class GameSocketControllerTest {
 
   @Mock private PersistenceService persistenceService;
 
+  @Mock private LobbyService lobbyService;
+
   private GameSocketController controller;
 
   @BeforeEach
   void setUp() {
-    controller = new GameSocketController(gameService, messagingTemplate, persistenceService);
+    controller =
+        new GameSocketController(
+            gameService,
+            messagingTemplate,
+            persistenceService,
+            lobbyService);
   }
 
   @Test
@@ -106,6 +120,30 @@ class GameSocketControllerTest {
   }
 
   private GameStateDto createGameStateDto() {
-    return new GameStateDto(null, Team.RED, null, null, List.of());
+    return new GameStateDto(null, Team.RED, null, null, List.of(), false, false);
+  }
+
+  @Test
+  void useCheatShouldSendPrivateSystemMessageAndPersistSnapshot() {
+    CheatCardMessage message = new CheatCardMessage();
+    message.setLobbyCode(LOBBY_CODE);
+    message.setUsername("Max");
+    message.setPositions(List.of(0, 1));
+
+    CheatResult result = new CheatResult("Die Karte \"Dog\" ist richtig.");
+
+    when(lobbyService.getPlayerTeam("Max", LOBBY_CODE)).thenReturn(Team.RED);
+    when(lobbyService.getPlayerRole("Max", LOBBY_CODE)).thenReturn(Role.OPERATIVE);
+    when(gameService.useCheat(LOBBY_CODE, List.of(0, 1), Team.RED)).thenReturn(result);
+
+    controller.useCheat(message);
+
+    verify(messagingTemplate)
+        .convertAndSendToUser(
+            eq("Max"),
+            eq("/queue/system"),
+            eq(new ChatDto("System", result.message(), ChatMessageType.SYSTEM)));
+
+    verify(persistenceService).saveSnapShot(LOBBY_CODE);
   }
 }
