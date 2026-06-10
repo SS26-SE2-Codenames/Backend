@@ -1,12 +1,19 @@
 package com.codenames.codenames.backend.game.api;
 
+import com.codenames.codenames.backend.chat.api.dto.ChatDto;
+import com.codenames.codenames.backend.chat.api.dto.ChatMessageType;
 import com.codenames.codenames.backend.database.persistence.PersistenceService;
+import com.codenames.codenames.backend.game.api.dto.CheatCardMessage;
 import com.codenames.codenames.backend.game.api.dto.ClueMessage;
 import com.codenames.codenames.backend.game.api.dto.PassTurnMessage;
 import com.codenames.codenames.backend.game.api.dto.RevealCardMessage;
 import com.codenames.codenames.backend.game.api.dto.StartGameMessage;
 import com.codenames.codenames.backend.game.application.GameService;
+import com.codenames.codenames.backend.game.domain.CheatResult;
 import com.codenames.codenames.backend.game.domain.Clue;
+import com.codenames.codenames.backend.lobby.application.LobbyService;
+import com.codenames.codenames.backend.lobby.domain.Role;
+import com.codenames.codenames.backend.lobby.domain.Team;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -21,6 +28,7 @@ import org.springframework.stereotype.Controller;
 public class GameSocketController {
 
   private final GameService gameService;
+  private final LobbyService lobbyService;
 
   private final SimpMessagingTemplate messagingTemplate;
   private final PersistenceService persistenceService;
@@ -33,15 +41,57 @@ public class GameSocketController {
    * @param gameService service responsible for gameplay logic
    * @param messagingTemplate template used for broadcasting websocket messages
    * @param persistenceService service used to persist current backend state
+   * @param lobbyService service responsible for lobby and player information
    */
   public GameSocketController(
       GameService gameService,
       SimpMessagingTemplate messagingTemplate,
-      PersistenceService persistenceService) {
+      PersistenceService persistenceService,
+      LobbyService lobbyService) {
 
     this.gameService = gameService;
     this.messagingTemplate = messagingTemplate;
     this.persistenceService = persistenceService;
+    this.lobbyService = lobbyService;
+  }
+
+  /**
+   * Handles a cheat request and sends the result only to the requesting player.
+   *
+   * @param message the cheat request containing lobby, username and selected cards
+   */
+  @MessageMapping("/cheat")
+  public void useCheat(CheatCardMessage message) {
+
+    Team team = lobbyService.getPlayerTeam(message.getUsername(), message.getLobbyCode());
+    Role role = lobbyService.getPlayerRole(message.getUsername(), message.getLobbyCode());
+
+    if (team == null || role != Role.OPERATIVE) {
+      return;
+    }
+
+    CheatResult result =
+        gameService.useCheat(
+            message.getLobbyCode(),
+            message.getPositions(),
+            team);
+
+    if (result == null) {
+      return;
+    }
+
+    ChatDto systemMessage =
+        new ChatDto(
+            "System",
+            result.message(),
+            ChatMessageType.SYSTEM);
+
+    messagingTemplate.convertAndSendToUser(
+        message.getUsername(),
+        "/queue/system",
+        systemMessage);
+
+    persistenceService.saveSnapShot(message.getLobbyCode());
   }
 
   /**
