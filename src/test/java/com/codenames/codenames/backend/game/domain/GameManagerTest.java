@@ -335,7 +335,7 @@ class GameManagerTest {
   @Test
   void recoveryConstructorThrowsWhenCardsAreNull() {
     GameStateDto state =
-        new GameStateDto(null, Team.RED, Role.SPYMASTER, null, null);
+        new GameStateDto(null, Team.RED, Role.SPYMASTER, null, 0, null);
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -344,7 +344,7 @@ class GameManagerTest {
   @Test
   void recoveryConstructorThrowsWhenCardsAreEmpty() {
     GameStateDto state =
-        new GameStateDto(null, Team.RED, Role.SPYMASTER, null, List.of());
+        new GameStateDto(null, Team.RED, Role.SPYMASTER, null, 0, List.of());
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -356,7 +356,7 @@ class GameManagerTest {
         List.of(new CardDto("Dog", Color.RED, false));
 
     GameStateDto state =
-        new GameStateDto(null, null, Role.SPYMASTER, null, cards);
+        new GameStateDto(null, null, Role.SPYMASTER, null, 0, cards);
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -368,7 +368,7 @@ class GameManagerTest {
         List.of(new CardDto("Dog", Color.RED, false));
 
     GameStateDto state =
-        new GameStateDto(null, Team.RED, null, null, cards);
+        new GameStateDto(null, Team.RED, null, null, 0, cards);
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -383,7 +383,7 @@ class GameManagerTest {
 
     GameStateDto state =
         new GameStateDto(
-            Team.RED, Team.BLUE, Role.OPERATIVE, new ClueDto("ANIMAL", 2), cards);
+            Team.RED, Team.BLUE, Role.OPERATIVE, new ClueDto("ANIMAL", 2), 3, cards);
 
     GameManager restored = new GameManager(state, mockClueValidationService);
 

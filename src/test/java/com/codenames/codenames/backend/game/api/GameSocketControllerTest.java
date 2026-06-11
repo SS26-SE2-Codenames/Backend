@@ -106,6 +106,6 @@ class GameSocketControllerTest {
   }
 
   private GameStateDto createGameStateDto() {
-    return new GameStateDto(null, Team.RED, null, null, List.of());
+    return new GameStateDto(null, Team.RED, null, null, 0, List.of());
   }
 }
