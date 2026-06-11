@@ -10,12 +10,14 @@ import com.codenames.codenames.backend.game.domain.GameManager;
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
  * Helper class that is called by the PersistenceService to map all the tables when a snapshot is
  * created.
  */
+@Slf4j
 @Component
 public class PersistenceMapper {
   /**
@@ -28,7 +30,6 @@ public class PersistenceMapper {
    */
   public LobbyEntity mapAggregateParentLobbyEntity(
       String lobbyCode, GameManager gameManager, List<PlayerDto> players) {
-
     LobbyEntity lobbyEntity = new LobbyEntity();
     lobbyEntity.setLobbyCode(lobbyCode);
 
@@ -37,7 +38,7 @@ public class PersistenceMapper {
     lobbyEntity.setGameStateEntity(mapGameState(lobbyEntity, lobbyCode, gameManager));
     lobbyEntity.setCardEntities(mapCard(lobbyEntity, cardList));
     lobbyEntity.setPlayerEntities(mapPlayer(lobbyEntity, players));
-
+    log.info("Mapping has been completed");
     return lobbyEntity;
   }
 

@@ -49,5 +49,6 @@ public class PersistenceService {
     LobbyEntity lobbySnapShot =
         persistenceMapper.mapAggregateParentLobbyEntity(lobbyCode, gameManager, playerList);
     lobbyRepository.save(lobbySnapShot);
+    log.info("Snapshot has been saved to DB");
   }
 }
