@@ -163,4 +163,11 @@ class PersistenceServiceTest {
     assertEquals("RED", cardList.get(24).getColor());
     assertFalse(cardList.get(24).getIsGuessed());
   }
+
+  @Test
+  void testSaveSnapshot_noUniquenessViolationOnSecondSave() {
+    persistenceService.saveSnapShot(lobbyCode);
+    persistenceService.saveSnapShot(lobbyCode);
+    assertEquals(lobbyCode, lobbyRepository.findById(lobbyCode).get().getLobbyCode());
+  }
 }
