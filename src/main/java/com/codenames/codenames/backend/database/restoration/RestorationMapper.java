@@ -54,8 +54,10 @@ public class RestorationMapper {
     if (gameStateEntity.getClueWord() != null) {
       clueDto = new ClueDto(gameStateEntity.getClueWord(), gameStateEntity.getClueGuessAmount());
     }
+    int remainingGuesses = gameStateEntity.getRemainingGuesses();
     List<CardDto> cardList = mapToCardDto(lobbyEntity);
-    return new GameStateDto(winner, currentTeam, currentPhase, clueDto, cardList);
+    return new GameStateDto(winner, currentTeam, currentPhase, clueDto,
+        remainingGuesses, cardList);
   }
 
   private List<CardDto> mapToCardDto(LobbyEntity lobbyEntity) {

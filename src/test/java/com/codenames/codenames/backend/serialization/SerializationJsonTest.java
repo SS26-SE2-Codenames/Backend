@@ -36,15 +36,16 @@ class SerializationJsonTest {
 
     dummyList = List.of(new CardDto("TEST", null, false));
     dummyGameState =
-        new GameStateDto(redTeam, redTeam, spymaster, new ClueDto("Test", 1), dummyList);
+        new GameStateDto(redTeam, redTeam, spymaster, new ClueDto("Test", 1), 2, dummyList);
   }
 
   @Test
   void testSerialize_pass() {
-    String expectedResult = "{\"winner\":\"RED\",\"currentTurn\":\"RED\","
-        + "\"currentPhase\":\"SPYMASTER\",\"currentClue\":{\"word\":\"Test\","
-        + "\"guessAmount\":1},\"cardList\":[{\"word\":\"TEST\","
-        + "\"color\":null,\"isGuessed\":false}]}";
+    String expectedResult =
+        "{\"winner\":\"RED\",\"currentTurn\":\"RED\","
+            + "\"currentPhase\":\"SPYMASTER\",\"currentClue\":{\"word\":\"Test\","
+            + "\"guessAmount\":1},\"remainingGuesses\":2,\"cardList\":[{\"word\":\"TEST\","
+            + "\"color\":null,\"isGuessed\":false}]}";
     String result = serializer.serialize(dummyGameState);
     assertEquals(expectedResult, result);
   }
