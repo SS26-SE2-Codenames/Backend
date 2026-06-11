@@ -81,6 +81,7 @@ class SystemStateRecoveryServiceTest {
             Team.RED,
             Role.OPERATIVE,
             new ClueDto("ANIMAL", 2),
+            3,
             List.of(new CardDto("Dog", Color.RED, true), new CardDto("Cat", Color.BLUE, false)));
     SystemSnapshot snapshot =
         new SystemSnapshot(
@@ -217,7 +218,7 @@ class SystemStateRecoveryServiceTest {
     TestContext context = createContext(tempDir.resolve("state-lobbies-null-games-present.json"));
     GameStateDto gameSnapshot =
         new GameStateDto(
-            null, Team.BLUE, Role.SPYMASTER, null, List.of(new CardDto("Tree", Color.BLUE, false)));
+            null, Team.BLUE, Role.SPYMASTER, null, 0, List.of(new CardDto("Tree", Color.BLUE, false)));
     SystemSnapshot snapshot =
         new SystemSnapshot(
             SystemSnapshot.CURRENT_SCHEMA_VERSION, null, Map.of("ABCDE", gameSnapshot));

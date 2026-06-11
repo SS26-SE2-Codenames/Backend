@@ -18,4 +18,5 @@ public record GameStateDto(
     Team currentTurn,
     Role currentPhase,
     ClueDto currentClue,
+    int remainingGuesses,
     List<CardDto> cardList) {}
