@@ -266,6 +266,7 @@ class LobbyServiceTest {
     lobbyService.checkLobbyStillHasPlayers("ABCDE");
     assertFalse(lobbyService.getLobbyList().containsKey("ABCDE"));
     verify(gameService, times(1)).removeGame("ABCDE");
+    verify(lobbyRepository, times(1)).deleteById("ABCDE");
   }
 
   @Test
