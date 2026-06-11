@@ -45,6 +45,7 @@ public class PersistenceService {
   public void saveSnapShot(String lobbyCode) {
     log.info("Saving snapshot of lobby: {}", lobbyCode);
     GameManager gameManager = gameService.getGameState(lobbyCode);
+    log.info("Card state for lobby {}: {}", lobbyCode, gameManager.getCardList());
     List<PlayerDto> playerList = lobbyService.getPlayersDto(lobbyCode);
     LobbyEntity lobbySnapShot =
         persistenceMapper.mapAggregateParentLobbyEntity(lobbyCode, gameManager, playerList);
