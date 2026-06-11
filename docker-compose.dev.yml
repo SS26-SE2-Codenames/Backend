@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: codenames
+      POSTGRES_USER: codenames_user
+      POSTGRES_PASSWORD: codenames_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "53213:8080"
+    volumes:
+      - ./data:/app/data
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/codenames
+      SPRING_DATASOURCE_USERNAME: codenames_user
+      SPRING_DATASOURCE_PASSWORD: codenames_pass
+    depends_on:
+      postgres:
+        condition: service_started
+
+volumes:
+  postgres_data:

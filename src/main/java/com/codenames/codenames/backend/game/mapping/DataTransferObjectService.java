@@ -53,7 +53,8 @@ public class DataTransferObjectService {
           currentTurn,
           currentPhase,
           null,
-              cardDataTransferObject);
+              cardDataTransferObject,
+              gameManager.getRemainingGuesses());
     }
     String word = gameManager.getCurrentClue().word();
     int guessAmount = gameManager.getCurrentClue().guessAmount();
@@ -62,6 +63,7 @@ public class DataTransferObjectService {
         currentTurn,
         currentPhase,
         new ClueDto(word, guessAmount),
-            cardDataTransferObject);
+            cardDataTransferObject,
+            gameManager.getRemainingGuesses());
   }
 }
