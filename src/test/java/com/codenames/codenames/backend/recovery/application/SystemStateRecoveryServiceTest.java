@@ -4,8 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import com.codenames.codenames.backend.chat.application.ChatService;
+import com.codenames.codenames.backend.database.repository.LobbyRepository;
 import com.codenames.codenames.backend.game.api.dto.CardDto;
 import com.codenames.codenames.backend.game.api.dto.ClueDto;
 import com.codenames.codenames.backend.game.api.dto.GameStateDto;
@@ -29,12 +31,19 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 class SystemStateRecoveryServiceTest {
 
+  private LobbyRepository lobbyRepository;
   @TempDir Path tempDir;
+
+  @BeforeEach
+  void setUp() {
+    lobbyRepository = mock(LobbyRepository.class);
+  }
 
   @Test
   void recoverOnStartupDoesNothingWhenNoSnapshotExists() {
@@ -243,7 +252,8 @@ class SystemStateRecoveryServiceTest {
             new CardGenerator("CodenamesWordlist.txt"), new ClueValidationService());
     GameService gameService = new GameService(gameManagerFactory, new DataTransferObjectService());
     LobbyService lobbyService =
-        new LobbyService(new LobbyCodeGenerator(), new ChatService(null), gameService);
+        new LobbyService(
+            new LobbyCodeGenerator(), new ChatService(null), gameService, lobbyRepository);
     SystemStateRecoveryService recoveryService =
         new SystemStateRecoveryService(stateStore, lobbyService, gameService, gameManagerFactory);
 
