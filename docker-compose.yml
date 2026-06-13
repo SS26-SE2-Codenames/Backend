@@ -19,8 +19,6 @@ services:
     restart: unless-stopped
     ports:
       - "53213:8080"
-    volumes:
-      - ./data:/app/data
     environment:  # Inject datasource url into application.yml when containerized
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/codenames
       SPRING_DATASOURCE_USERNAME: codenames_user
