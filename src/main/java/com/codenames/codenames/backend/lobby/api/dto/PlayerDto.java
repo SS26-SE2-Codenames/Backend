@@ -11,5 +11,5 @@ import com.codenames.codenames.backend.lobby.domain.Team;
  * @param role     the user's current role, this can be null
  * @param isHost   whether the user is host
  */
-public record PlayerDto(String username, Team team, Role role, boolean isHost) {
+public record PlayerDto(String username, Team team, Role role, boolean isHost, String uuid) {
 }
