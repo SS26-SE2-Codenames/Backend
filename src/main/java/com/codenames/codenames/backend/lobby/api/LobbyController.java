@@ -55,7 +55,8 @@ public class LobbyController {
       String hostUuid = (host != null) ? host.uuid() : null;
 
       return ResponseEntity.ok(
-              new LobbyResponse("Successfully created Lobby.", lobbyCode, players, false, hostUuid));
+              new LobbyResponse(
+                      "Successfully created Lobby.", lobbyCode, players, false, hostUuid));
     }
   }
 
@@ -77,7 +78,12 @@ public class LobbyController {
     if (joinedPlayer != null) {
       return ResponseEntity.ok(
               new LobbyResponse(
-                      "Joined Lobby successfully.", lobbyCode, service.getPlayersDto(lobbyCode), false, joinedPlayer.uuid()));
+                      "Joined Lobby successfully.",
+                      lobbyCode,
+                      service.getPlayersDto(lobbyCode),
+                      false,
+                      joinedPlayer.uuid())
+      );
     } else {
       return ResponseEntity.badRequest()
               .body(new LobbyResponse(LOBBY_NOT_FOUND, lobbyCode, null, false, null));
@@ -102,7 +108,11 @@ public class LobbyController {
 
       return ResponseEntity.ok(
               new LobbyResponse(
-                      "Left lobby successfully.", lobbyCode, service.getPlayersDto(lobbyCode), false, null));
+                      "Left lobby successfully.",
+                      lobbyCode, service.getPlayersDto(lobbyCode),
+                      false,
+                      null)
+      );
     } else {
       return ResponseEntity.badRequest()
               .body(new LobbyResponse(LOBBY_NOT_FOUND, lobbyCode, null, false, null));
@@ -121,7 +131,13 @@ public class LobbyController {
     List<PlayerDto> players = service.getPlayersDto(lobbyCode);
     boolean isStarted = service.getIsStarted(lobbyCode);
     return ResponseEntity.ok(
-            new LobbyResponse("Lobby info retrieved successfully.", lobbyCode, players, isStarted, null));
+            new LobbyResponse(
+                    "Lobby info retrieved successfully.",
+                    lobbyCode,
+                    players,
+                    isStarted,
+                    null)
+    );
   }
   /**
    * Handles a request to select a team and role for a player.
@@ -129,6 +145,7 @@ public class LobbyController {
    * @param request the position selection request containing username, lobby code, team, and role
    * @return a response indicating whether the selection was successful
    */
+
   @PostMapping("/{lobbyCode}/select-position")
   public ResponseEntity<LobbyResponse> selectPosition(
           @PathVariable String lobbyCode, @RequestBody PlayerDto request) {
@@ -160,6 +177,7 @@ public class LobbyController {
    * @return a response entity of a lobby response, with isStarted @code true or @code false,
    *     whether the starting was successful or not
    */
+
   @GetMapping("/{lobbyCode}/start-game")
   public ResponseEntity<LobbyResponse> startGame(
           @PathVariable String lobbyCode, @RequestParam String username) {
@@ -168,11 +186,21 @@ public class LobbyController {
     if (isStarted) {
       return ResponseEntity.ok(
               new LobbyResponse(
-                      "Game is starting now.", lobbyCode, service.getPlayersDto(lobbyCode), true, null));
+                      "Game is starting now.",
+                      lobbyCode,
+                      service.getPlayersDto(lobbyCode),
+                      true,
+                      null)
+      );
     }
     return ResponseEntity.badRequest()
             .body(
                     new LobbyResponse(
-                            "Could not start the game.", lobbyCode, service.getPlayersDto(lobbyCode), false, null));
+                            "Could not start the game.",
+                            lobbyCode,
+                            service.getPlayersDto(lobbyCode),
+                            false,
+                            null)
+            );
   }
 }

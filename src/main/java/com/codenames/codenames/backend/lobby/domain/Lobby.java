@@ -4,6 +4,7 @@ import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.Getter;
 
@@ -68,12 +69,19 @@ public class Lobby {
       return null;
     }
 
-    String newUuid = java.util.UUID.randomUUID().toString();
+    String newUuid = UUID.randomUUID().toString();
     Player newPlayer = new Player(username, isHost, newUuid);
     playerList.add(newPlayer);
 
     return newPlayer;
   }
+  /**
+   * Adds a player to lobby.
+   *
+   * @param username der Name des Spielers
+   * @param isHost   gibt an, ob der Spieler der Host ist
+   * @return         der erstellte Player
+   */
 
   public Player addPlayer(String username, boolean isHost) {
     return addPlayer(username, isHost, null);

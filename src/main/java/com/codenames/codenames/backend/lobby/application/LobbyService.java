@@ -97,7 +97,7 @@ public class LobbyService {
                 .orElse(null);
 
         if (existingPlayer == null || !existingPlayer.uuid().equals(uuid)) {
-          log.warn("{}: join rejected. Game already started and no valid UUID provided for reconnect.", lobbyCode);
+          log.warn("{}: join rejected. Game started, no valid reconnect UUID.", lobbyCode);
           return null;
         }
         log.info("{}: player reconnected to a running game", lobbyCode);

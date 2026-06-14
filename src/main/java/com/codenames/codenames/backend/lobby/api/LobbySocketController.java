@@ -71,7 +71,11 @@ public class LobbySocketController {
       log.error(e.getMessage());
     }
 
-    Player joinedPlayer = lobbyService.joinLobby(message.getName(), message.getCode(), message.getUuid());
+    Player joinedPlayer = lobbyService.joinLobby(
+            message.getName(),
+            message.getCode(),
+            message.getUuid()
+    );
     boolean joined = (joinedPlayer != null);
     boolean reconnect =
         lobbyService.getPlayers(message.getCode()).stream()
