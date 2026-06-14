@@ -160,14 +160,13 @@ class LobbyTest {
     Lobby lobby = new Lobby("ABCDE", "Host");
     lobby.addPlayer("P1", false);
 
-
     Player blocked = lobby.addPlayer("P1", false, "WRONG-UUID");
 
     assertNull(blocked);
   }
 
   @Test
-  void testSetPlayerUuid_playerFound(){
+  void testSetPlayerUuid_playerFound() {
     Lobby lobby = new Lobby("ABCDE", "Host");
     lobby.setPlayerUuid("Host", "test-uuid-1");
 
@@ -176,7 +175,7 @@ class LobbyTest {
   }
 
   @Test
-  void testSetPlayerUuid_playerNotFound(){
+  void testSetPlayerUuid_playerNotFound() {
     Lobby lobby = new Lobby("ABCDE", "Host");
     lobby.setPlayerUuid("NotHost", "test-uuid-1");
     // if i don't hit the same username, it should not be overridden
