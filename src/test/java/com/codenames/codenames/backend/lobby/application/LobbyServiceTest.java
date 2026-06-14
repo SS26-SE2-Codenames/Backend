@@ -385,13 +385,41 @@ class LobbyServiceTest {
     assertEquals(2, snapshots.get("ABCDE").size());
 
     PlayerDto host =
-        snapshots.get("ABCDE").stream()
-            .filter(player -> player.username().equals("Host"))
-            .findFirst()
-            .orElseThrow();
+            snapshots.get("ABCDE").stream()
+                    .filter(player -> player.username().equals("Host"))
+                    .findFirst()
+                    .orElseThrow();
 
     assertEquals(Team.RED, host.team());
     assertEquals(Role.SPYMASTER, host.role());
     assertTrue(host.isHost());
+  }
+
+  @Test
+  void joinLobbyShouldBlockNewPlayerIfGameStarted() {
+    when(gameService.isGameStarted("ABCDE")).thenReturn(true);
+
+    Player result = lobbyService.joinLobby("NewPlayer", "ABCDE", null);
+
+    assertNull(result);
+  }
+
+  @Test
+  void joinLobbyShouldAllowReconnectIfGameStarted() {
+    lobbyService.getLobbyList().clear();
+
+    String lobbyCode = lobbyService.createLobby("Host");
+
+    when(gameService.isGameStarted(lobbyCode)).thenReturn(false);
+
+    Player p1 = lobbyService.joinLobby("P1", lobbyCode, null);
+    assertNotNull(p1);
+
+    when(gameService.isGameStarted(lobbyCode)).thenReturn(true);
+
+    Player result = lobbyService.joinLobby("P1", lobbyCode, p1.uuid());
+
+    assertNotNull(result);
+    assertEquals(p1.uuid(), result.uuid());
   }
 }

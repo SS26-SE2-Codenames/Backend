@@ -129,4 +129,35 @@ class LobbyTest {
 
     assertTrue(startingTeam == Team.RED || startingTeam == Team.BLUE);
   }
+
+  @Test
+  void addPlayerShouldAssignUuidToNewPlayer() {
+    Lobby lobby = new Lobby("ABCDE", "Host");
+    Player newPlayer = lobby.addPlayer("P1", false);
+
+    assertNotNull(newPlayer.uuid());
+  }
+
+  @Test
+  void addPlayerShouldAllowReconnectWithCorrectUuid() {
+    Lobby lobby = new Lobby("ABCDE", "Host");
+    Player first = lobby.addPlayer("P1", false);
+    String validUuid = first.uuid();
+
+    Player reconnected = lobby.addPlayer("P1", false, validUuid);
+
+    assertNotNull(reconnected);
+    assertEquals(validUuid, reconnected.uuid());
+  }
+
+  @Test
+  void addPlayerShouldBlockReconnectWithWrongUuid() {
+    Lobby lobby = new Lobby("ABCDE", "Host");
+    lobby.addPlayer("P1", false);
+
+
+    Player blocked = lobby.addPlayer("P1", false, "WRONG-UUID");
+
+    assertNull(blocked);
+  }
 }
