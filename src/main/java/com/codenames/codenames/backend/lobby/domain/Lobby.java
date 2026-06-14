@@ -132,6 +132,23 @@ public class Lobby {
   }
 
   /**
+   * Sets the UUID for a player by replacing their Player record.
+   * Used during restoration to preserve UUIDs from the database.
+   *
+   * @param username the username of the player
+   * @param uuid the UUID to assign
+   */
+  public void setPlayerUuid(String username, String uuid) {
+    for (int i = 0; i < playerList.size(); i++) {
+      Player p = playerList.get(i);
+      if (p.username().equals(username)) {
+        playerList.set(i, new Player(p.username(), p.isHost(), uuid));
+        return;
+      }
+    }
+  }
+
+  /**
    * Returns the team of a player.
    *
    * @param username the username of the player

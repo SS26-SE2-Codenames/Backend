@@ -92,7 +92,8 @@ public class RestorationMapper {
               playerEntity.getUsername(),
               team,
               role,
-              playerEntity.getIsHost());
+              playerEntity.getIsHost(),
+              playerEntity.getUuid());
       playerList.add(playerDto);
     }
     return playerList;
@@ -112,6 +113,9 @@ public class RestorationMapper {
       }
       if (player.role() != null) {
         lobby.setPlayerRole(player.username(), player.role());
+      }
+      if (player.uuid() != null) {
+        lobby.setPlayerUuid(player.username(), player.uuid());
       }
     }
 
