@@ -60,9 +60,11 @@ class LobbySocketControllerTest {
 
     accessor.setSessionAttributes(attrs);
 
-    when(lobbyService.joinLobby("Max", "ABCDE", null)).thenReturn(new Player("Max", true, "mock-uuid"));
+    when(lobbyService.joinLobby("Max", "ABCDE", null)).thenReturn(
+            new Player("Max", true, "mock-uuid"));
 
-    when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max", true, "mock-uuid")));
+    when(lobbyService.getPlayers("ABCDE")).thenReturn(
+            List.of(new Player("Max", true, "mock-uuid")));
     when(gameService.getCurrentGameState("ABCDE")).thenReturn(createGameStatePayload());
 
     controller.join(msg, accessor);
@@ -125,8 +127,10 @@ class LobbySocketControllerTest {
     attrs.put("sessionId", "123");
     accessor.setSessionAttributes(attrs);
 
-    when(lobbyService.joinLobby("Max", "ABCDE", null)).thenReturn(new Player("Max", true, "mock-uuid"));
-    when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max", true, "mock-uuid")));
+    when(lobbyService.joinLobby("Max", "ABCDE", null)).thenReturn(
+            new Player("Max", true, "mock-uuid"));
+    when(lobbyService.getPlayers("ABCDE")).thenReturn(
+            List.of(new Player("Max", true, "mock-uuid")));
     when(gameService.getCurrentGameState("ABCDE")).thenReturn(createGameStatePayload());
 
     controller.join(msg, accessor);
@@ -154,7 +158,8 @@ class LobbySocketControllerTest {
     accessor.setSessionAttributes(attrs);
 
     when(lobbyService.joinLobby("Max", "ABCDE", "existing-uuid")).thenReturn(null);
-    when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max", true, "existing-uuid")));
+    when(lobbyService.getPlayers("ABCDE")).thenReturn(
+            List.of(new Player("Max", true, "existing-uuid")));
     when(gameService.getCurrentGameState("ABCDE")).thenReturn(createGameStatePayload());
 
     controller.join(msg, accessor);

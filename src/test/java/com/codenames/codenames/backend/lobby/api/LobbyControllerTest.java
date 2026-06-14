@@ -8,9 +8,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.application.LobbyService;
+import com.codenames.codenames.backend.lobby.domain.Player;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
-import com.codenames.codenames.backend.lobby.domain.Player;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,11 @@ class LobbyControllerTest {
   @Test
   void createLobbyShouldReturn200() throws Exception {
     when(service.createLobby("TestUser")).thenReturn("ABCDE");
-    when(service.getPlayer("ABCDE", "TestUser")).thenReturn(new Player("TestUser", true, "mock-uuid"));
+    when(service.getPlayer("ABCDE",
+            "TestUser")).thenReturn(new Player("TestUser",
+            true,
+            "mock-uuid")
+    );
 
     mockMvc
         .perform(get("/lobby/create").param("username", "TestUser"))
@@ -127,7 +131,7 @@ class LobbyControllerTest {
                                       "role": "SPYMASTER",
                                       "isHost": "true"
                                     }
-                                    """))
+                    """))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message").value("Position selected successfully."))
         .andExpect(jsonPath("$.lobbyCode").value("ABCDE"));
@@ -149,7 +153,7 @@ class LobbyControllerTest {
                                       "role": "SPYMASTER",
                                       "isHost": "true"
                                     }
-                                    """))
+                    """))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.message").value("Could not assign selected team/role."))
         .andExpect(jsonPath("$.lobbyCode").value("ABCDE"));
@@ -158,7 +162,8 @@ class LobbyControllerTest {
   @Test
   void getLobbyInfoShouldReturn200WhenLobbyExists() throws Exception {
     List<PlayerDto> players =
-        List.of(new PlayerDto("Alice", null, null, true, null), new PlayerDto("Bob", null, null, false, null));
+        List.of(new PlayerDto("Alice", null, null, true, null),
+                new PlayerDto("Bob", null, null, false, null));
 
     when(service.getPlayersDto("ABCDE")).thenReturn(players);
 
@@ -174,7 +179,8 @@ class LobbyControllerTest {
   @Test
   void testStartGameReturns200WhenConditionIsMet() throws Exception {
     List<PlayerDto> players =
-        List.of(new PlayerDto("Alice", null, null, true, null), new PlayerDto("Bob", null, null, false, null));
+        List.of(new PlayerDto("Alice", null, null, true, null),
+                new PlayerDto("Bob", null, null, false, null));
 
     when(service.getPlayersDto("ABCDE")).thenReturn(players);
     when(service.startGame("ABCDE", "Alice")).thenReturn(true);
@@ -191,7 +197,8 @@ class LobbyControllerTest {
   @Test
   void testStartGameReturns400WhenServiceReturnsFalse() throws Exception {
     List<PlayerDto> players =
-        List.of(new PlayerDto("Alice", null, null, true, null), new PlayerDto("Bob", null, null, false, null));
+        List.of(new PlayerDto("Alice", null, null, true, null),
+                new PlayerDto("Bob", null, null, false, null));
 
     when(service.getPlayersDto("ABCDE")).thenReturn(players);
     when(service.startGame("ABCDE", "Alice")).thenReturn(false);

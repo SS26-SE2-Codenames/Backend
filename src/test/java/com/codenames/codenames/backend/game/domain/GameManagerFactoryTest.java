@@ -63,7 +63,14 @@ class GameManagerFactoryTest {
   void testCreateFromSnapshotWithoutClue() {
     GameStateDto snapshot =
         new GameStateDto(
-            null, Team.BLUE, Role.SPYMASTER, null, 0, List.of(new CardDto("Tree", Color.BLUE, false)));
+            null,
+                Team.BLUE,
+                Role.SPYMASTER,
+                null,
+                0,
+                List.of(new CardDto("Tree",
+                        Color.BLUE, false))
+        );
 
     GameManager recovered = gameManagerFactory.createFromSnapshot(snapshot);
 
