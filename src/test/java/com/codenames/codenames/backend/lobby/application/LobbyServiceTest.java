@@ -54,9 +54,9 @@ class LobbyServiceTest {
   @Test
   void createLobbyReturnLobbyCode() {
     lobbyService.createLobby("Host");
-    boolean result = lobbyService.joinLobby("TestUser", "ABCDE");
+    Player result = lobbyService.joinLobby("TestUser", "ABCDE", null);
 
-    assertTrue(result);
+    assertNotNull(result);
 
     List<Player> players = lobbyService.getPlayers("ABCDE");
     assertTrue(players.stream().anyMatch(p -> p.username().equals("TestUser")));
@@ -80,8 +80,8 @@ class LobbyServiceTest {
 
   @Test
   void joinLobbyReturnFalseLobbyNotExists() {
-    boolean result = lobbyService.joinLobby("TestUser", "ABCDE");
-    assertFalse(result);
+    Player result = lobbyService.joinLobby("TestUser", "ABCDE", null);
+    assertNull(result);
   }
 
   @Test
@@ -141,7 +141,7 @@ class LobbyServiceTest {
   @Test
   void selectPositionShouldReturnFalseWhenSecondSpymasterChoosesSameTeam() {
     lobbyService.createLobby("Host");
-    lobbyService.joinLobby("P1", "ABCDE");
+    lobbyService.joinLobby("P1", "ABCDE", null);
 
     boolean firstResult = lobbyService.selectPosition("Host", "ABCDE", Team.RED, Role.SPYMASTER);
     boolean secondResult = lobbyService.selectPosition("P1", "ABCDE", Team.RED, Role.SPYMASTER);
@@ -153,7 +153,7 @@ class LobbyServiceTest {
   @Test
   void selectPositionShouldReturnTrueWhenSpymastersChooseDifferentTeams() {
     lobbyService.createLobby("Host");
-    lobbyService.joinLobby("P1", "ABCDE");
+    lobbyService.joinLobby("P1", "ABCDE", null);
 
     boolean firstResult = lobbyService.selectPosition("Host", "ABCDE", Team.RED, Role.SPYMASTER);
     boolean secondResult = lobbyService.selectPosition("P1", "ABCDE", Team.BLUE, Role.SPYMASTER);
@@ -165,7 +165,7 @@ class LobbyServiceTest {
   @Test
   void selectPositionShouldReturnTrueWhenMultipleOperativesChooseSameTeam() {
     lobbyService.createLobby("Host");
-    lobbyService.joinLobby("P1", "ABCDE");
+    lobbyService.joinLobby("P1", "ABCDE", null);
 
     boolean firstResult = lobbyService.selectPosition("Host", "ABCDE", Team.RED, Role.OPERATIVE);
     boolean secondResult = lobbyService.selectPosition("P1", "ABCDE", Team.RED, Role.OPERATIVE);
@@ -186,11 +186,11 @@ class LobbyServiceTest {
   void joinLobbyShouldReturnFalseWhenPlayerAlreadyExists() {
     lobbyService.createLobby("Host");
 
-    boolean first = lobbyService.joinLobby("Max", "ABCDE");
-    boolean second = lobbyService.joinLobby("Max", "ABCDE");
+    Player first = lobbyService.joinLobby("Max", "ABCDE", null);
+    Player second = lobbyService.joinLobby("Max", "ABCDE", null);
 
-    assertTrue(first);
-    assertFalse(second);
+    assertNotNull(first);
+    assertNull(second);
 
     List<Player> players = lobbyService.getPlayers("ABCDE");
 
@@ -272,7 +272,7 @@ class LobbyServiceTest {
   @Test
   void testLobbyIsNotRemovedWhenItHasPlayers() {
     lobbyService.createLobby("Host");
-    lobbyService.joinLobby("Player1", "ABCDE");
+    lobbyService.joinLobby("Player1", "ABCDE", null);
     lobbyService.checkLobbyStillHasPlayers("ABCDE");
     assertTrue(lobbyService.getLobbyList().containsKey("ABCDE"));
   }
@@ -345,8 +345,8 @@ class LobbyServiceTest {
   @Test
   void testGetHostWorks() {
     lobbyService.createLobby("Alice");
-    lobbyService.joinLobby("Bob", "ABCDE");
-    lobbyService.joinLobby("Caesar", "ABCDE");
+    lobbyService.joinLobby("Bob", "ABCDE", null);
+    lobbyService.joinLobby("Caesar", "ABCDE", null);
 
     String expected = "Alice";
     String result = lobbyService.getHost("ABCDE");
@@ -376,7 +376,7 @@ class LobbyServiceTest {
   @Test
   void getLobbySnapshotsShouldReturnAllLobbyPlayerDtos() {
     lobbyService.createLobby("Host");
-    lobbyService.joinLobby("Player", "ABCDE");
+    lobbyService.joinLobby("Player", "ABCDE", null);
     lobbyService.selectPosition("Host", "ABCDE", Team.RED, Role.SPYMASTER);
 
     Map<String, List<PlayerDto>> snapshots = lobbyService.getLobbySnapshots();

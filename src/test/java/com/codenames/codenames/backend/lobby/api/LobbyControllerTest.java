@@ -10,6 +10,7 @@ import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.application.LobbyService;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
+import com.codenames.codenames.backend.lobby.domain.Player;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ class LobbyControllerTest {
   @Test
   void createLobbyShouldReturn200() throws Exception {
     when(service.createLobby("TestUser")).thenReturn("ABCDE");
+    when(service.getPlayer("ABCDE", "TestUser")).thenReturn(new Player("TestUser", true, "mock-uuid"));
 
     mockMvc
         .perform(get("/lobby/create").param("username", "TestUser"))
@@ -60,12 +62,13 @@ class LobbyControllerTest {
 
   @Test
   void joinLobbyShouldReturn200WhenSuccess() throws Exception {
-    when(service.joinLobby("TestUser", "ABCDE")).thenReturn(true);
+    when(service.joinLobby("TestUser", "ABCDE", null))
+            .thenReturn(new Player("TestUser", false, "mock-uuid-123"));
 
     mockMvc
-        .perform(get("/lobby/ABCDE/join").param("username", "TestUser"))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message").value("Joined Lobby successfully."));
+            .perform(get("/lobby/ABCDE/join").param("username", "TestUser"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.message").value("Joined Lobby successfully."));
   }
 
   @Test
@@ -78,12 +81,12 @@ class LobbyControllerTest {
 
   @Test
   void joinLobbyShouldReturn400WhenNotFound() throws Exception {
-    when(service.joinLobby("TestUser", "XXXXX")).thenReturn(false);
+    when(service.joinLobby("TestUser", "XXXXX", null)).thenReturn(null);
 
     mockMvc
-        .perform(get("/lobby/XXXXX/join").param("username", "TestUser"))
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.message").value("Could not find lobby."));
+            .perform(get("/lobby/XXXXX/join").param("username", "TestUser"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value("Could not find lobby."));
   }
 
   @Test

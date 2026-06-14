@@ -1,11 +1,8 @@
 package com.codenames.codenames.backend.lobby.domain;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for {@link Lobby}.
@@ -27,7 +24,7 @@ class LobbyTest {
   void addPlayerShouldAddPlayer() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
-    lobby.addPlayer("P1");
+    lobby.addPlayer("P1", null);
 
     assertEquals(2, lobby.getPlayerList().size());
     assertTrue(lobby.getPlayerList().stream().anyMatch(p -> p.username().equals("P1")));
@@ -37,10 +34,10 @@ class LobbyTest {
   void addPlayerShouldNotExceedMaxPlayers() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
-    lobby.addPlayer("P1");
-    lobby.addPlayer("P2");
-    lobby.addPlayer("P3");
-    lobby.addPlayer("P4");
+    lobby.addPlayer("P1", null);
+    lobby.addPlayer("P2", null);
+    lobby.addPlayer("P3", null);
+    lobby.addPlayer("P4", null);
 
     assertEquals(4, lobby.getPlayerList().size());
   }
@@ -49,7 +46,7 @@ class LobbyTest {
   void removePlayerShouldRemovePlayer() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
-    lobby.addPlayer("P1");
+    lobby.addPlayer("P1", null);
     lobby.removePlayer("P1");
 
     assertFalse(lobby.getPlayerList().stream().anyMatch(p -> p.username().equals("P1")));
@@ -68,11 +65,11 @@ class LobbyTest {
   void addPlayerShouldNotAddDuplicatePlayer() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
-    boolean first = lobby.addPlayer("Max");
-    boolean second = lobby.addPlayer("Max");
+    Player first = lobby.addPlayer("Max", null);
+    Player second = lobby.addPlayer("Max", null);
 
-    assertTrue(first);
-    assertFalse(second);
+    assertNotNull(first);
+    assertNull(second);
 
     long count = lobby.getPlayerList().stream().filter(p -> p.username().equals("Max")).count();
 

@@ -85,14 +85,25 @@ public class LobbyService {
    * @param lobbyCode the lobby code identifying the lobby
    * @return {@code true} if the player successfully joined, {@code false} otherwise
    */
-  public boolean joinLobby(String username, String lobbyCode, String uuid) {
+  public Player joinLobby(String username, String lobbyCode, String uuid) {
     Lobby lobby = lobbyList.get(lobbyCode);
     if (lobby != null) {
       log.info("{}: a player has joined", lobbyCode);
       return lobby.addPlayer(username, uuid);
     }
     log.error("{}: an error occurred when joining lobby", lobbyCode);
-    return false;
+    return null;
+  }
+
+  public Player getPlayer(String lobbyCode, String username) {
+    Lobby lobby = lobbyList.get(lobbyCode);
+    if (lobby != null) {
+      return lobby.getPlayerList().stream()
+              .filter(p -> p.username().equals(username))
+              .findFirst()
+              .orElse(null);
+    }
+    return null;
   }
 
   /**

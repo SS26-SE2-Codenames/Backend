@@ -51,6 +51,7 @@ class LobbySocketControllerTest {
     JoinMessage msg = new JoinMessage();
     msg.setName("Max");
     msg.setCode("ABCDE");
+    msg.setUuid(null);
 
     SimpMessageHeaderAccessor accessor = SimpMessageHeaderAccessor.create();
 
@@ -59,14 +60,14 @@ class LobbySocketControllerTest {
 
     accessor.setSessionAttributes(attrs);
 
-    when(lobbyService.joinLobby("Max", "ABCDE")).thenReturn(true);
+    when(lobbyService.joinLobby("Max", "ABCDE", null)).thenReturn(new Player("Max", true, "mock-uuid"));
 
-    when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max", true)));
+    when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max", true, "mock-uuid")));
     when(gameService.getCurrentGameState("ABCDE")).thenReturn(createGameStatePayload());
 
     controller.join(msg, accessor);
 
-    verify(lobbyService).joinLobby("Max", "ABCDE");
+    verify(lobbyService).joinLobby("Max", "ABCDE", null);
 
     assertEquals("Max", sessionRegistry.getUser("123"));
     assertEquals("ABCDE", sessionRegistry.getLobby("123"));
@@ -88,9 +89,8 @@ class LobbySocketControllerTest {
     attrs.put("sessionId", "123");
     accessor.setSessionAttributes(attrs);
 
-    when(lobbyService.joinLobby("Max", "ABCDE")).thenReturn(false);
+    when(lobbyService.joinLobby("Max", "ABCDE", null)).thenReturn(null);
     when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of());
-
     controller.join(msg, accessor);
 
     verify(messagingTemplate).convertAndSend("/topic/errors/123", "Join failed");
@@ -125,8 +125,8 @@ class LobbySocketControllerTest {
     attrs.put("sessionId", "123");
     accessor.setSessionAttributes(attrs);
 
-    when(lobbyService.joinLobby("Max", "ABCDE")).thenReturn(true);
-    when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max", true)));
+    when(lobbyService.joinLobby("Max", "ABCDE", null)).thenReturn(new Player("Max", true, "mock-uuid"));
+    when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max", true, "mock-uuid")));
     when(gameService.getCurrentGameState("ABCDE")).thenReturn(createGameStatePayload());
 
     controller.join(msg, accessor);
@@ -134,7 +134,7 @@ class LobbySocketControllerTest {
     assertEquals("Max", sessionRegistry.getUser("123"));
     assertEquals("ABCDE", sessionRegistry.getLobby("123"));
 
-    verify(lobbyService).joinLobby("Max", "ABCDE");
+    verify(lobbyService).joinLobby("Max", "ABCDE", null);
     verify(messagingTemplate).convertAndSend(eq("/topic/lobby/ABCDE"), any(Object.class));
     verify(messagingTemplate).convertAndSend(eq("/topic/game/ABCDE"), any(Object.class));
   }
@@ -145,6 +145,7 @@ class LobbySocketControllerTest {
     JoinMessage msg = new JoinMessage();
     msg.setName("Max");
     msg.setCode("ABCDE");
+    msg.setUuid("existing-uuid");
 
     SimpMessageHeaderAccessor accessor = SimpMessageHeaderAccessor.create();
 
@@ -152,8 +153,8 @@ class LobbySocketControllerTest {
     attrs.put("sessionId", "reconnect-1");
     accessor.setSessionAttributes(attrs);
 
-    when(lobbyService.joinLobby("Max", "ABCDE")).thenReturn(false);
-    when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max", true)));
+    when(lobbyService.joinLobby("Max", "ABCDE", "existing-uuid")).thenReturn(null);
+    when(lobbyService.getPlayers("ABCDE")).thenReturn(List.of(new Player("Max", true, "existing-uuid")));
     when(gameService.getCurrentGameState("ABCDE")).thenReturn(createGameStatePayload());
 
     controller.join(msg, accessor);
