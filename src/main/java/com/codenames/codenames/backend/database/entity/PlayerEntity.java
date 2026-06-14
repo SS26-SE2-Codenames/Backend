@@ -35,4 +35,6 @@ public class PlayerEntity {
   private String team;
   @Column(length = 9, nullable = false)
   private String role;
+  @Column(nullable = false, unique = true)
+  private String uuid;
 }

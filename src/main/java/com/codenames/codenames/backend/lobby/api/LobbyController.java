@@ -65,7 +65,7 @@ public class LobbyController {
   @GetMapping("/{lobbyCode}/join")
   public ResponseEntity<LobbyResponse> joinLobby(
       @RequestParam String username, @PathVariable String lobbyCode) {
-    boolean joined = service.joinLobby(username, lobbyCode);
+    boolean joined = service.joinLobby(username, lobbyCode, null);
     if (joined) {
 
       return ResponseEntity.ok(

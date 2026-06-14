@@ -55,7 +55,7 @@ public class Lobby {
       return false;
     }
 
-    playerList.add(new Player(username, isHost));
+    playerList.add(new Player(username, isHost, null));
     return true;
   }
 
@@ -66,8 +66,16 @@ public class Lobby {
    * @param username the username of the player
    * @return {@code true} if the player was added, {@code false} otherwise
    */
-  public boolean addPlayer(String username) {
-    return addPlayer(username, false);
+  public boolean addPlayer(String username, String uuid) {
+    boolean alreadyExists =
+            playerList.stream().anyMatch(p -> p.username().equals(username));
+
+    if (alreadyExists || playerList.size() >= MAX_PLAYERS) {
+      return false;
+    }
+
+    playerList.add(new Player(username, false, uuid));
+    return true;
   }
 
   /**

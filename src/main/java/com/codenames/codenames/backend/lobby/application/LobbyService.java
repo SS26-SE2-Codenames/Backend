@@ -85,11 +85,11 @@ public class LobbyService {
    * @param lobbyCode the lobby code identifying the lobby
    * @return {@code true} if the player successfully joined, {@code false} otherwise
    */
-  public boolean joinLobby(String username, String lobbyCode) {
+  public boolean joinLobby(String username, String lobbyCode, String uuid) {
     Lobby lobby = lobbyList.get(lobbyCode);
     if (lobby != null) {
       log.info("{}: a player has joined", lobbyCode);
-      return lobby.addPlayer(username);
+      return lobby.addPlayer(username, uuid);
     }
     log.error("{}: an error occurred when joining lobby", lobbyCode);
     return false;
