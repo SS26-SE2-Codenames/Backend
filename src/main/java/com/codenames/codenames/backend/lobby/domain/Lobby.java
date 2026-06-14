@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.UUID;
 import lombok.Getter;
 
 /**
@@ -49,17 +48,35 @@ public class Lobby {
    * @param isHost whether the player is the host of the lobby
    * @return {@code true} if the player was added, {@code false} otherwise
    */
-  public Player addPlayer(String username, boolean isHost) {
-    boolean alreadyExists = playerList.stream().anyMatch(p -> p.username().equals(username));
 
-    if (alreadyExists || playerList.size() >= MAX_PLAYERS) {
+  public Player addPlayer(String username, boolean isHost, String requestedUuid) {
+    java.util.Optional<Player> existingPlayerOpt = playerList.stream()
+            .filter(p -> p.username().equals(username))
+            .findFirst();
+
+    if (existingPlayerOpt.isPresent()) {
+      Player existingPlayer = existingPlayerOpt.get();
+
+      if (existingPlayer.uuid().equals(requestedUuid)) {
+        return existingPlayer;
+      }
+
       return null;
     }
 
-    String newUuid = UUID.randomUUID().toString();
+    if (playerList.size() >= MAX_PLAYERS) {
+      return null;
+    }
+
+    String newUuid = java.util.UUID.randomUUID().toString();
     Player newPlayer = new Player(username, isHost, newUuid);
-    playerList.add(new Player(username, isHost, null));
+    playerList.add(newPlayer);
+
     return newPlayer;
+  }
+
+  public Player addPlayer(String username, boolean isHost) {
+    return addPlayer(username, isHost, null);
   }
 
   /**
@@ -70,7 +87,7 @@ public class Lobby {
    * @return {@code true} if the player was added, {@code false} otherwise
    */
   public Player addPlayer(String username, String uuid) {
-    return addPlayer(username, false);
+    return addPlayer(username, false, uuid);
   }
 
   /**
