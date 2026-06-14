@@ -114,6 +114,7 @@ class GameServiceTest {
             redTeam,
             Role.SPYMASTER,
             new ClueDto("ANIMAL", 2),
+            3,
                 List.of(new CardDto("Dog", Color.RED, false)));
     when(mockGameManager.getCurrentTurn()).thenReturn(redTeam);
     when(mockGameManager.getCurrentPhase()).thenReturn(Role.SPYMASTER);
@@ -144,6 +145,7 @@ class GameServiceTest {
             redTeam,
             Role.SPYMASTER,
             new ClueDto("ANIMAL", 2),
+            3,
                 List.of(new CardDto("Dog", Color.RED, false)));
 
     when(mockGameManager.getCurrentTurn()).thenReturn(redTeam);

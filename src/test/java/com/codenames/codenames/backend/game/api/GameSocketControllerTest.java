@@ -68,6 +68,7 @@ class GameSocketControllerTest {
     controller.revealCard(message);
 
     verify(gameService).flipCard(LOBBY_CODE, 0, Team.RED);
+    verify(persistenceService).saveSnapShot(LOBBY_CODE);
     verify(messagingTemplate).convertAndSend(anyString(), any(Object.class));
   }
 
@@ -106,6 +107,6 @@ class GameSocketControllerTest {
   }
 
   private GameStateDto createGameStateDto() {
-    return new GameStateDto(null, Team.RED, null, null, List.of());
+    return new GameStateDto(null, Team.RED, null, null, 0, List.of());
   }
 }

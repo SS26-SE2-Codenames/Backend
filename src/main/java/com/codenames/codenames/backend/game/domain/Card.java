@@ -1,9 +1,11 @@
 package com.codenames.codenames.backend.game.domain;
 
 import lombok.Getter;
+import lombok.ToString;
 
 /** Represents a single card on a board. */
 @Getter
+@ToString
 public class Card {
   private final String word;
   private final Color color;

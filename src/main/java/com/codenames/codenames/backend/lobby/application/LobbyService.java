@@ -1,6 +1,7 @@
 package com.codenames.codenames.backend.lobby.application;
 
 import com.codenames.codenames.backend.chat.application.ChatService;
+import com.codenames.codenames.backend.database.repository.LobbyRepository;
 import com.codenames.codenames.backend.game.application.GameService;
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.domain.Lobby;
@@ -25,11 +26,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class LobbyService {
 
-  @Getter
-  private final Map<String, Lobby> lobbyList = new ConcurrentHashMap<>();
+  @Getter private final Map<String, Lobby> lobbyList = new ConcurrentHashMap<>();
   private final LobbyCodeGenerator generator;
   private final GameService gameService;
   private final ChatService chatService;
+  private final LobbyRepository lobbyRepository;
 
   /**
    * Creates a new {@code LobbyService}.
@@ -37,10 +38,14 @@ public class LobbyService {
    * @param generator the lobby code generator used to create unique lobby codes
    */
   public LobbyService(
-      LobbyCodeGenerator generator, ChatService chatService, GameService gameService) {
+      LobbyCodeGenerator generator,
+      ChatService chatService,
+      GameService gameService,
+      LobbyRepository lobbyRepository) {
     this.generator = generator;
     this.chatService = chatService;
     this.gameService = gameService;
+    this.lobbyRepository = lobbyRepository;
   }
 
   /**
@@ -158,6 +163,7 @@ public class LobbyService {
       lobbyList.remove(lobbyCode);
       chatService.clearLobbyHistory(lobbyCode);
       gameService.removeGame(lobbyCode);
+      lobbyRepository.deleteById(lobbyCode);
       log.info("{}: Lobby is empty, was removed from list.", lobbyCode);
     }
   }
