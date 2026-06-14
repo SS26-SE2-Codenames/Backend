@@ -82,6 +82,7 @@ class GameSocketControllerTest {
     controller.revealCard(message);
 
     verify(gameService).flipCard(LOBBY_CODE, 0, Team.RED);
+    verify(persistenceService).saveSnapShot(LOBBY_CODE);
     verify(messagingTemplate).convertAndSend(anyString(), any(Object.class));
   }
 

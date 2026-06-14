@@ -92,6 +92,7 @@ public class GameManager {
         state.currentClue() == null
             ? null
             : new Clue(state.currentClue().word(), state.currentClue().guessAmount());
+    this.remainingGuesses = state.remainingGuesses();
     this.clueValidationService = clueValidationService;
 
     List<Card> cards = state.cardList().stream().map(this::toCard).toList();

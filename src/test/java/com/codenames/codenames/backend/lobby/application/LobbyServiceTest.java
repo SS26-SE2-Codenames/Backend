@@ -13,6 +13,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.codenames.codenames.backend.chat.application.ChatService;
+import com.codenames.codenames.backend.database.repository.LobbyRepository;
 import com.codenames.codenames.backend.game.application.GameService;
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.domain.Lobby;
@@ -37,14 +38,16 @@ class LobbyServiceTest {
   private LobbyService lobbyService;
   private LobbyCodeGenerator generator;
   private GameService gameService;
+  private LobbyRepository lobbyRepository;
 
   @BeforeEach
   void setup() {
     generator = mock(LobbyCodeGenerator.class);
     gameService = mock(GameService.class);
     ChatService chatService = mock(ChatService.class);
+    lobbyRepository = mock(LobbyRepository.class);
 
-    lobbyService = new LobbyService(generator, chatService, gameService);
+    lobbyService = new LobbyService(generator, chatService, gameService, lobbyRepository);
     when(generator.generateLobbyCode()).thenReturn("ABCDE");
   }
 
@@ -263,6 +266,7 @@ class LobbyServiceTest {
     lobbyService.checkLobbyStillHasPlayers("ABCDE");
     assertFalse(lobbyService.getLobbyList().containsKey("ABCDE"));
     verify(gameService, times(1)).removeGame("ABCDE");
+    verify(lobbyRepository, times(1)).deleteById("ABCDE");
   }
 
   @Test

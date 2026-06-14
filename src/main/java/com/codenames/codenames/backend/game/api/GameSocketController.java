@@ -118,6 +118,7 @@ public class GameSocketController {
   public void revealCard(RevealCardMessage message) {
 
     gameService.flipCard(message.getLobbyCode(), message.getPosition(), message.getCurrentTurn());
+    persistenceService.saveSnapShot(message.getLobbyCode());
 
     messagingTemplate.convertAndSend(
         GAME_TOPIC_PREFIX + message.getLobbyCode(),

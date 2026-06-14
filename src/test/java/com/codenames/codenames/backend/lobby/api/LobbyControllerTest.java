@@ -1,7 +1,5 @@
 package com.codenames.codenames.backend.lobby.api;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -12,7 +10,6 @@ import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.application.LobbyService;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
-import com.codenames.codenames.backend.recovery.application.SystemStatePersistenceService;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +25,6 @@ class LobbyControllerTest {
 
   @MockBean private LobbyService service;
 
-  @MockBean private SystemStatePersistenceService persistenceService;
-
   @Test
   void createLobbyShouldReturn200() throws Exception {
     when(service.createLobby("TestUser")).thenReturn("ABCDE");
@@ -39,8 +34,6 @@ class LobbyControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message").value("Successfully created Lobby."))
         .andExpect(jsonPath("$.lobbyCode").value("ABCDE"));
-
-    verifyNoInteractions(persistenceService);
   }
 
   @Test
@@ -73,8 +66,6 @@ class LobbyControllerTest {
         .perform(get("/lobby/ABCDE/join").param("username", "TestUser"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message").value("Joined Lobby successfully."));
-
-    verifyNoInteractions(persistenceService);
   }
 
   @Test
@@ -104,8 +95,6 @@ class LobbyControllerTest {
         .perform(get("/lobby/ABCDE/leave").param("username", "TestUser"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message").value("Left lobby successfully."));
-
-    verifyNoInteractions(persistenceService);
   }
 
   @Test
@@ -139,8 +128,6 @@ class LobbyControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message").value("Position selected successfully."))
         .andExpect(jsonPath("$.lobbyCode").value("ABCDE"));
-
-    verifyNoInteractions(persistenceService);
   }
 
   @Test
@@ -196,8 +183,6 @@ class LobbyControllerTest {
         .andExpect(jsonPath("$.lobbyCode").value("ABCDE"))
         .andExpect(jsonPath("$.playerList[0].username").value("Alice"))
         .andExpect(jsonPath("$.isStarted").value("true"));
-
-    verify(persistenceService).persistCurrentState();
   }
 
   @Test

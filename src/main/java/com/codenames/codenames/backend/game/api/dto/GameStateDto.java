@@ -18,7 +18,8 @@ public record GameStateDto(
     Team currentTurn,
     Role currentPhase,
     ClueDto currentClue,
-    List<CardDto> cardList,
+    int remainingGuesses,
+    List<CardDto> cardList
     boolean redTeamCheatUsed,
     boolean blueTeamCheatUsed) {
 }

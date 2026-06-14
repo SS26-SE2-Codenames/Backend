@@ -3,7 +3,6 @@ package com.codenames.codenames.backend.lobby.api;
 import com.codenames.codenames.backend.lobby.api.dto.LobbyResponse;
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.application.LobbyService;
-import com.codenames.codenames.backend.recovery.application.SystemStatePersistenceService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,18 +24,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class LobbyController {
 
   private final LobbyService service;
-  private final SystemStatePersistenceService persistenceService;
   private static final String LOBBY_NOT_FOUND = "Could not find lobby.";
 
   /**
    * Creates a new {@code LobbyController}.
    *
    * @param service the lobby service used to handle business logic
-   * @param persistenceService service used to persist current backend state
    */
-  public LobbyController(LobbyService service, SystemStatePersistenceService persistenceService) {
+  public LobbyController(LobbyService service) {
     this.service = service;
-    this.persistenceService = persistenceService;
   }
 
   /**
@@ -96,10 +92,6 @@ public class LobbyController {
 
     if (left) {
       service.checkLobbyStillHasPlayers(lobbyCode);
-
-      if (wasStarted) {
-        persistenceService.persistCurrentState();
-      }
 
       return ResponseEntity.ok(
           new LobbyResponse(
@@ -170,7 +162,6 @@ public class LobbyController {
     boolean isStarted = service.startGame(lobbyCode, username);
 
     if (isStarted) {
-      persistenceService.persistCurrentState();
       return ResponseEntity.ok(
           new LobbyResponse(
               "Game is starting now.", lobbyCode, service.getPlayersDto(lobbyCode), true));

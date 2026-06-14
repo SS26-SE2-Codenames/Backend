@@ -335,7 +335,7 @@ class GameManagerTest {
   @Test
   void recoveryConstructorThrowsWhenCardsAreNull() {
     GameStateDto state =
-        new GameStateDto(null, Team.RED, Role.SPYMASTER, null, null, false, false);
+        new GameStateDto(null, Team.RED, Role.SPYMASTER, null, 0, null, false, false);
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -344,7 +344,7 @@ class GameManagerTest {
   @Test
   void recoveryConstructorThrowsWhenCardsAreEmpty() {
     GameStateDto state =
-        new GameStateDto(null, Team.RED, Role.SPYMASTER, null, List.of(), false, false);
+        new GameStateDto(null, Team.RED, Role.SPYMASTER, null, 0, List.of(), false, false);
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -356,7 +356,7 @@ class GameManagerTest {
         List.of(new CardDto("Dog", Color.RED, false));
 
     GameStateDto state =
-        new GameStateDto(null, null, Role.SPYMASTER, null, cards, false, false);
+        new GameStateDto(null, null, Role.SPYMASTER, null, 0, cards, false, false);
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -368,7 +368,7 @@ class GameManagerTest {
         List.of(new CardDto("Dog", Color.RED, false));
 
     GameStateDto state =
-        new GameStateDto(null, Team.RED, null, null, cards, false, false);
+        new GameStateDto(null, Team.RED, null, null, 0, cards, false, false);
 
     assertThrows(
         IllegalArgumentException.class, () -> new GameManager(state, mockClueValidationService));
@@ -383,7 +383,7 @@ class GameManagerTest {
 
     GameStateDto state =
         new GameStateDto(
-            Team.RED, Team.BLUE, Role.OPERATIVE, new ClueDto("ANIMAL", 2), cards, false, false);
+            Team.RED, Team.BLUE, Role.OPERATIVE, new ClueDto("ANIMAL", 2), 3, cards, false, false);
 
     GameManager restored = new GameManager(state, mockClueValidationService);
 

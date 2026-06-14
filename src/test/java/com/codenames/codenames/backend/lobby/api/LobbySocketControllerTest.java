@@ -166,6 +166,6 @@ class LobbySocketControllerTest {
   }
 
   private GameStateDto createGameStatePayload() {
-    return new GameStateDto(null, null, null, null, List.of(), false, false);
+    return new GameStateDto(null, null, null, null, 0, List.of(), false, false);
   }
 }
