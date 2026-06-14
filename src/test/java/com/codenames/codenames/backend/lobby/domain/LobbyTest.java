@@ -2,6 +2,7 @@ package com.codenames.codenames.backend.lobby.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -163,5 +164,24 @@ class LobbyTest {
     Player blocked = lobby.addPlayer("P1", false, "WRONG-UUID");
 
     assertNull(blocked);
+  }
+
+  @Test
+  void testSetPlayerUuid_playerFound(){
+    Lobby lobby = new Lobby("ABCDE", "Host");
+    lobby.setPlayerUuid("Host", "test-uuid-1");
+
+    Player player1 = lobby.getPlayerList().get(0);
+    assertEquals("test-uuid-1", player1.uuid());
+  }
+
+  @Test
+  void testSetPlayerUuid_playerNotFound(){
+    Lobby lobby = new Lobby("ABCDE", "Host");
+    lobby.setPlayerUuid("NotHost", "test-uuid-1");
+    // if i don't hit the same username, it should not be overridden
+
+    Player player1 = lobby.getPlayerList().get(0);
+    assertNotEquals("test-uuid-1", player1.uuid());
   }
 }

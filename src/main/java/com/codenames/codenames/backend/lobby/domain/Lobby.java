@@ -150,11 +150,12 @@ public class Lobby {
     for (int i = 0; i < playerList.size(); i++) {
       Player p = playerList.get(i);
       if (p.username().equals(username)) {
+        // caller loops through all players in list on match we overwrite
         playerList.set(i, new Player(p.username(), p.isHost(), uuid));
         return;
       }
     }
-  }
+  } // refer RestorationMapper as for why we overwrite player records
 
   /**
    * Returns the team of a player.

@@ -101,6 +101,9 @@ public class RestorationMapper {
 
   private Lobby buildLobby(String lobbyCode, List<PlayerDto> players) {
     String hostUsername = findHostUsername(players);
+    // the way uuid is generated is a bit roundabout, but I do not have the time to refactor it
+    // and I do not want to touch the code if it works (Lobby.java)
+    // since constructor uses the two parameter method -> reroute to 3 parameter -> always null UUID
 
     Lobby lobby = new Lobby(lobbyCode, hostUsername);
 
@@ -115,6 +118,7 @@ public class RestorationMapper {
         lobby.setPlayerRole(player.username(), player.role());
       }
       if (player.uuid() != null) {
+        // Solution: we overwrite all player records with data loaded from DB
         lobby.setPlayerUuid(player.username(), player.uuid());
       }
     }
