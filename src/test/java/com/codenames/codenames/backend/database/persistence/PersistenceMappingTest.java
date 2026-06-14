@@ -52,8 +52,8 @@ class PersistenceMappingTest {
 
     mockClueValidationService = mock(ClueValidationService.class);
     gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
-    player1 = new PlayerDto("Test1", redTeam, spymaster, true, null);
-    player2 = new PlayerDto("Test2", redTeam, operative, false, null);
+    player1 = new PlayerDto("Test1", redTeam, spymaster, true, "test-uuid-1");
+    player2 = new PlayerDto("Test2", redTeam, operative, false, "test-uuid-2");
     playerDtoList = List.of(player1, player2);
 
     lobbyEntity =
@@ -86,6 +86,7 @@ class PersistenceMappingTest {
     assertTrue(retrievedPlayer1.getIsHost());
     assertEquals("RED", retrievedPlayer1.getTeam());
     assertEquals("SPYMASTER", retrievedPlayer1.getRole());
+    assertEquals("test-uuid-1", retrievedPlayer1.getUuid());
   }
 
   @Test
