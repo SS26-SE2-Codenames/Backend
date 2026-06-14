@@ -8,12 +8,10 @@ import com.codenames.codenames.backend.game.api.dto.ClueMessage;
 import com.codenames.codenames.backend.game.api.dto.PassTurnMessage;
 import com.codenames.codenames.backend.game.api.dto.RevealCardMessage;
 import com.codenames.codenames.backend.game.api.dto.StartGameMessage;
+import com.codenames.codenames.backend.game.application.CheatService;
 import com.codenames.codenames.backend.game.application.GameService;
 import com.codenames.codenames.backend.game.domain.CheatResult;
 import com.codenames.codenames.backend.game.domain.Clue;
-import com.codenames.codenames.backend.lobby.application.LobbyService;
-import com.codenames.codenames.backend.lobby.domain.Role;
-import com.codenames.codenames.backend.lobby.domain.Team;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -28,7 +26,7 @@ import org.springframework.stereotype.Controller;
 public class GameSocketController {
 
   private final GameService gameService;
-  private final LobbyService lobbyService;
+  private final CheatService cheatService;
 
   private final SimpMessagingTemplate messagingTemplate;
   private final PersistenceService persistenceService;
@@ -41,18 +39,18 @@ public class GameSocketController {
    * @param gameService service responsible for gameplay logic
    * @param messagingTemplate template used for broadcasting websocket messages
    * @param persistenceService service used to persist current backend state
-   * @param lobbyService service responsible for lobby and player information
+   * @param cheatService service responsible for cheat handling
    */
   public GameSocketController(
       GameService gameService,
       SimpMessagingTemplate messagingTemplate,
       PersistenceService persistenceService,
-      LobbyService lobbyService) {
+      CheatService cheatService) {
 
     this.gameService = gameService;
     this.messagingTemplate = messagingTemplate;
     this.persistenceService = persistenceService;
-    this.lobbyService = lobbyService;
+    this.cheatService = cheatService;
   }
 
   /**
@@ -63,18 +61,11 @@ public class GameSocketController {
   @MessageMapping("/cheat")
   public void useCheat(CheatCardMessage message) {
 
-    Team team = lobbyService.getPlayerTeam(message.getUsername(), message.getLobbyCode());
-    Role role = lobbyService.getPlayerRole(message.getUsername(), message.getLobbyCode());
-
-    if (team == null || role != Role.OPERATIVE) {
-      return;
-    }
-
     CheatResult result =
-        gameService.useCheat(
+        cheatService.useCheat(
             message.getLobbyCode(),
-            message.getPositions(),
-            team);
+            message.getUsername(),
+            message.getPositions());
 
     if (result == null) {
       return;

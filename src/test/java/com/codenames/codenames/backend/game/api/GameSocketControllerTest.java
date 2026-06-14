@@ -16,10 +16,9 @@ import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.codenames.codenames.backend.game.api.dto.PassTurnMessage;
 import com.codenames.codenames.backend.game.api.dto.RevealCardMessage;
 import com.codenames.codenames.backend.game.api.dto.StartGameMessage;
+import com.codenames.codenames.backend.game.application.CheatService;
 import com.codenames.codenames.backend.game.application.GameService;
 import com.codenames.codenames.backend.game.domain.CheatResult;
-import com.codenames.codenames.backend.lobby.application.LobbyService;
-import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +40,7 @@ class GameSocketControllerTest {
 
   @Mock private PersistenceService persistenceService;
 
-  @Mock private LobbyService lobbyService;
+  @Mock private CheatService cheatService;
 
   private GameSocketController controller;
 
@@ -52,7 +51,7 @@ class GameSocketControllerTest {
             gameService,
             messagingTemplate,
             persistenceService,
-            lobbyService);
+            cheatService);
   }
 
   @Test
@@ -121,7 +120,7 @@ class GameSocketControllerTest {
   }
 
   private GameStateDto createGameStateDto() {
-    return new GameStateDto(null, Team.RED, null, null, List.of(), false, false);
+    return new GameStateDto(null, Team.RED, null, null, 0,  List.of(), false, false);
   }
 
   @Test
@@ -133,11 +132,11 @@ class GameSocketControllerTest {
 
     CheatResult result = new CheatResult("Die Karte \"Dog\" ist richtig.");
 
-    when(lobbyService.getPlayerTeam("Max", LOBBY_CODE)).thenReturn(Team.RED);
-    when(lobbyService.getPlayerRole("Max", LOBBY_CODE)).thenReturn(Role.OPERATIVE);
-    when(gameService.useCheat(LOBBY_CODE, List.of(0, 1), Team.RED)).thenReturn(result);
+    when(cheatService.useCheat(LOBBY_CODE, "Max", List.of(0, 1))).thenReturn(result);
 
     controller.useCheat(message);
+
+    verify(cheatService).useCheat(LOBBY_CODE, "Max", List.of(0, 1));
 
     verify(messagingTemplate)
         .convertAndSendToUser(
@@ -146,5 +145,22 @@ class GameSocketControllerTest {
             eq(new ChatDto("System", result.message(), ChatMessageType.SYSTEM)));
 
     verify(persistenceService).saveSnapShot(LOBBY_CODE);
+  }
+
+  @Test
+  void useCheatShouldDoNothingWhenResultIsNull() {
+    CheatCardMessage message = new CheatCardMessage();
+    message.setLobbyCode(LOBBY_CODE);
+    message.setUsername("Max");
+    message.setPositions(List.of(0, 1));
+
+    when(cheatService.useCheat(LOBBY_CODE, "Max", List.of(0, 1))).thenReturn(null);
+
+    controller.useCheat(message);
+
+    verify(cheatService).useCheat(LOBBY_CODE, "Max", List.of(0, 1));
+    verify(messagingTemplate, never())
+        .convertAndSendToUser(anyString(), anyString(), any(Object.class));
+    verify(persistenceService, never()).saveSnapShot(LOBBY_CODE);
   }
 }
