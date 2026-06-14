@@ -87,22 +87,28 @@ public class LobbyService {
    */
   public Player joinLobby(String username, String lobbyCode, String uuid) {
     Lobby lobby = lobbyList.get(lobbyCode);
+
     if (lobby != null) {
-      log.info("{}: a player has joined", lobbyCode);
+      if (gameService.isGameStarted(lobbyCode)) {
+
+        Player existingPlayer = lobby.getPlayerList().stream()
+                .filter(p -> p.username().equals(username))
+                .findFirst()
+                .orElse(null);
+
+        if (existingPlayer == null || !existingPlayer.uuid().equals(uuid)) {
+          log.warn("{}: join rejected. Game already started and no valid UUID provided for reconnect.", lobbyCode);
+          return null;
+        }
+        log.info("{}: player reconnected to a running game", lobbyCode);
+      } else {
+        log.info("{}: a player has joined", lobbyCode);
+      }
+
       return lobby.addPlayer(username, uuid);
     }
-    log.error("{}: an error occurred when joining lobby", lobbyCode);
-    return null;
-  }
 
-  public Player getPlayer(String lobbyCode, String username) {
-    Lobby lobby = lobbyList.get(lobbyCode);
-    if (lobby != null) {
-      return lobby.getPlayerList().stream()
-              .filter(p -> p.username().equals(username))
-              .findFirst()
-              .orElse(null);
-    }
+    log.error("{}: an error occurred when joining lobby", lobbyCode);
     return null;
   }
 
@@ -278,6 +284,24 @@ public class LobbyService {
     Lobby lobby = lobbyList.get(lobbyCode);
     if (lobby != null) {
       return lobby.getPlayerRole(username);
+    }
+    return null;
+  }
+
+  /**
+   * Retrieves a specific player from a lobby.
+   *
+   * @param lobbyCode the lobby code
+   * @param username the username of the player
+   * @return the Player object, or null if not found
+   */
+  public Player getPlayer(String lobbyCode, String username) {
+    Lobby lobby = lobbyList.get(lobbyCode);
+    if (lobby != null) {
+      return lobby.getPlayerList().stream()
+              .filter(p -> p.username().equals(username))
+              .findFirst()
+              .orElse(null);
     }
     return null;
   }
