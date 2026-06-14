@@ -52,8 +52,8 @@ class PersistenceMappingTest {
 
     mockClueValidationService = mock(ClueValidationService.class);
     gameManager = new GameManager(redTeam, mockCardGenerator, mockClueValidationService);
-    player1 = new PlayerDto("Test1", redTeam, spymaster, true);
-    player2 = new PlayerDto("Test2", redTeam, operative, false);
+    player1 = new PlayerDto("Test1", redTeam, spymaster, true, null);
+    player2 = new PlayerDto("Test2", redTeam, operative, false, null);
     playerDtoList = List.of(player1, player2);
 
     lobbyEntity =

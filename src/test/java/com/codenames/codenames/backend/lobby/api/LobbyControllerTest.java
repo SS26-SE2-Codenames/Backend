@@ -74,7 +74,7 @@ class LobbyControllerTest {
   @Test
   void getLobbyInfoShouldReturn200() throws Exception {
     when(service.getPlayersDto("ABCDE"))
-        .thenReturn(List.of(new PlayerDto("test", null, null, true)));
+        .thenReturn(List.of(new PlayerDto("test", null, null, true, null)));
     String url = "/lobby/ABCDE";
     mockMvc.perform(get(url)).andExpect(status().isOk());
   }
@@ -158,7 +158,7 @@ class LobbyControllerTest {
   @Test
   void getLobbyInfoShouldReturn200WhenLobbyExists() throws Exception {
     List<PlayerDto> players =
-        List.of(new PlayerDto("Alice", null, null, true), new PlayerDto("Bob", null, null, false));
+        List.of(new PlayerDto("Alice", null, null, true, null), new PlayerDto("Bob", null, null, false, null));
 
     when(service.getPlayersDto("ABCDE")).thenReturn(players);
 
@@ -174,7 +174,7 @@ class LobbyControllerTest {
   @Test
   void testStartGameReturns200WhenConditionIsMet() throws Exception {
     List<PlayerDto> players =
-        List.of(new PlayerDto("Alice", null, null, true), new PlayerDto("Bob", null, null, false));
+        List.of(new PlayerDto("Alice", null, null, true, null), new PlayerDto("Bob", null, null, false, null));
 
     when(service.getPlayersDto("ABCDE")).thenReturn(players);
     when(service.startGame("ABCDE", "Alice")).thenReturn(true);
@@ -191,7 +191,7 @@ class LobbyControllerTest {
   @Test
   void testStartGameReturns400WhenServiceReturnsFalse() throws Exception {
     List<PlayerDto> players =
-        List.of(new PlayerDto("Alice", null, null, true), new PlayerDto("Bob", null, null, false));
+        List.of(new PlayerDto("Alice", null, null, true, null), new PlayerDto("Bob", null, null, false, null));
 
     when(service.getPlayersDto("ABCDE")).thenReturn(players);
     when(service.startGame("ABCDE", "Alice")).thenReturn(false);
