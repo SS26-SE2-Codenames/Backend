@@ -40,6 +40,7 @@ class RestorationMapperTest {
     playerEntity.setIsHost(true);
     playerEntity.setTeam("RED");
     playerEntity.setRole("OPERATIVE");
+    playerEntity.setUuid("test-uuid-1");
     List<PlayerEntity> playerList = List.of(playerEntity);
     lobbyEntity.setPlayerEntities(playerList);
 
@@ -47,8 +48,8 @@ class RestorationMapperTest {
 
     assertNotNull(lobby);
     assertEquals("ABCDE", lobby.getLobbyCode());
-
     assertEquals(1, lobby.getPlayerList().size());
+    assertEquals("test-uuid-1", lobby.getPlayerList().get(0).uuid());
   }
 
   @Test
@@ -143,5 +144,4 @@ class RestorationMapperTest {
 
     assertNull(lobby.getPlayerRole("TestPlayer2"));
   }
-
 }
