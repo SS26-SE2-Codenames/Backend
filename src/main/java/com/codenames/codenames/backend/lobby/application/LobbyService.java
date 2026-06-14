@@ -212,7 +212,8 @@ public class LobbyService {
                       player.username(),
                       lobby.getPlayerTeam(player.username()),
                       lobby.getPlayerRole(player.username()),
-                      player.isHost()))
+                      player.isHost(),
+                      player.uuid()))
           .toList();
     }
     return List.of();
