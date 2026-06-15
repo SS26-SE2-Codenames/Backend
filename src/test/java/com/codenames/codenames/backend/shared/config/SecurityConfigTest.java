@@ -40,6 +40,11 @@ class SecurityConfigTest {
   }
 
   @Test
+  void sockJsEndpointShouldBeDenied() throws Exception {
+    mockMvc.perform(get("/ws")).andExpect(status().isForbidden());
+  }
+
+  @Test
   void websocketFallbackEndpointShouldBePublic() throws Exception {
     mockMvc.perform(get("/ws-fallback")).andExpect(status().isNotFound());
   }

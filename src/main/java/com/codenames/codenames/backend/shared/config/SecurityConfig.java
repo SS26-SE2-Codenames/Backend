@@ -17,15 +17,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig {
 
-  @Value("${app.allowed-origins:http://localhost:8080,http://10.0.2.2:8080}")
+  @Value("${app.allowed-origins}")
   private String[] allowedOrigins;
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.csrf(
-            csrf ->
-                csrf.ignoringRequestMatchers(
-                    "/lobby/**", "/ws", "/ws/**", "/ws-fallback", "/ws-fallback/**"))
+    http.csrf(csrf -> csrf.ignoringRequestMatchers("/lobby/**", "/ws-fallback", "/ws-fallback/**"))
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .authorizeHttpRequests(
             auth ->
@@ -35,7 +32,7 @@ public class SecurityConfig {
                     .permitAll()
                     .requestMatchers("/lobby/**")
                     .permitAll()
-                    .requestMatchers("/ws", "/ws/**", "/ws-fallback", "/ws-fallback/**")
+                    .requestMatchers("/ws-fallback", "/ws-fallback/**")
                     .permitAll()
                     .anyRequest()
                     .denyAll())
