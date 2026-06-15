@@ -1,10 +1,12 @@
 package com.codenames.codenames.backend.lobby.domain;
 
+import static java.util.UUID.randomUUID;
+
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.Getter;
 
@@ -51,7 +53,7 @@ public class Lobby {
    */
 
   public Player addPlayer(String username, boolean isHost, String requestedUuid) {
-    java.util.Optional<Player> existingPlayerOpt = playerList.stream()
+    Optional<Player> existingPlayerOpt = playerList.stream()
             .filter(p -> p.username().equals(username))
             .findFirst();
 
@@ -69,7 +71,7 @@ public class Lobby {
       return null;
     }
 
-    String newUuid = UUID.randomUUID().toString();
+    String newUuid = randomUUID().toString();
     Player newPlayer = new Player(username, isHost, newUuid);
     playerList.add(newPlayer);
 
@@ -140,8 +142,7 @@ public class Lobby {
   }
 
   /**
-   * Sets the UUID for a player by replacing their Player record.
-   * Used during restoration to preserve UUIDs from the database.
+   * Sets the UUID for a player by replacing their Player record, used by restoration of UUID.
    *
    * @param username the username of the player
    * @param uuid the UUID to assign
