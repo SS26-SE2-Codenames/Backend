@@ -2,7 +2,6 @@ package com.codenames.codenames.backend.game.api;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -140,9 +139,9 @@ class GameSocketControllerTest {
 
     verify(messagingTemplate)
         .convertAndSendToUser(
-            eq("Max"),
-            eq("/queue/system"),
-            eq(new ChatDto("System", result.message(), ChatMessageType.SYSTEM)));
+            "Max",
+            "/queue/system",
+            new ChatDto("System", result.message(), ChatMessageType.SYSTEM));
 
     verify(persistenceService).saveSnapShot(LOBBY_CODE);
   }
