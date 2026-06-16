@@ -91,12 +91,11 @@ public class LobbyService {
     if (lobby != null) {
       if (gameService.isGameStarted(lobbyCode)) {
 
-        Player existingPlayer = lobby.getPlayerList().stream()
-                .filter(p -> p.username().equals(username))
-                .findFirst()
-                .orElse(null);
+        boolean validReconnect =
+                  lobby.getPlayerList().stream()
+                          .anyMatch(p -> p.uuid().equals(uuid));
 
-        if (existingPlayer == null || !existingPlayer.uuid().equals(uuid)) {
+        if (!validReconnect) {
           log.warn("{}: join rejected. Game started, no valid reconnect UUID.", lobbyCode);
           return null;
         }
@@ -143,27 +142,27 @@ public class LobbyService {
   /**
    * Assigns a team and role to a player in a lobby.
    *
-   * @param username the username of the player
+   * @param uuid the UUID of the player
    * @param lobbyCode the lobby code identifying the lobby
    * @param team the selected team
    * @param role the selected role
    * @return {@code true} if the position was assigned, {@code false} otherwise
    */
-  public boolean selectPosition(String username, String lobbyCode, Team team, Role role) {
+  public boolean selectPosition(String uuid, String lobbyCode, Team team, Role role) {
     Lobby lobby = lobbyList.get(lobbyCode);
 
-    if (lobby == null || !lobby.hasPlayer(username) || team == null || role == null) {
+    if (lobby == null || !lobby.hasPlayer(uuid) || team == null || role == null) {
       log.error("{}: position selection error occurred", lobbyCode);
       return false;
     }
 
-    if (role == Role.SPYMASTER && isSpymasterAlreadyAssigned(lobby, username, team)) {
+    if (role == Role.SPYMASTER && isSpymasterAlreadyAssigned(lobby, uuid, team)) {
       log.error("{}: position selection error occurred, spymaster is already assigned.", lobbyCode);
       return false;
     }
 
-    lobby.setPlayerTeam(username, team);
-    lobby.setPlayerRole(username, role);
+    lobby.setPlayerTeam(uuid, team);
+    lobby.setPlayerRole(uuid, role);
     log.info("{}: new role was assigned to player", lobbyCode);
     return true;
   }
@@ -210,8 +209,8 @@ public class LobbyService {
               player ->
                   new PlayerDto(
                       player.username(),
-                      lobby.getPlayerTeam(player.username()),
-                      lobby.getPlayerRole(player.username()),
+                      lobby.getPlayerTeam(player.uuid()),
+                      lobby.getPlayerRole(player.uuid()),
                       player.isHost(),
                       player.uuid()))
           .toList();
@@ -223,15 +222,15 @@ public class LobbyService {
    * Checks whether a spymaster is already assigned for the given team in the lobby.
    *
    * @param lobby the lobby to inspect
-   * @param username the username requesting the role
+   * @param uuid the UUID requesting the role
    * @param team the team to inspect
    * @return {@code true} if a different player is already the spymaster for that team
    */
-  private boolean isSpymasterAlreadyAssigned(Lobby lobby, String username, Team team) {
+  private boolean isSpymasterAlreadyAssigned(Lobby lobby, String uuid, Team team) {
     for (Player player : lobby.getPlayerList()) {
-      if (!player.username().equals(username)
-          && lobby.getPlayerTeam(player.username()) == team
-          && lobby.getPlayerRole(player.username()) == Role.SPYMASTER) {
+      if (!player.uuid().equals(uuid)
+          && lobby.getPlayerTeam(player.uuid()) == team
+          && lobby.getPlayerRole(player.uuid()) == Role.SPYMASTER) {
         return true;
       }
     }
@@ -262,14 +261,14 @@ public class LobbyService {
   /**
    * Retrieves the team of a player in a lobby.
    *
-   * @param username the username of a player
+   * @param uuid the UUID of a player
    * @param lobbyCode the lobby code of the lobby
    * @return the team of the player, or {@code null} if the lobby or player does not exist
    */
-  public Team getPlayerTeam(String username, String lobbyCode) {
+  public Team getPlayerTeam(String uuid, String lobbyCode) {
     Lobby lobby = lobbyList.get(lobbyCode);
     if (lobby != null) {
-      return lobby.getPlayerTeam(username);
+      return lobby.getPlayerTeam(uuid);
     }
     return null;
   }
@@ -277,14 +276,14 @@ public class LobbyService {
   /**
    * Retrieves the role of a player in a lobby.
    *
-   * @param username the username of a player
+   * @param uuid the UUID of a player
    * @param lobbyCode the lobby code of the lobby
    * @return the role of the player, or {@code null} if the lobby or player does not exist
    */
-  public Role getPlayerRole(String username, String lobbyCode) {
+  public Role getPlayerRole(String uuid, String lobbyCode) {
     Lobby lobby = lobbyList.get(lobbyCode);
     if (lobby != null) {
-      return lobby.getPlayerRole(username);
+      return lobby.getPlayerRole(uuid);
     }
     return null;
   }
@@ -293,14 +292,14 @@ public class LobbyService {
    * Retrieves a specific player from a lobby.
    *
    * @param lobbyCode the lobby code
-   * @param username the username of the player
+   * @param uuid the UUID of the player
    * @return the Player object, or null if not found
    */
-  public Player getPlayer(String lobbyCode, String username) {
+  public Player getPlayer(String lobbyCode, String uuid) {
     Lobby lobby = lobbyList.get(lobbyCode);
     if (lobby != null) {
       return lobby.getPlayerList().stream()
-              .filter(p -> p.username().equals(username))
+              .filter(p -> p.uuid().equals(uuid))
               .findFirst()
               .orElse(null);
     }

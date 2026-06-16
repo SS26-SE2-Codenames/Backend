@@ -9,125 +9,126 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-/**
- * Tests for {@link Lobby}.
- *
- * <p>Validates player management and lobby constraints.
- */
 class LobbyTest {
 
   @Test
-  void constructorShouldInitializeLobbyCorrectly() {
+    void constructorShouldInitializeLobbyCorrectly() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
     assertEquals("ABCDE", lobby.getLobbyCode());
     assertEquals(1, lobby.getPlayerList().size());
     assertTrue(lobby.getPlayerList().stream().anyMatch(p -> p.username().equals("Host")));
+    assertNotNull(lobby.getPlayerList().get(0).uuid());
   }
 
   @Test
-  void addPlayerShouldAddPlayer() {
+    void addPlayerShouldAddPlayer() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
-    lobby.addPlayer("P1", null);
+    lobby.addPlayer("P1", false);
 
     assertEquals(2, lobby.getPlayerList().size());
     assertTrue(lobby.getPlayerList().stream().anyMatch(p -> p.username().equals("P1")));
   }
 
   @Test
-  void addPlayerShouldNotExceedMaxPlayers() {
+    void addPlayerShouldNotExceedMaxPlayers() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
-    lobby.addPlayer("P1", null);
-    lobby.addPlayer("P2", null);
-    lobby.addPlayer("P3", null);
-    lobby.addPlayer("P4", null);
+    lobby.addPlayer("P1", false);
+    lobby.addPlayer("P2", false);
+    lobby.addPlayer("P3", false);
+    Player rejectedPlayer = lobby.addPlayer("P4", false);
 
     assertEquals(4, lobby.getPlayerList().size());
+    assertNull(rejectedPlayer);
   }
 
   @Test
-  void removePlayerShouldRemovePlayer() {
+    void removePlayerShouldRemovePlayer() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
-    lobby.addPlayer("P1", null);
-    lobby.removePlayer("P1");
+    Player p1 = lobby.addPlayer("P1", false);
+    String p1Uuid = p1.uuid();
 
-    assertFalse(lobby.getPlayerList().stream().anyMatch(p -> p.username().equals("P1")));
+    lobby.removePlayer(p1Uuid);
+
+    assertFalse(lobby.getPlayerList().stream().anyMatch(p -> p.uuid().equals(p1Uuid)));
   }
 
   @Test
-  void removePlayerShouldDoNothingIfPlayerNotExists() {
+    void removePlayerShouldDoNothingIfPlayerNotExists() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
-    lobby.removePlayer("Ghost");
+    lobby.removePlayer("invalid-uuid-1234");
 
     assertEquals(1, lobby.getPlayerList().size());
   }
 
   @Test
-  void addPlayerShouldNotAddDuplicatePlayer() {
+    void addPlayerShouldAllowDuplicateUsernamesWithDifferentUuids() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
-    Player first = lobby.addPlayer("Max", null);
-    Player second = lobby.addPlayer("Max", null);
+    Player first = lobby.addPlayer("Max", false);
+    Player second = lobby.addPlayer("Max", false);
 
     assertNotNull(first);
-    assertNull(second);
-
-    long count = lobby.getPlayerList().stream().filter(p -> p.username().equals("Max")).count();
-
-    assertEquals(1, count);
+    assertNotNull(second);
+    assertNotEquals(first.uuid(), second.uuid());
+    assertEquals(3, lobby.getPlayerList().size());
   }
 
   @Test
-  void hasPlayerShouldReturnTrueIfPlayerExists() {
+    void hasPlayerShouldReturnTrueIfPlayerExists() {
+    Lobby lobby = new Lobby("ABCDE", "Host");
+    String hostUuid = lobby.getPlayerList().get(0).uuid();
+
+    assertTrue(lobby.hasPlayer(hostUuid));
+  }
+
+  @Test
+    void hasPlayerShouldReturnFalseIfPlayerDoesNotExist() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
-    assertTrue(lobby.hasPlayer("Host"));
+    assertFalse(lobby.hasPlayer("invalid-uuid"));
   }
 
   @Test
-  void hasPlayerShouldReturnFalseIfPlayerDoesNotExist() {
+    void setPlayerTeamShouldStoreSelectedTeam() {
     Lobby lobby = new Lobby("ABCDE", "Host");
+    String hostUuid = lobby.getPlayerList().get(0).uuid();
 
-    assertFalse(lobby.hasPlayer("Ghost"));
+    lobby.setPlayerTeam(hostUuid, Team.RED);
+
+    assertEquals(Team.RED, lobby.getPlayerTeam(hostUuid));
   }
 
   @Test
-  void setPlayerTeamShouldStoreSelectedTeam() {
+    void setPlayerRoleShouldStoreSelectedRole() {
     Lobby lobby = new Lobby("ABCDE", "Host");
+    String hostUuid = lobby.getPlayerList().get(0).uuid();
 
-    lobby.setPlayerTeam("Host", Team.RED);
+    lobby.setPlayerRole(hostUuid, Role.SPYMASTER);
 
-    assertEquals(Team.RED, lobby.getPlayerTeam("Host"));
+    assertEquals(Role.SPYMASTER, lobby.getPlayerRole(hostUuid));
   }
 
   @Test
-  void setPlayerRoleShouldStoreSelectedRole() {
+    void removePlayerShouldAlsoRemoveStoredTeamAndRole() {
     Lobby lobby = new Lobby("ABCDE", "Host");
+    String hostUuid = lobby.getPlayerList().get(0).uuid();
 
-    lobby.setPlayerRole("Host", Role.SPYMASTER);
+    lobby.setPlayerTeam(hostUuid, Team.BLUE);
+    lobby.setPlayerRole(hostUuid, Role.OPERATIVE);
 
-    assertEquals(Role.SPYMASTER, lobby.getPlayerRole("Host"));
+    lobby.removePlayer(hostUuid);
+
+    assertNull(lobby.getPlayerTeam(hostUuid));
+    assertNull(lobby.getPlayerRole(hostUuid));
   }
 
   @Test
-  void removePlayerShouldAlsoRemoveStoredTeamAndRole() {
-    Lobby lobby = new Lobby("ABCDE", "Host");
-
-    lobby.setPlayerTeam("Host", Team.BLUE);
-    lobby.setPlayerRole("Host", Role.OPERATIVE);
-
-    lobby.removePlayer("Host");
-
-    assertNull(lobby.getPlayerTeam("Host"));
-    assertNull(lobby.getPlayerRole("Host"));
-  }
-
-  @Test
-  void startingTeamShouldBeEitherRedOrBlue() {
+    void startingTeamShouldBeEitherRedOrBlue() {
     Lobby lobby = new Lobby("ABCDE", "Host");
 
     Team startingTeam = lobby.decideStartingTeam();
@@ -136,7 +137,7 @@ class LobbyTest {
   }
 
   @Test
-  void addPlayerShouldAssignUuidToNewPlayer() {
+    void addPlayerShouldAssignUuidToNewPlayer() {
     Lobby lobby = new Lobby("ABCDE", "Host");
     Player newPlayer = lobby.addPlayer("P1", false);
 
@@ -144,7 +145,7 @@ class LobbyTest {
   }
 
   @Test
-  void addPlayerShouldAllowReconnectWithCorrectUuid() {
+    void addPlayerShouldAllowReconnectWithCorrectUuid() {
     Lobby lobby = new Lobby("ABCDE", "Host");
     Player first = lobby.addPlayer("P1", false);
     String validUuid = first.uuid();
@@ -156,7 +157,7 @@ class LobbyTest {
   }
 
   @Test
-  void addPlayerShouldBlockReconnectWithWrongUuid() {
+    void addPlayerShouldBlockReconnectWithWrongUuid() {
     Lobby lobby = new Lobby("ABCDE", "Host");
     lobby.addPlayer("P1", false);
 
@@ -166,21 +167,14 @@ class LobbyTest {
   }
 
   @Test
-  void testSetPlayerUuid_playerFound() {
-    Lobby lobby = new Lobby("ABCDE", "Host");
-    lobby.setPlayerUuid("Host", "test-uuid-1");
+    void addRestoredPlayerShouldAddPlayerDirectly() {
+    Lobby lobby = new Lobby("ABCDE");
+    Player restoredPlayer = new Player("RestoredUser", false, "custom-uuid-999");
 
-    Player player1 = lobby.getPlayerList().get(0);
-    assertEquals("test-uuid-1", player1.uuid());
-  }
+    lobby.addRestoredPlayer(restoredPlayer);
 
-  @Test
-  void testSetPlayerUuid_playerNotFound() {
-    Lobby lobby = new Lobby("ABCDE", "Host");
-    lobby.setPlayerUuid("NotHost", "test-uuid-1");
-    // if i don't hit the same username, it should not be overridden
-
-    Player player1 = lobby.getPlayerList().get(0);
-    assertNotEquals("test-uuid-1", player1.uuid());
+    assertEquals(1, lobby.getPlayerList().size());
+    assertEquals("custom-uuid-999", lobby.getPlayerList().get(0).uuid());
+    assertEquals("RestoredUser", lobby.getPlayerList().get(0).username());
   }
 }

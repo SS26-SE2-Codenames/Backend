@@ -12,15 +12,15 @@ import com.codenames.codenames.backend.lobby.application.LobbyService;
 import com.codenames.codenames.backend.lobby.domain.Player;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
+import com.codenames.codenames.backend.shared.config.SecurityConfig;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import com.codenames.codenames.backend.shared.config.SecurityConfig;
-import org.springframework.context.annotation.Import;
 
 @WebMvcTest(LobbyController.class)
 @Import(SecurityConfig.class)
@@ -31,41 +31,47 @@ class LobbyControllerTest {
   @MockBean private LobbyService service;
 
   @Test
-  void createLobbyShouldReturn200() throws Exception {
-    when(service.createLobby("TestUser")).thenReturn("ABCDE");
-    when(service.getPlayer("ABCDE",
-            "TestUser")).thenReturn(new Player("TestUser",
-            true,
-            "mock-uuid")
-    );
+    void createLobbyShouldReturn200() throws Exception {
+    when(service.createLobby(anyString())).thenReturn("ABCDE");
+    when(service.getPlayer(anyString(), anyString()))
+                .thenReturn(new Player("TestUser", true, "mock-uuid-123"));
 
     mockMvc
-        .perform(get("/lobby/create").param("username", "TestUser"))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message").value("Successfully created Lobby."))
-        .andExpect(jsonPath("$.lobbyCode").value("ABCDE"));
+                .perform(
+                        get("/lobby/create")
+                                .param("username", "TestUser")
+                                .param("uuid", "mock-uuid-123"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("Successfully created Lobby."))
+                .andExpect(jsonPath("$.lobbyCode").value("ABCDE"));
   }
 
   @Test
-  void createLobbyBlankLobbyCode() throws Exception {
+    void createLobbyBlankLobbyCode() throws Exception {
     when(service.createLobby("TestUser")).thenReturn("");
 
     mockMvc
-        .perform(get("/lobby/create").param("username", "TestUser"))
-        .andExpect(status().isInternalServerError())
-        .andExpect(jsonPath("$.message").value("Error while creating lobby."))
-        .andExpect(jsonPath("$.lobbyCode").value(""));
+                .perform(
+                        get("/lobby/create")
+                                .param("username", "TestUser")
+                                .param("uuid", "mock-uuid-123")) // <-- Hier fehlte die UUID
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.message").value("Error while creating lobby."))
+                .andExpect(jsonPath("$.lobbyCode").value(""));
   }
 
   @Test
-  void createLobbyNullLobbyCode() throws Exception {
+    void createLobbyNullLobbyCode() throws Exception {
     when(service.createLobby("TestUser")).thenReturn(null);
 
     mockMvc
-        .perform(get("/lobby/create").param("username", "TestUser"))
-        .andExpect(status().isInternalServerError())
-        .andExpect(jsonPath("$.message").value("Error while creating lobby."))
-        .andExpect(jsonPath("$.lobbyCode").value(""));
+                .perform(
+                        get("/lobby/create")
+                                .param("username", "TestUser")
+                                .param("uuid", "mock-uuid-123")) // <-- Hier fehlte die UUID
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.message").value("Error while creating lobby."))
+                .andExpect(jsonPath("$.lobbyCode").value(""));
   }
 
   @Test
@@ -138,25 +144,27 @@ class LobbyControllerTest {
   }
 
   @Test
-  void selectPositionShouldReturn200whenSuccess() throws Exception {
-    when(service.selectPosition("TestUser", "ABCDE", Team.RED, Role.SPYMASTER)).thenReturn(true);
+    void selectPositionShouldReturn200whenSuccess() throws Exception {
+    when(service.selectPosition("mock-uuid-123", "ABCDE", Team.RED, Role.SPYMASTER))
+                .thenReturn(true);
 
     mockMvc
-        .perform(
-            post("/lobby/ABCDE/select-position")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(
-                    """
-                                    {
-                                      "username": "TestUser",
-                                      "team": "RED",
-                                      "role": "SPYMASTER",
-                                      "isHost": "true"
-                                    }
-                    """))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message").value("Position selected successfully."))
-        .andExpect(jsonPath("$.lobbyCode").value("ABCDE"));
+                .perform(
+                        post("/lobby/ABCDE/select-position")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
+                                        {
+                                          "username": "TestUser",
+                                          "uuid": "mock-uuid-123",
+                                          "team": "RED",
+                                          "role": "SPYMASTER",
+                                          "isHost": true
+                                        }
+                                        """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("Position selected successfully."))
+                .andExpect(jsonPath("$.lobbyCode").value("ABCDE"));
   }
 
   @Test
