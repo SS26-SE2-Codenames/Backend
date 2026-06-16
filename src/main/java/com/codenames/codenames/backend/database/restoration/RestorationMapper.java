@@ -10,6 +10,7 @@ import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.codenames.codenames.backend.game.domain.Color;
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.domain.Lobby;
+import com.codenames.codenames.backend.lobby.domain.Player;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.ArrayList;
@@ -100,39 +101,25 @@ public class RestorationMapper {
   }
 
   private Lobby buildLobby(String lobbyCode, List<PlayerDto> players) {
-    String hostUsername = findHostUsername(players);
-    // the way uuid is generated is a bit roundabout, but I do not have the time to refactor it
-    // and I do not want to touch the code if it works (Lobby.java)
-    // since constructor uses the two parameter method -> reroute to 3 parameter -> always null UUID
 
-    Lobby lobby = new Lobby(lobbyCode, hostUsername);
+    Lobby lobby = new Lobby(lobbyCode);
 
     for (PlayerDto player : players) {
-      if (!player.username().equals(hostUsername)) {
-        lobby.addPlayer(player.username(), player.isHost());
-      }
+      lobby.addRestoredPlayer(
+                    new Player(
+                            player.username(),
+                            player.isHost(),
+                            player.uuid()));
+
       if (player.team() != null) {
-        lobby.setPlayerTeam(player.username(), player.team());
+        lobby.setPlayerTeam(player.uuid(), player.team());
       }
+
       if (player.role() != null) {
-        lobby.setPlayerRole(player.username(), player.role());
-      }
-      if (player.uuid() != null) {
-        // Solution: we overwrite all player records with data loaded from DB
-        lobby.setPlayerUuid(player.username(), player.uuid());
+        lobby.setPlayerRole(player.uuid(), player.role());
       }
     }
 
     return lobby;
-  }
-
-  private static String findHostUsername(List<PlayerDto> players) {
-    String hostUsername = "";
-    for (PlayerDto playerDto : players) {
-      if (playerDto.isHost()) {
-        hostUsername = playerDto.username();
-      }
-    }
-    return hostUsername;
   }
 }

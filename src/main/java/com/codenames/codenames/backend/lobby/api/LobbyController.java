@@ -40,12 +40,12 @@ public class LobbyController {
   /**
    * Handles a request to create a new lobby.
    *
-   * @param username the username of the requesting user
+   * @param uuid the UUID of the requesting user
    * @return a response containing the result and the generated lobby code
    */
   @GetMapping("/create")
-  public ResponseEntity<LobbyResponse> createLobby(@RequestParam String username) {
-    String lobbyCode = service.createLobby(username);
+  public ResponseEntity<LobbyResponse> createLobby(@RequestParam String uuid) {
+    String lobbyCode = service.createLobby(uuid);
     if (lobbyCode == null || lobbyCode.isBlank()) {
       return ResponseEntity.internalServerError()
               .body(new LobbyResponse("Error while creating lobby.", "", null, false, null));
@@ -53,7 +53,7 @@ public class LobbyController {
       List<PlayerDto> players = service.getPlayersDto(lobbyCode);
 
       Player host = Objects.requireNonNull(
-                service.getPlayer(lobbyCode, username));
+                service.getPlayer(lobbyCode, uuid));
 
       String hostUuid = host.uuid();
 
@@ -153,7 +153,7 @@ public class LobbyController {
   public ResponseEntity<LobbyResponse> selectPosition(
           @PathVariable String lobbyCode, @RequestBody PlayerDto request) {
     boolean updated =
-            service.selectPosition(request.username(), lobbyCode, request.team(), request.role());
+            service.selectPosition(request.uuid(), lobbyCode, request.team(), request.role());
 
     if (updated) {
       return ResponseEntity.ok(
