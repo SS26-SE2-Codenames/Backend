@@ -5,6 +5,7 @@ import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.application.LobbyService;
 import com.codenames.codenames.backend.lobby.domain.Player;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,8 +52,10 @@ public class LobbyController {
     } else {
       List<PlayerDto> players = service.getPlayersDto(lobbyCode);
 
-      Player host = service.getPlayer(lobbyCode, username);
-      String hostUuid = (host != null) ? host.uuid() : null;
+      Player host = Objects.requireNonNull(
+                service.getPlayer(lobbyCode, username));
+
+      String hostUuid = host.uuid();
 
       return ResponseEntity.ok(
               new LobbyResponse(
