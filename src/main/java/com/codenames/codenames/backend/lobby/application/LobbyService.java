@@ -125,14 +125,14 @@ public class LobbyService {
   /**
    * Removes a player from a lobby.
    *
-   * @param username the username of the player
+   * @param uuid the uuid of the player
    * @param lobbyCode the lobby code identifying the lobby
    * @return {@code true} if the player was removed, {@code false} if the lobby does not exist
    */
-  public boolean leaveLobby(String username, String lobbyCode) {
+  public boolean leaveLobby(String uuid, String lobbyCode) {
     Lobby lobby = lobbyList.get(lobbyCode);
     if (lobby != null) {
-      lobby.removePlayer(username);
+      lobby.removePlayer(uuid);
       log.info("{}: a player left", lobbyCode);
       return true;
     }
@@ -312,14 +312,18 @@ public class LobbyService {
    * checks if the requesting user is liable to start the game.
    *
    * @param lobbyCode the unique lobby code
-   * @param username the name of the requesting user
+   * @param uuid the uuid of the requesting user
    * @return if starting was successful
    */
-  public boolean startGame(String lobbyCode, String username) {
+  public boolean startGame(String lobbyCode, String uuid) {
     boolean isStarted =
-        !lobbyCode.isBlank() && !username.isBlank() && Objects.equals(getHost(lobbyCode), username);
-    Lobby lobby = lobbyList.get(lobbyCode);
-    addGameManagerForLobby(lobby, lobbyCode);
+            !lobbyCode.isBlank()
+                    && !uuid.isBlank()
+                    && Objects.equals(getHost(lobbyCode), uuid);
+    if (isStarted) {
+      Lobby lobby = lobbyList.get(lobbyCode);
+      addGameManagerForLobby(lobby, lobbyCode);
+    }
 
     log.info("{}: Game start requested, returning: {}", lobbyCode, isStarted);
     return isStarted;
@@ -329,7 +333,7 @@ public class LobbyService {
    * This method computes the host of a lobby.
    *
    * @param lobbyCode the unique lobby code
-   * @return the username of the host
+   * @return the UUID of the host
    */
   public String getHost(String lobbyCode) {
     if (lobbyCode == null || lobbyCode.isBlank()) {
@@ -341,7 +345,7 @@ public class LobbyService {
     }
     for (Player p : players) {
       if (p.isHost()) {
-        return p.username();
+        return p.uuid();
       }
     }
     return "";

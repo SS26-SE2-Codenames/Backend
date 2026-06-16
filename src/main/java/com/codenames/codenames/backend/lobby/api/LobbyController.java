@@ -93,15 +93,15 @@ public class LobbyController {
   /**
    * Handles a request to leave a lobby.
    *
-   * @param username the username of the player
+   * @param uuid the UUID of the player
    * @param lobbyCode the lobby code identifying the lobby
    * @return a response indicating whether the operation was successful
    */
   @GetMapping("/{lobbyCode}/leave")
   public ResponseEntity<LobbyResponse> leaveLobby(
-          @PathVariable String lobbyCode, @RequestParam String username) {
+          @PathVariable String lobbyCode, @RequestParam String uuid) {
     boolean wasStarted = service.getIsStarted(lobbyCode);
-    boolean left = service.leaveLobby(username, lobbyCode);
+    boolean left = service.leaveLobby(uuid, lobbyCode);
 
     if (left) {
       service.checkLobbyStillHasPlayers(lobbyCode);
@@ -173,15 +173,15 @@ public class LobbyController {
    * Endpoint for starting a game, this is the last http-request only the host can make.
    *
    * @param lobbyCode the unique lobby code
-   * @param username the name of the requesting user
+   * @param uuid the UUID of the requesting user
    * @return a response entity of a lobby response, with isStarted @code true or @code false,
    *     whether the starting was successful or not
    */
 
   @GetMapping("/{lobbyCode}/start-game")
   public ResponseEntity<LobbyResponse> startGame(
-          @PathVariable String lobbyCode, @RequestParam String username) {
-    boolean isStarted = service.startGame(lobbyCode, username);
+          @PathVariable String lobbyCode, @RequestParam String uuid) {
+    boolean isStarted = service.startGame(lobbyCode, uuid);
 
     if (isStarted) {
       return ResponseEntity.ok(
