@@ -45,11 +45,12 @@ public class Lobby {
   }
 
   /**
-   * Adds a player to the lobby if capacity allows and the username is unique.
+   * Adds a new player to the lobby or reconnects an existing player.
    *
    * @param username the username of the player
    * @param isHost whether the player is the host of the lobby
-   * @return {@code true} if the player was added, {@code false} otherwise
+   * @param requestedUuid the UUID provided by the client to verify a reconnect
+   * @return {@link Player} if the player was added or reconnected, {@code null} otherwise
    */
 
   public Player addPlayer(String username, boolean isHost, String requestedUuid) {
