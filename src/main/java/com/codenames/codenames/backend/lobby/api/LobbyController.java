@@ -40,7 +40,7 @@ public class LobbyController {
   /**
    * Handles a request to create a new lobby.
    *
-   * @param username the UUID of the requesting user
+   * @param username the username of the requesting user
    * @return a response containing the result and the generated lobby code
    */
   @GetMapping("/create")
