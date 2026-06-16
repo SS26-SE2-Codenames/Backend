@@ -25,10 +25,10 @@ public class Lobby {
   private final List<Player> playerList = new CopyOnWriteArrayList<>();
   private final SecureRandom random = new SecureRandom();
 
-  /** Maps a username to the selected team. */
+  /** Maps a UUID to the selected team. */
   private final Map<String, Team> playerTeams;
 
-  /** Maps a username to the selected role. */
+  /** Maps a UUID to the selected role. */
   private final Map<String, Role> playerRoles;
 
   /**
@@ -45,27 +45,48 @@ public class Lobby {
   }
 
   /**
+   * Creates an empty lobby. Primarily used during the database restoration process.
+   *
+   * @param lobbyCode the unique code identifying the lobby
+   */
+
+  public Lobby(String lobbyCode) {
+    this.lobbyCode = lobbyCode;
+    this.playerTeams = new HashMap<>();
+    this.playerRoles = new HashMap<>();
+  }
+
+  /**
+   * Directly adds a pre-existing player object back into the lobby.
+   *
+   * @param player the player to restore
+   */
+
+  public void addRestoredPlayer(Player player) {
+    playerList.add(player);
+  }
+
+  /**
    * Adds a new player to the lobby or reconnects an existing player.
    *
    * @param username the username of the player
    * @param isHost whether the player is the host of the lobby
    * @param requestedUuid the UUID provided by the client to verify a reconnect
    * @return {@link Player} if the player was added or reconnected, {@code null} otherwise
+   *{@code null} if the lobby is full or if the reconnect UUID was not found.
    */
 
   public Player addPlayer(String username, boolean isHost, String requestedUuid) {
-    Optional<Player> existingPlayerOpt = playerList.stream()
-            .filter(p -> p.username().equals(username))
-            .findFirst();
+    if (requestedUuid != null) {
+      Optional<Player> existingPlayerOpt = playerList.stream()
+                  .filter(p -> p.uuid().equals(requestedUuid))
+                  .findFirst();
 
-    if (existingPlayerOpt.isPresent()) {
-      Player existingPlayer = existingPlayerOpt.get();
-
-      if (existingPlayer.uuid().equals(requestedUuid)) {
-        return existingPlayer;
+      if (existingPlayerOpt.isPresent()) {
+        return existingPlayerOpt.get();
+      } else {
+        return null;
       }
-
-      return null;
     }
 
     if (playerList.size() >= MAX_PLAYERS) {
@@ -81,9 +102,9 @@ public class Lobby {
   /**
    * Adds a player to lobby.
    *
-   * @param username der Name des Spielers
-   * @param isHost   gibt an, ob der Spieler der Host ist
-   * @return         der erstellte Player
+   * @param username the username of the player
+   * @param isHost indicates which player is the host
+   * @return the player or {@code null}, if lobby is full
    */
 
   public Player addPlayer(String username, boolean isHost) {
@@ -91,7 +112,7 @@ public class Lobby {
   }
 
   /**
-   * Adds a player to the lobby if capacity allows and the username is unique. Calls {@link
+   * Adds a player to the lobby if capacity allows and the UUID is unique. Calls {@link
    * #addPlayer(String, boolean)} with {@code false} as the second argument
    *
    * @param username the username of the player
@@ -104,79 +125,62 @@ public class Lobby {
   /**
    * Removes a player from the lobby.
    *
-   * @param username the username of the player to remove
+   * @param uuid the uuid of the player to remove
    */
-  public void removePlayer(String username) {
-    playerList.removeIf(p -> p.username().equals(username));
-    this.playerTeams.remove(username);
-    this.playerRoles.remove(username);
+  public void removePlayer(String uuid) {
+    playerList.removeIf(p -> p.uuid().equals(uuid));
+    this.playerTeams.remove(uuid);
+    this.playerRoles.remove(uuid);
   }
 
   /**
    * Checks whether a player with the given username is in the lobby.
    *
-   * @param username the username to check
+   * @param uuid the uuid to check
    * @return {@code true} if the player exists in the lobby, {@code false} otherwise
    */
-  public boolean hasPlayer(String username) {
-    return playerList.stream().anyMatch(p -> p.username().equals(username));
+  public boolean hasPlayer(String uuid) {
+    return playerList.stream().anyMatch(p -> p.uuid().equals(uuid));
   }
 
   /**
    * Sets the team for a player.
    *
-   * @param username the username of the player
+   * @param uuid the UUID of the player
    * @param team the team to assign
    */
-  public void setPlayerTeam(String username, Team team) {
-    playerTeams.put(username, team);
+  public void setPlayerTeam(String uuid, Team team) {
+    playerTeams.put(uuid, team);
   }
 
   /**
    * Sets the role for a player.
    *
-   * @param username the username of the player
+   * @param uuid the UUID of the player
    * @param role the role to assign
    */
-  public void setPlayerRole(String username, Role role) {
-    playerRoles.put(username, role);
+  public void setPlayerRole(String uuid, Role role) {
+    playerRoles.put(uuid, role);
   }
-
-  /**
-   * Sets the UUID for a player by replacing their Player record, used by restoration of UUID.
-   *
-   * @param username the username of the player
-   * @param uuid the UUID to assign
-   */
-  public void setPlayerUuid(String username, String uuid) {
-    for (int i = 0; i < playerList.size(); i++) {
-      Player p = playerList.get(i);
-      if (p.username().equals(username)) {
-        // caller loops through all players in list on match we overwrite
-        playerList.set(i, new Player(p.username(), p.isHost(), uuid));
-        return;
-      }
-    }
-  } // refer RestorationMapper as for why we overwrite player records
 
   /**
    * Returns the team of a player.
    *
-   * @param username the username of the player
+   * @param uuid the UUID of the player
    * @return the assigned team, or {@code null} if none is assigned
    */
-  public Team getPlayerTeam(String username) {
-    return playerTeams.get(username);
+  public Team getPlayerTeam(String uuid) {
+    return playerTeams.get(uuid);
   }
 
   /**
    * Returns the role of a player.
    *
-   * @param username the username of the player
+   * @param uuid the UUID of the player
    * @return the assigned role, or {@code null} if none is assigned
    */
-  public Role getPlayerRole(String username) {
-    return playerRoles.get(username);
+  public Role getPlayerRole(String uuid) {
+    return playerRoles.get(uuid);
   }
 
   /**
