@@ -322,7 +322,9 @@ class LobbyServiceTest {
   @Test
   void testAddGameManagerForLobby() {
     lobbyService.createLobby("User");
-    lobbyService.startGame("ABCDE", "User");
+    String hostUuid = lobbyService.getHost("ABCDE");
+    lobbyService.startGame("ABCDE", hostUuid);
+
     verify(gameService, times(1)).createGameManager(eq("ABCDE"), any(Team.class));
   }
 
@@ -348,10 +350,15 @@ class LobbyServiceTest {
     lobbyService.joinLobby("Bob", "ABCDE", null);
     lobbyService.joinLobby("Caesar", "ABCDE", null);
 
-    String expected = "Alice";
+    String expectedUuid = lobbyService.getPlayers("ABCDE").stream()
+              .filter(Player::isHost)
+              .findFirst()
+              .orElseThrow()
+              .uuid();
+
     String result = lobbyService.getHost("ABCDE");
 
-    assertEquals(expected, result);
+    assertEquals(expectedUuid, result);
   }
 
   @ParameterizedTest

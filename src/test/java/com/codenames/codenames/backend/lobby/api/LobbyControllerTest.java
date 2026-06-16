@@ -1,5 +1,6 @@
 package com.codenames.codenames.backend.lobby.api;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -67,12 +68,26 @@ class LobbyControllerTest {
   @Test
   void joinLobbyShouldReturn200WhenSuccess() throws Exception {
     when(service.joinLobby("TestUser", "ABCDE", null))
-            .thenReturn(new Player("TestUser", false, "mock-uuid-123"));
+              .thenReturn(new Player("TestUser", false, "mock-uuid-123"));
 
     mockMvc
-            .perform(get("/lobby/ABCDE/join").param("username", "TestUser"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.message").value("Joined Lobby successfully."));
+              .perform(get("/lobby/ABCDE/join").param("username", "TestUser"))
+              .andExpect(status().isOk())
+              .andExpect(jsonPath("$.message").value("Joined Lobby successfully."));
+  }
+
+  @Test
+  void joinLobbyShouldReturn200WhenReconnectSuccess() throws Exception {
+    when(service.joinLobby("TestUser", "ABCDE", "mock-uuid-123"))
+                .thenReturn(new Player("TestUser", false, "mock-uuid-123"));
+
+    mockMvc
+                .perform(
+                        get("/lobby/ABCDE/join")
+                                .param("username", "TestUser")
+                                .param("uuid", "mock-uuid-123")) // <-- Hier auf "uuid" geändert
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("Joined Lobby successfully."));
   }
 
   @Test
@@ -88,20 +103,22 @@ class LobbyControllerTest {
     when(service.joinLobby("TestUser", "XXXXX", null)).thenReturn(null);
 
     mockMvc
-            .perform(get("/lobby/XXXXX/join").param("username", "TestUser"))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.message").value("Could not find lobby."));
+              .perform(get("/lobby/XXXXX/join").param("username", "TestUser"))
+              .andExpect(status().isBadRequest())
+              .andExpect(jsonPath("$.message").value("Could not find lobby."));
   }
 
   @Test
   void leaveLobbyShouldReturn200WhenSuccess() throws Exception {
     when(service.getIsStarted("ABCDE")).thenReturn(false);
-    when(service.leaveLobby("TestUser", "ABCDE")).thenReturn(true);
+    when(service.leaveLobby(anyString(), anyString())).thenReturn(true);
 
     mockMvc
-        .perform(get("/lobby/ABCDE/leave").param("username", "TestUser"))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message").value("Left lobby successfully."));
+              .perform(get("/lobby/ABCDE/leave")
+                      .param("username", "TestUser")
+                      .param("uuid", "mock-uuid-123"))
+              .andExpect(status().isOk())
+              .andExpect(jsonPath("$.message").value("Left lobby successfully."));
   }
 
   @Test
@@ -109,10 +126,12 @@ class LobbyControllerTest {
     when(service.leaveLobby("TestUser", "ABCDE")).thenReturn(false);
 
     mockMvc
-        .perform(
-            get("/lobby/ABCDE/leave").param("username", "TestUser").param("lobbyCode", "ABCDE"))
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.message").value("Could not find lobby."));
+              .perform(get("/lobby/ABCDE/leave")
+                      .param("username", "TestUser")
+                      .param("lobbyCode", "ABCDE")
+                      .param("uuid", "mock-uuid-123"))
+              .andExpect(status().isBadRequest())
+              .andExpect(jsonPath("$.message").value("Could not find lobby."));
   }
 
   @Test
@@ -179,36 +198,40 @@ class LobbyControllerTest {
   @Test
   void testStartGameReturns200WhenConditionIsMet() throws Exception {
     List<PlayerDto> players =
-        List.of(new PlayerDto("Alice", null, null, true, null),
-                new PlayerDto("Bob", null, null, false, null));
+              List.of(new PlayerDto("Alice", null, null, true, null),
+                      new PlayerDto("Bob", null, null, false, null));
 
     when(service.getPlayersDto("ABCDE")).thenReturn(players);
-    when(service.startGame("ABCDE", "Alice")).thenReturn(true);
+    when(service.startGame(anyString(), anyString())).thenReturn(true);
 
     mockMvc
-        .perform(get("/lobby/ABCDE/start-game").param("username", "Alice"))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message").value("Game is starting now."))
-        .andExpect(jsonPath("$.lobbyCode").value("ABCDE"))
-        .andExpect(jsonPath("$.playerList[0].username").value("Alice"))
-        .andExpect(jsonPath("$.isStarted").value("true"));
+              .perform(get("/lobby/ABCDE/start-game")
+                      .param("username", "Alice")
+                      .param("uuid", "mock-uuid-123"))
+              .andExpect(status().isOk())
+              .andExpect(jsonPath("$.message").value("Game is starting now."))
+              .andExpect(jsonPath("$.lobbyCode").value("ABCDE"))
+              .andExpect(jsonPath("$.playerList[0].username").value("Alice"))
+              .andExpect(jsonPath("$.isStarted").value("true"));
   }
 
   @Test
   void testStartGameReturns400WhenServiceReturnsFalse() throws Exception {
     List<PlayerDto> players =
-        List.of(new PlayerDto("Alice", null, null, true, null),
-                new PlayerDto("Bob", null, null, false, null));
+              List.of(new PlayerDto("Alice", null, null, true, null),
+                      new PlayerDto("Bob", null, null, false, null));
 
     when(service.getPlayersDto("ABCDE")).thenReturn(players);
     when(service.startGame("ABCDE", "Alice")).thenReturn(false);
 
     mockMvc
-        .perform(get("/lobby/ABCDE/start-game").param("username", "Alice"))
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.message").value("Could not start the game."))
-        .andExpect(jsonPath("$.lobbyCode").value("ABCDE"))
-        .andExpect(jsonPath("$.playerList[0].username").value("Alice"))
-        .andExpect(jsonPath("$.isStarted").value("false"));
+              .perform(get("/lobby/ABCDE/start-game")
+                      .param("username", "Alice")
+                      .param("uuid", "mock-uuid-123"))
+              .andExpect(status().isBadRequest())
+              .andExpect(jsonPath("$.message").value("Could not start the game."))
+              .andExpect(jsonPath("$.lobbyCode").value("ABCDE"))
+              .andExpect(jsonPath("$.playerList[0].username").value("Alice"))
+              .andExpect(jsonPath("$.isStarted").value("false"));
   }
 }
