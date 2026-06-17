@@ -40,7 +40,6 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/codenames
       SPRING_DATASOURCE_USERNAME: codenames_user
       SPRING_DATASOURCE_PASSWORD: codenames_pass
-      APP_ALLOWED_ORIGINS: "http://se2-demo.aau.at:53213,http://localhost:8080,http://10.0.2.2:8080"
     depends_on:
       postgres:
         condition: service_healthy
