@@ -18,6 +18,7 @@ import com.codenames.codenames.backend.game.api.dto.StartGameMessage;
 import com.codenames.codenames.backend.game.application.CheatService;
 import com.codenames.codenames.backend.game.application.GameService;
 import com.codenames.codenames.backend.game.domain.CheatResult;
+import com.codenames.codenames.backend.game.domain.ExposeCheatResult;
 import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -168,14 +169,57 @@ class GameSocketControllerTest {
     message.setLobbyCode(LOBBY_CODE);
     message.setUsername("Max");
     message.setPositions(List.of());
+    GameStateDto gameState = createGameStateDto();
 
-    when(gameService.getCurrentGameState(LOBBY_CODE))
-        .thenReturn(createGameStateDto());
+    when(cheatService.exposeCheat(LOBBY_CODE, "Max"))
+        .thenReturn(new ExposeCheatResult(true, Team.RED));
+    when(gameService.getCurrentGameState(LOBBY_CODE)).thenReturn(gameState);
 
     controller.exposeCheat(message);
 
     verify(cheatService).exposeCheat(LOBBY_CODE, "Max");
+    verify(messagingTemplate)
+        .convertAndSend(
+            "/topic/chat/" + LOBBY_CODE + "/RED/operative",
+            new ChatDto("System", "EXPOSE_CORRECT", ChatMessageType.SYSTEM));
     verify(persistenceService).saveSnapShot(LOBBY_CODE);
-    verify(messagingTemplate).convertAndSend(anyString(), any(Object.class));
+    verify(messagingTemplate).convertAndSend("/topic/game/" + LOBBY_CODE, gameState);
+  }
+
+  @Test
+  void exposeCheatShouldSendWrongSystemMessage() {
+    CheatCardMessage message = new CheatCardMessage();
+    message.setLobbyCode(LOBBY_CODE);
+    message.setUsername("Max");
+    message.setPositions(List.of());
+    GameStateDto gameState = createGameStateDto();
+
+    when(cheatService.exposeCheat(LOBBY_CODE, "Max"))
+        .thenReturn(new ExposeCheatResult(false, Team.BLUE));
+    when(gameService.getCurrentGameState(LOBBY_CODE)).thenReturn(gameState);
+
+    controller.exposeCheat(message);
+
+    verify(messagingTemplate)
+        .convertAndSend(
+            "/topic/chat/" + LOBBY_CODE + "/BLUE/operative",
+            new ChatDto("System", "EXPOSE_WRONG", ChatMessageType.SYSTEM));
+    verify(messagingTemplate).convertAndSend("/topic/game/" + LOBBY_CODE, gameState);
+  }
+
+  @Test
+  void exposeCheatShouldDoNothingWhenResultIsNull() {
+    CheatCardMessage message = new CheatCardMessage();
+    message.setLobbyCode(LOBBY_CODE);
+    message.setUsername("Max");
+    message.setPositions(List.of());
+
+    when(cheatService.exposeCheat(LOBBY_CODE, "Max")).thenReturn(null);
+
+    controller.exposeCheat(message);
+
+    verify(cheatService).exposeCheat(LOBBY_CODE, "Max");
+    verify(persistenceService, never()).saveSnapShot(LOBBY_CODE);
+    verify(messagingTemplate, never()).convertAndSend(anyString(), any(Object.class));
   }
 }
