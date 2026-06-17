@@ -180,4 +180,15 @@ public class GameService {
 
     return getGame(lobbyCode).useCheat(positions, team);
   }
+
+  /**
+   * Performs an expose-cheat attempt and applies the matching penalty.
+   *
+   * @param lobbyCode the lobby code of the game
+   * @param team the team trying to expose the opponent's cheat
+   * @return true if the opposing team has used their cheat, false otherwise
+   */
+  public boolean exposeCheatAndApplyPenalty(String lobbyCode, Team team) {
+    return getGame(lobbyCode).exposeCheatAndApplyPenalty(team);
+  }
 }
