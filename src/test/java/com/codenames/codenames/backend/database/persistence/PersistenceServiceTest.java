@@ -77,8 +77,8 @@ class PersistenceServiceTest {
 
     gameManager = helperMethodGenerateFullCardList(redColor, redTeam);
 
-    player1 = new PlayerDto("Test1", redTeam, spymaster, true);
-    player2 = new PlayerDto("Test2", redTeam, operative, false);
+    player1 = new PlayerDto("Test1", redTeam, spymaster, true, "test-uuid-1");
+    player2 = new PlayerDto("Test2", redTeam, operative, false, "test-uuid-2");
 
     playerDtoList = List.of(player1, player2);
 
@@ -141,6 +141,7 @@ class PersistenceServiceTest {
     assertTrue(playerEntity.getIsHost());
     assertEquals("RED", playerEntity.getTeam());
     assertEquals("SPYMASTER", playerEntity.getRole());
+    assertEquals("test-uuid-1", playerEntity.getUuid());
   }
 
   @Test

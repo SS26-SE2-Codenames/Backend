@@ -10,6 +10,7 @@ import com.codenames.codenames.backend.game.api.dto.GameStateDto;
 import com.codenames.codenames.backend.game.domain.Color;
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.domain.Lobby;
+import com.codenames.codenames.backend.lobby.domain.Player;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.ArrayList;
@@ -98,39 +99,33 @@ public class RestorationMapper {
               playerEntity.getUsername(),
               team,
               role,
-              playerEntity.getIsHost());
+              playerEntity.getIsHost(),
+              playerEntity.getUuid());
       playerList.add(playerDto);
     }
     return playerList;
   }
 
   private Lobby buildLobby(String lobbyCode, List<PlayerDto> players) {
-    String hostUsername = findHostUsername(players);
 
-    Lobby lobby = new Lobby(lobbyCode, hostUsername);
+    Lobby lobby = new Lobby(lobbyCode);
 
     for (PlayerDto player : players) {
-      if (!player.username().equals(hostUsername)) {
-        lobby.addPlayer(player.username(), player.isHost());
-      }
+      lobby.addRestoredPlayer(
+                    new Player(
+                            player.username(),
+                            player.isHost(),
+                            player.uuid()));
+
       if (player.team() != null) {
-        lobby.setPlayerTeam(player.username(), player.team());
+        lobby.setPlayerTeam(player.uuid(), player.team());
       }
+
       if (player.role() != null) {
-        lobby.setPlayerRole(player.username(), player.role());
+        lobby.setPlayerRole(player.uuid(), player.role());
       }
     }
 
     return lobby;
-  }
-
-  private static String findHostUsername(List<PlayerDto> players) {
-    String hostUsername = "";
-    for (PlayerDto playerDto : players) {
-      if (playerDto.isHost()) {
-        hostUsername = playerDto.username();
-      }
-    }
-    return hostUsername;
   }
 }

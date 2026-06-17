@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 class PlayerTest {
   @Test
   void shouldReturnUsername() {
-    Player player = new Player("Max", false);
+    Player player = new Player("Max", false, null);
 
     assertEquals("Max", player.username());
   }

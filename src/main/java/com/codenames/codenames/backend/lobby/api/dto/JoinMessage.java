@@ -13,4 +13,5 @@ import lombok.Setter;
 public class JoinMessage {
   private String name;
   private String code;
+  private String uuid;
 }
