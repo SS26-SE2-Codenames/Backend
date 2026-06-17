@@ -103,7 +103,6 @@ public class LobbyController {
   @GetMapping("/{lobbyCode}/leave")
   public ResponseEntity<LobbyResponse> leaveLobby(
           @PathVariable String lobbyCode, @RequestParam String uuid) {
-    boolean wasStarted = service.getIsStarted(lobbyCode);
     boolean left = service.leaveLobby(uuid, lobbyCode);
 
     if (left) {
