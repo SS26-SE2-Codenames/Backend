@@ -299,6 +299,20 @@ public class GameManager {
   }
 
   /**
+   * Checks whether the opposing team has already used their cheat.
+   *
+   * @param callingTeam the team trying to expose the opponent's cheat
+   * @return true if the opposing team has used their cheat, false otherwise
+   */
+  public boolean exposeCheat(Team callingTeam) {
+    if (callingTeam == Team.RED) {
+      return blueTeamCheatUsed;
+    }
+
+    return redTeamCheatUsed;
+  }
+
+  /**
    * Helper method to check if the current team calling a method is allowed to do so.
    *
    * @param team the team of who is calling the method
