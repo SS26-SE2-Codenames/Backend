@@ -1,6 +1,7 @@
 package com.codenames.codenames.backend.game.application;
 
 import com.codenames.codenames.backend.game.domain.CheatResult;
+import com.codenames.codenames.backend.game.domain.ExposeCheatResult;
 import com.codenames.codenames.backend.lobby.application.LobbyService;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
@@ -49,16 +50,17 @@ public class CheatService {
    *
    * @param lobbyCode the lobby code
    * @param username the requesting username
-   * @return true if the opposing team has used their cheat, false otherwise
+   * @return the expose-cheat result or null if the request is invalid
    */
-  public boolean exposeCheat(String lobbyCode, String username) {
+  public ExposeCheatResult exposeCheat(String lobbyCode, String username) {
     Team team = lobbyService.getPlayerTeam(username, lobbyCode);
     Role role = lobbyService.getPlayerRole(username, lobbyCode);
 
     if (team == null || role != Role.OPERATIVE) {
-      return false;
+      return null;
     }
 
-    return gameService.exposeCheatAndApplyPenalty(lobbyCode, team);
+    boolean correct = gameService.exposeCheatAndApplyPenalty(lobbyCode, team);
+    return new ExposeCheatResult(correct, team);
   }
 }

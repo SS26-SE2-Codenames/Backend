@@ -12,6 +12,7 @@ import com.codenames.codenames.backend.game.application.CheatService;
 import com.codenames.codenames.backend.game.application.GameService;
 import com.codenames.codenames.backend.game.domain.CheatResult;
 import com.codenames.codenames.backend.game.domain.Clue;
+import com.codenames.codenames.backend.game.domain.ExposeCheatResult;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -96,9 +97,30 @@ public class GameSocketController {
   @MessageMapping("/expose-cheat")
   public void exposeCheat(CheatCardMessage message) {
 
-    cheatService.exposeCheat(
-        message.getLobbyCode(),
-        message.getUsername());
+    ExposeCheatResult result =
+        cheatService.exposeCheat(
+            message.getLobbyCode(),
+            message.getUsername());
+
+    if (result == null) {
+      return;
+    }
+
+    ChatDto systemMessage =
+        new ChatDto(
+            "System",
+            result.correct()
+                ? "EXPOSE_CORRECT"
+                : "EXPOSE_WRONG",
+            ChatMessageType.SYSTEM);
+
+    messagingTemplate.convertAndSend(
+        "/topic/chat/"
+            + message.getLobbyCode()
+            + "/"
+            + result.team()
+            + "/operative",
+        systemMessage);
 
     persistenceService.saveSnapShot(message.getLobbyCode());
 
