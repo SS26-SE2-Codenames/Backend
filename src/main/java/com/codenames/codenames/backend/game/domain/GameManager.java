@@ -35,6 +35,9 @@ public class GameManager {
   @Getter private Team currentTurn;
   @Getter private Role currentPhase;
 
+  @Getter private boolean redTeamCheatUsed = false;
+  @Getter private boolean blueTeamCheatUsed = false;
+
   /**
    * Constructor for a new GameManager and initializes the playing board.
    *
@@ -83,6 +86,8 @@ public class GameManager {
     this.currentTurn = state.currentTurn();
     this.currentPhase = state.currentPhase();
     this.winner = state.winner();
+    this.redTeamCheatUsed = state.redTeamCheatUsed();
+    this.blueTeamCheatUsed = state.blueTeamCheatUsed();
     this.currentClue =
         state.currentClue() == null
             ? null
@@ -303,5 +308,79 @@ public class GameManager {
     if (team != currentTurn || role != currentPhase) {
       throw new IllegalStateException("Not your turn/ role");
     }
+  }
+
+  /**
+   * Checks whether a card position is within the valid board range.
+   *
+   * @param position the position to validate
+   * @return true if the position is valid
+   */
+  private boolean isValidPosition(Integer position) {
+    return position != null
+        && position >= 0
+        && position < board.getCardList().size();
+  }
+
+  /**
+   * Performs the cheat action for the current team.
+   * The team may use the cheat only once per game.
+   * If at least one selected card belongs to the team,
+   * one correct card is returned.
+   *
+   * @param positions selected card positions
+   * @param team the team requesting the cheat
+   * @return the cheat result or null if the request is invalid
+   */
+  public CheatResult useCheat(List<Integer> positions, Team team) {
+
+    if (positions == null || positions.isEmpty()) {
+      return null;
+    }
+
+    if (team != currentTurn || currentPhase != Role.OPERATIVE) {
+      return null;
+    }
+
+    if (team == Team.RED && redTeamCheatUsed) {
+      return null;
+    }
+
+    if (team == Team.BLUE && blueTeamCheatUsed) {
+      return null;
+    }
+
+    List<Card> selectedCards =
+        positions.stream()
+            .filter(this::isValidPosition)
+            .filter(position -> !board.getIsGuessed(position))
+            .map(position -> board.getCardList().get(position))
+            .toList();
+
+    if (selectedCards.isEmpty()) {
+      return null;
+    }
+
+    List<Card> correctCards =
+        selectedCards.stream()
+            .filter(
+                card ->
+                    (team == Team.RED && card.getColor() == Color.RED)
+                        || (team == Team.BLUE && card.getColor() == Color.BLUE))
+            .toList();
+
+    if (team == Team.RED) {
+      redTeamCheatUsed = true;
+    } else {
+      blueTeamCheatUsed = true;
+    }
+
+    if (correctCards.isEmpty()) {
+      return new CheatResult("Keine der ausgewählten Karten ist richtig.", team);
+    }
+
+    Card correctCard = correctCards.get(0);
+
+    return new CheatResult("Die Karte \"" + correctCard.getWord() + "\" ist richtig.", team);
   }
 }

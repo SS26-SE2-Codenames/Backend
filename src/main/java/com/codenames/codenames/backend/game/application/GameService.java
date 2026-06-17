@@ -1,11 +1,13 @@
 package com.codenames.codenames.backend.game.application;
 
 import com.codenames.codenames.backend.game.api.dto.GameStateDto;
+import com.codenames.codenames.backend.game.domain.CheatResult;
 import com.codenames.codenames.backend.game.domain.Clue;
 import com.codenames.codenames.backend.game.domain.GameManager;
 import com.codenames.codenames.backend.game.domain.GameManagerFactory;
 import com.codenames.codenames.backend.game.mapping.DataTransferObjectService;
 import com.codenames.codenames.backend.lobby.domain.Team;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.extern.slf4j.Slf4j;
@@ -161,5 +163,21 @@ public class GameService {
     return games.keySet().stream()
         .collect(
             java.util.stream.Collectors.toMap(lobbyCode -> lobbyCode, this::getCurrentGameState));
+  }
+
+  /**
+   * Performs a cheat request for the given team.
+   *
+   * @param lobbyCode the lobby code of the game
+   * @param positions the selected card positions
+   * @param team the team requesting the cheat
+   * @return the cheat result or null if the request is invalid
+   */
+  public CheatResult useCheat(
+      String lobbyCode,
+      List<Integer> positions,
+      Team team) {
+
+    return getGame(lobbyCode).useCheat(positions, team);
   }
 }

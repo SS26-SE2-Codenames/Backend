@@ -37,4 +37,8 @@ public class GameStateEntity {
   private int clueGuessAmount;
   @Column(name = "remaining_guesses")
   private int remainingGuesses;
+  @Column(name = "red_team_cheat_used", nullable = false)
+  private boolean redTeamCheatUsed;
+  @Column(name = "blue_team_cheat_used", nullable = false)
+  private boolean blueTeamCheatUsed;
 }

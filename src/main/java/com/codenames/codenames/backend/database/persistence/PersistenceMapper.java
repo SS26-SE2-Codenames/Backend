@@ -79,6 +79,13 @@ public class PersistenceMapper {
       gameStateEntity.setClueGuessAmount(0);
       gameStateEntity.setRemainingGuesses(0);
     }
+
+    gameStateEntity.setRedTeamCheatUsed(
+        gameManager.isRedTeamCheatUsed());
+
+    gameStateEntity.setBlueTeamCheatUsed(
+        gameManager.isBlueTeamCheatUsed());
+
     return gameStateEntity;
   }
 

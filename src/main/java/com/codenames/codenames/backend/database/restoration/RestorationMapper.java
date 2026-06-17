@@ -47,7 +47,6 @@ public class RestorationMapper {
       throw new IllegalStateException("Game state entity is null");
     }
 
-    Team winner = null;
     // valueOf takes string and returns enum of that string
     Team currentTeam = Team.valueOf(gameStateEntity.getCurrentTurn());
     Role currentPhase = Role.valueOf(gameStateEntity.getCurrentPhase());
@@ -57,8 +56,15 @@ public class RestorationMapper {
     }
     int remainingGuesses = gameStateEntity.getRemainingGuesses();
     List<CardDto> cardList = mapToCardDto(lobbyEntity);
-    return new GameStateDto(winner, currentTeam, currentPhase, clueDto,
-        remainingGuesses, cardList);
+    return new GameStateDto(
+        null,
+        currentTeam,
+        currentPhase,
+        clueDto,
+        remainingGuesses,
+        cardList,
+        gameStateEntity.isRedTeamCheatUsed(),
+        gameStateEntity.isBlueTeamCheatUsed());
   }
 
   private List<CardDto> mapToCardDto(LobbyEntity lobbyEntity) {
