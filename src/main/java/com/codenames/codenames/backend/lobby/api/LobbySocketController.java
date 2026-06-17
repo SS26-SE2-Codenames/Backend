@@ -71,10 +71,15 @@ public class LobbySocketController {
       log.error(e.getMessage());
     }
 
-    boolean joined = lobbyService.joinLobby(message.getName(), message.getCode());
+    Player joinedPlayer = lobbyService.joinLobby(
+            message.getName(),
+            message.getCode(),
+            message.getUuid()
+    );
+    boolean joined = (joinedPlayer != null);
     boolean reconnect =
         lobbyService.getPlayers(message.getCode()).stream()
-            .anyMatch(player -> player.username().equals(message.getName()));
+            .anyMatch(player -> player.uuid().equals(message.getUuid()));
 
     if (!joined && !reconnect) {
       messagingTemplate.convertAndSend("/topic/errors/" + sessionId, "Join failed");

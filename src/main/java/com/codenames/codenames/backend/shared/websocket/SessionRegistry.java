@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 /**
  * Registry for managing WebSocket sessions and their associated users and lobbies.
  *
- * <p>Maintains mappings between session IDs, usernames, and lobby codes to support messaging and
+ * <p>Maintains mappings between session IDs, UUID's, and lobby codes to support messaging and
  * cleanup on disconnect.
  *
  * <p>This implementation is thread-safe.
@@ -21,12 +21,12 @@ public class SessionRegistry {
    * Registers a session with its associated user and lobby.
    *
    * @param sessionId the WebSocket session ID
-   * @param username the username of the player
+   * @param uuid the UUID of the player
    * @param lobbyCode the lobby code
    */
-  public void register(String sessionId, String username, String lobbyCode) {
+  public void register(String sessionId, String uuid, String lobbyCode) {
     sessionToLobby.put(sessionId, lobbyCode);
-    sessionToUser.put(sessionId, username);
+    sessionToUser.put(sessionId, uuid);
   }
 
   /**

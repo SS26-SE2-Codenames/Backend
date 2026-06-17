@@ -3,7 +3,9 @@ package com.codenames.codenames.backend.lobby.api;
 import com.codenames.codenames.backend.lobby.api.dto.LobbyResponse;
 import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
 import com.codenames.codenames.backend.lobby.application.LobbyService;
+import com.codenames.codenames.backend.lobby.domain.Player;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,12 +48,18 @@ public class LobbyController {
     String lobbyCode = service.createLobby(username);
     if (lobbyCode == null || lobbyCode.isBlank()) {
       return ResponseEntity.internalServerError()
-          .body(new LobbyResponse("Error while creating lobby.", "", null, false));
+              .body(new LobbyResponse("Error while creating lobby.", "", null, false, null));
     } else {
-
       List<PlayerDto> players = service.getPlayersDto(lobbyCode);
+
+      Player host = Objects.requireNonNull(
+                service.getPlayer(lobbyCode, username));
+
+      String hostUuid = host.uuid();
+
       return ResponseEntity.ok(
-          new LobbyResponse("Successfully created Lobby.", lobbyCode, players, false));
+              new LobbyResponse(
+                      "Successfully created Lobby.", lobbyCode, players, false, hostUuid));
     }
   }
 
@@ -64,41 +72,52 @@ public class LobbyController {
    */
   @GetMapping("/{lobbyCode}/join")
   public ResponseEntity<LobbyResponse> joinLobby(
-      @RequestParam String username, @PathVariable String lobbyCode) {
-    boolean joined = service.joinLobby(username, lobbyCode);
-    if (joined) {
+          @RequestParam String username,
+          @PathVariable String lobbyCode,
+          @RequestParam(required = false) String uuid) {
 
+    Player joinedPlayer = service.joinLobby(username, lobbyCode, uuid);
+
+    if (joinedPlayer != null) {
       return ResponseEntity.ok(
-          new LobbyResponse(
-              "Joined Lobby successfully.", lobbyCode, service.getPlayersDto(lobbyCode), false));
+              new LobbyResponse(
+                      "Joined Lobby successfully.",
+                      lobbyCode,
+                      service.getPlayersDto(lobbyCode),
+                      false,
+                      joinedPlayer.uuid())
+      );
     } else {
       return ResponseEntity.badRequest()
-          .body(new LobbyResponse(LOBBY_NOT_FOUND, lobbyCode, null, false));
+              .body(new LobbyResponse(LOBBY_NOT_FOUND, lobbyCode, null, false, null));
     }
   }
 
   /**
    * Handles a request to leave a lobby.
    *
-   * @param username the username of the player
+   * @param uuid the UUID of the player
    * @param lobbyCode the lobby code identifying the lobby
    * @return a response indicating whether the operation was successful
    */
   @GetMapping("/{lobbyCode}/leave")
   public ResponseEntity<LobbyResponse> leaveLobby(
-      @PathVariable String lobbyCode, @RequestParam String username) {
-    boolean wasStarted = service.getIsStarted(lobbyCode);
-    boolean left = service.leaveLobby(username, lobbyCode);
+          @PathVariable String lobbyCode, @RequestParam String uuid) {
+    boolean left = service.leaveLobby(uuid, lobbyCode);
 
     if (left) {
       service.checkLobbyStillHasPlayers(lobbyCode);
 
       return ResponseEntity.ok(
-          new LobbyResponse(
-              "Left lobby successfully.", lobbyCode, service.getPlayersDto(lobbyCode), false));
+              new LobbyResponse(
+                      "Left lobby successfully.",
+                      lobbyCode, service.getPlayersDto(lobbyCode),
+                      false,
+                      null)
+      );
     } else {
       return ResponseEntity.badRequest()
-          .body(new LobbyResponse(LOBBY_NOT_FOUND, lobbyCode, null, false));
+              .body(new LobbyResponse(LOBBY_NOT_FOUND, lobbyCode, null, false, null));
     }
   }
 
@@ -114,61 +133,76 @@ public class LobbyController {
     List<PlayerDto> players = service.getPlayersDto(lobbyCode);
     boolean isStarted = service.getIsStarted(lobbyCode);
     return ResponseEntity.ok(
-        new LobbyResponse("Lobby info retrieved successfully.", lobbyCode, players, isStarted));
+            new LobbyResponse(
+                    "Lobby info retrieved successfully.",
+                    lobbyCode,
+                    players,
+                    isStarted,
+                    null)
+    );
   }
-
   /**
    * Handles a request to select a team and role for a player.
    *
    * @param request the position selection request containing username, lobby code, team, and role
    * @return a response indicating whether the selection was successful
    */
+
   @PostMapping("/{lobbyCode}/select-position")
   public ResponseEntity<LobbyResponse> selectPosition(
-      @PathVariable String lobbyCode, @RequestBody PlayerDto request) {
+          @PathVariable String lobbyCode, @RequestBody PlayerDto request) {
     boolean updated =
-        service.selectPosition(request.username(), lobbyCode, request.team(), request.role());
+            service.selectPosition(request.uuid(), lobbyCode, request.team(), request.role());
 
     if (updated) {
-
       return ResponseEntity.ok(
-          new LobbyResponse(
-              "Position selected successfully.",
-              lobbyCode,
-              service.getPlayersDto(lobbyCode),
-              false));
+              new LobbyResponse(
+                      "Position selected successfully.",
+                      lobbyCode,
+                      service.getPlayersDto(lobbyCode),
+                      false, null));
     } else {
       return ResponseEntity.badRequest()
-          .body(
-              new LobbyResponse(
-                  "Could not assign selected team/role.",
-                  lobbyCode,
-                  service.getPlayersDto(lobbyCode),
-                  false));
+              .body(
+                      new LobbyResponse(
+                              "Could not assign selected team/role.",
+                              lobbyCode,
+                              service.getPlayersDto(lobbyCode),
+                              false, null));
     }
   }
-
   /**
    * Endpoint for starting a game, this is the last http-request only the host can make.
    *
    * @param lobbyCode the unique lobby code
-   * @param username the name of the requesting user
+   * @param uuid the UUID of the requesting user
    * @return a response entity of a lobby response, with isStarted @code true or @code false,
    *     whether the starting was successful or not
    */
+
   @GetMapping("/{lobbyCode}/start-game")
   public ResponseEntity<LobbyResponse> startGame(
-      @PathVariable String lobbyCode, @RequestParam String username) {
-    boolean isStarted = service.startGame(lobbyCode, username);
+          @PathVariable String lobbyCode, @RequestParam String uuid) {
+    boolean isStarted = service.startGame(lobbyCode, uuid);
 
     if (isStarted) {
       return ResponseEntity.ok(
-          new LobbyResponse(
-              "Game is starting now.", lobbyCode, service.getPlayersDto(lobbyCode), true));
+              new LobbyResponse(
+                      "Game is starting now.",
+                      lobbyCode,
+                      service.getPlayersDto(lobbyCode),
+                      true,
+                      null)
+      );
     }
     return ResponseEntity.badRequest()
-        .body(
-            new LobbyResponse(
-                "Could not start the game.", lobbyCode, service.getPlayersDto(lobbyCode), false));
+            .body(
+                    new LobbyResponse(
+                            "Could not start the game.",
+                            lobbyCode,
+                            service.getPlayersDto(lobbyCode),
+                            false,
+                            null)
+            );
   }
 }
