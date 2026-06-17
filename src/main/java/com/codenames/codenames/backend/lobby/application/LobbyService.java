@@ -1,0 +1,372 @@
+package com.codenames.codenames.backend.lobby.application;
+
+import com.codenames.codenames.backend.chat.application.ChatService;
+import com.codenames.codenames.backend.database.repository.LobbyRepository;
+import com.codenames.codenames.backend.game.application.GameService;
+import com.codenames.codenames.backend.lobby.api.dto.PlayerDto;
+import com.codenames.codenames.backend.lobby.domain.Lobby;
+import com.codenames.codenames.backend.lobby.domain.Player;
+import com.codenames.codenames.backend.lobby.domain.Role;
+import com.codenames.codenames.backend.lobby.domain.Team;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+/**
+ * Service responsible for managing lobbies and player interactions.
+ *
+ * <p>Handles creation of lobbies, player joins/leaves, and retrieval of lobby data. Ensures
+ * uniqueness of lobby codes and thread-safe access to lobby storage.
+ */
+@Slf4j
+@Service
+public class LobbyService {
+
+  @Getter private final Map<String, Lobby> lobbyList = new ConcurrentHashMap<>();
+  private final LobbyCodeGenerator generator;
+  private final GameService gameService;
+  private final ChatService chatService;
+  private final LobbyRepository lobbyRepository;
+
+  /**
+   * Creates a new {@code LobbyService}.
+   *
+   * @param generator the lobby code generator used to create unique lobby codes
+   */
+  public LobbyService(
+      LobbyCodeGenerator generator,
+      ChatService chatService,
+      GameService gameService,
+      LobbyRepository lobbyRepository) {
+    this.generator = generator;
+    this.chatService = chatService;
+    this.gameService = gameService;
+    this.lobbyRepository = lobbyRepository;
+  }
+
+  /**
+   * Creates a new lobby and adds the given user as the first player.
+   *
+   * @param username the username of the player creating the lobby
+   * @return the generated lobby code, or {@code null} if creation fails
+   */
+  public String createLobby(String username) {
+    String lobbyCode = generateLobbyCode();
+    if (lobbyCode == null || lobbyCode.isBlank()) {
+      log.error("ERROR: there was an error when generating a lobby code");
+      return null;
+    }
+
+    Lobby lobby = new Lobby(lobbyCode, username);
+    lobbyList.put(lobbyCode, lobby);
+    log.info("{}: a lobby has been created", lobbyCode);
+    return lobbyCode;
+  }
+
+  /**
+   * Helper method to add the GameManager once a lobby is created.
+   *
+   * @param lobby the lobby object to determine the starting team
+   * @param lobbyCode the ID for the lobby which the GameManager is responsible for
+   */
+  private void addGameManagerForLobby(Lobby lobby, String lobbyCode) {
+    Team start = lobby.decideStartingTeam();
+    gameService.createGameManager(lobbyCode, start);
+  }
+
+  /**
+   * Adds a player to an existing lobby.
+   *
+   * @param username the username of the player
+   * @param lobbyCode the lobby code identifying the lobby
+   * @return {@code true} if the player successfully joined, {@code false} otherwise
+   */
+  public Player joinLobby(String username, String lobbyCode, String uuid) {
+    Lobby lobby = lobbyList.get(lobbyCode);
+
+    if (lobby != null) {
+      if (gameService.isGameStarted(lobbyCode)) {
+
+        boolean validReconnect =
+                  lobby.getPlayerList().stream()
+                          .anyMatch(p -> p.uuid().equals(uuid));
+
+        if (!validReconnect) {
+          log.warn("{}: join rejected. Game started, no valid reconnect UUID.", lobbyCode);
+          return null;
+        }
+        log.info("{}: player reconnected to a running game", lobbyCode);
+      } else {
+        log.info("{}: a player has joined", lobbyCode);
+      }
+
+      return lobby.addPlayer(username, uuid);
+    }
+
+    log.error("{}: an error occurred when joining lobby", lobbyCode);
+    return null;
+  }
+
+  /**
+   * Registers a recovered lobby into in-memory lobby storage.
+   *
+   * @param lobbyCode lobby identifier
+   * @param lobby recovered lobby instance
+   */
+  public void restoreLobby(String lobbyCode, Lobby lobby) {
+    lobbyList.put(lobbyCode, lobby);
+  }
+
+  /**
+   * Removes a player from a lobby.
+   *
+   * @param uuid the uuid of the player
+   * @param lobbyCode the lobby code identifying the lobby
+   * @return {@code true} if the player was removed, {@code false} if the lobby does not exist
+   */
+  public boolean leaveLobby(String uuid, String lobbyCode) {
+    Lobby lobby = lobbyList.get(lobbyCode);
+    if (lobby != null) {
+      lobby.removePlayer(uuid);
+      log.info("{}: a player left", lobbyCode);
+      return true;
+    }
+    log.error("{}: an error occurred when leaving", lobbyCode);
+    return false;
+  }
+
+  /**
+   * Assigns a team and role to a player in a lobby.
+   *
+   * @param uuid the UUID of the player
+   * @param lobbyCode the lobby code identifying the lobby
+   * @param team the selected team
+   * @param role the selected role
+   * @return {@code true} if the position was assigned, {@code false} otherwise
+   */
+  public boolean selectPosition(String uuid, String lobbyCode, Team team, Role role) {
+    Lobby lobby = lobbyList.get(lobbyCode);
+
+    if (lobby == null || !lobby.hasPlayer(uuid) || team == null || role == null) {
+      log.error("{}: position selection error occurred", lobbyCode);
+      return false;
+    }
+
+    if (role == Role.SPYMASTER && isSpymasterAlreadyAssigned(lobby, uuid, team)) {
+      log.error("{}: position selection error occurred, spymaster is already assigned.", lobbyCode);
+      return false;
+    }
+
+    lobby.setPlayerTeam(uuid, team);
+    lobby.setPlayerRole(uuid, role);
+    log.info("{}: new role was assigned to player", lobbyCode);
+    return true;
+  }
+
+  /**
+   * Checks if the lobby still has players after a player leaves and removes the lobby if it is
+   * empty.
+   *
+   * @param lobbyCode the lobby code identifying the lobby
+   */
+  public void checkLobbyStillHasPlayers(String lobbyCode) {
+    Lobby lobby = lobbyList.get(lobbyCode);
+    if (lobby.getPlayerList().isEmpty()) {
+      lobbyList.remove(lobbyCode);
+      chatService.clearLobbyHistory(lobbyCode);
+      gameService.removeGame(lobbyCode);
+      lobbyRepository.deleteById(lobbyCode);
+      log.info("{}: Lobby is empty, was removed from list.", lobbyCode);
+    }
+  }
+
+  /**
+   * Retrieves all playerList in the specified lobby.
+   *
+   * @param lobbyCode the lobby code identifying the lobby
+   * @return a list of players, or an empty list if the lobby does not exist
+   */
+  public List<Player> getPlayers(String lobbyCode) {
+    Lobby lobby = lobbyList.get(lobbyCode);
+    return lobby != null ? lobby.getPlayerList() : List.of();
+  }
+
+  /**
+   * Retrieves all playerList in the specified lobby as PlayerDto objects.
+   *
+   * @param lobbyCode the lobby code identifying the lobby
+   * @return a list of PlayerDto objects, or an empty list if the lobby does not exist
+   */
+  public List<PlayerDto> getPlayersDto(String lobbyCode) {
+    Lobby lobby = lobbyList.get(lobbyCode);
+    if (lobby != null) {
+      return lobby.getPlayerList().stream()
+          .map(
+              player ->
+                  new PlayerDto(
+                      player.username(),
+                      lobby.getPlayerTeam(player.uuid()),
+                      lobby.getPlayerRole(player.uuid()),
+                      player.isHost(),
+                      player.uuid()))
+          .toList();
+    }
+    return List.of();
+  }
+
+  /**
+   * Checks whether a spymaster is already assigned for the given team in the lobby.
+   *
+   * @param lobby the lobby to inspect
+   * @param uuid the UUID requesting the role
+   * @param team the team to inspect
+   * @return {@code true} if a different player is already the spymaster for that team
+   */
+  private boolean isSpymasterAlreadyAssigned(Lobby lobby, String uuid, Team team) {
+    for (Player player : lobby.getPlayerList()) {
+      if (!player.uuid().equals(uuid)
+          && lobby.getPlayerTeam(player.uuid()) == team
+          && lobby.getPlayerRole(player.uuid()) == Role.SPYMASTER) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Generates a unique lobby code.
+   *
+   * @return a unique lobby code, or {@code null} if no valid code could be generated
+   */
+  private String generateLobbyCode() {
+    String code = generator.generateLobbyCode();
+
+    if (code == null || code.isBlank()) {
+      return null;
+    }
+
+    while (lobbyList.containsKey(code)) {
+      code = generator.generateLobbyCode();
+      if (code == null || code.isBlank()) {
+        return null;
+      }
+    }
+    return code;
+  }
+
+  /**
+   * Retrieves the team of a player in a lobby.
+   *
+   * @param uuid the UUID of a player
+   * @param lobbyCode the lobby code of the lobby
+   * @return the team of the player, or {@code null} if the lobby or player does not exist
+   */
+  public Team getPlayerTeam(String uuid, String lobbyCode) {
+    Lobby lobby = lobbyList.get(lobbyCode);
+    if (lobby != null) {
+      return lobby.getPlayerTeam(uuid);
+    }
+    return null;
+  }
+
+  /**
+   * Retrieves the role of a player in a lobby.
+   *
+   * @param uuid the UUID of a player
+   * @param lobbyCode the lobby code of the lobby
+   * @return the role of the player, or {@code null} if the lobby or player does not exist
+   */
+  public Role getPlayerRole(String uuid, String lobbyCode) {
+    Lobby lobby = lobbyList.get(lobbyCode);
+    if (lobby != null) {
+      return lobby.getPlayerRole(uuid);
+    }
+    return null;
+  }
+
+  /**
+   * Retrieves a specific player from a lobby.
+   *
+   * @param lobbyCode the lobby code
+   * @param username the username of the player
+   * @return the Player object, or null if not found
+   */
+  public Player getPlayer(String lobbyCode, String username) {
+    Lobby lobby = lobbyList.get(lobbyCode);
+    if (lobby != null) {
+      return lobby.getPlayerList().stream()
+              .filter(p -> p.username().equals(username))
+              .findFirst()
+              .orElse(null);
+    }
+    return null;
+  }
+
+  /**
+   * The service method for starting a game. This creates a game manager object for the lobby and
+   * checks if the requesting user is liable to start the game.
+   *
+   * @param lobbyCode the unique lobby code
+   * @param uuid the uuid of the requesting user
+   * @return if starting was successful
+   */
+  public boolean startGame(String lobbyCode, String uuid) {
+    boolean isStarted =
+            !lobbyCode.isBlank()
+                    && !uuid.isBlank()
+                    && Objects.equals(getHost(lobbyCode), uuid);
+    if (isStarted) {
+      Lobby lobby = lobbyList.get(lobbyCode);
+      addGameManagerForLobby(lobby, lobbyCode);
+    }
+
+    log.info("{}: Game start requested, returning: {}", lobbyCode, isStarted);
+    return isStarted;
+  }
+
+  /**
+   * This method computes the host of a lobby.
+   *
+   * @param lobbyCode the unique lobby code
+   * @return the UUID of the host
+   */
+  public String getHost(String lobbyCode) {
+    if (lobbyCode == null || lobbyCode.isBlank()) {
+      return "";
+    }
+    List<Player> players = getPlayers(lobbyCode);
+    if (players.isEmpty()) {
+      return "";
+    }
+    for (Player p : players) {
+      if (p.isHost()) {
+        return p.uuid();
+      }
+    }
+    return "";
+  }
+
+  /**
+   * Checks if the game is started by looking after an existing game manager object.
+   *
+   * @param lobbyCode the unique lobby code
+   * @return whether a game manager exists (@code true or @code false)
+   */
+  public boolean getIsStarted(String lobbyCode) {
+    return gameService.isGameStarted(lobbyCode);
+  }
+
+  /**
+   * Returns all lobbies as serializable snapshots.
+   *
+   * @return map of lobby codes to player dto lists
+   */
+  public Map<String, List<PlayerDto>> getLobbySnapshots() {
+    return lobbyList.keySet().stream()
+        .collect(java.util.stream.Collectors.toMap(lobbyCode -> lobbyCode, this::getPlayersDto));
+  }
+}
