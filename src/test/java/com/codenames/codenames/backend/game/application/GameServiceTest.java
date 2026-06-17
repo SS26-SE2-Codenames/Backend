@@ -163,7 +163,7 @@ class GameServiceTest {
   @Test
   void testUseCheat() {
     List<Integer> positions = List.of(0, 1);
-    CheatResult expected = new CheatResult("Die Karte \"Dog\" ist richtig.");
+    CheatResult expected = new CheatResult("Die Karte \"Dog\" ist richtig.", Team.RED);
 
     when(mockGameManager.useCheat(positions, redTeam)).thenReturn(expected);
 

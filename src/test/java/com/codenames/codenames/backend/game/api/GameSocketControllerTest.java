@@ -129,7 +129,7 @@ class GameSocketControllerTest {
     message.setUsername("Max");
     message.setPositions(List.of(0, 1));
 
-    CheatResult result = new CheatResult("Die Karte \"Dog\" ist richtig.");
+    CheatResult result = new CheatResult("Die Karte \"Dog\" ist richtig.", Team.RED);
 
     when(cheatService.useCheat(LOBBY_CODE, "Max", List.of(0, 1))).thenReturn(result);
 
@@ -138,9 +138,8 @@ class GameSocketControllerTest {
     verify(cheatService).useCheat(LOBBY_CODE, "Max", List.of(0, 1));
 
     verify(messagingTemplate)
-        .convertAndSendToUser(
-            "Max",
-            "/queue/system",
+        .convertAndSend(
+            "/topic/chat/" + LOBBY_CODE + "/RED/operative",
             new ChatDto("System", result.message(), ChatMessageType.SYSTEM));
 
     verify(persistenceService).saveSnapShot(LOBBY_CODE);

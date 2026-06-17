@@ -376,11 +376,11 @@ public class GameManager {
     }
 
     if (correctCards.isEmpty()) {
-      return new CheatResult("Keine der ausgewählten Karten ist richtig.");
+      return new CheatResult("Keine der ausgewählten Karten ist richtig.", team);
     }
 
     Card correctCard = correctCards.get(0);
 
-    return new CheatResult("Die Karte \"" + correctCard.getWord() + "\" ist richtig.");
+    return new CheatResult("Die Karte \"" + correctCard.getWord() + "\" ist richtig.", team);
   }
 }

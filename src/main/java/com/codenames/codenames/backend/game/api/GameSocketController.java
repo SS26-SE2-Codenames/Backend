@@ -77,9 +77,12 @@ public class GameSocketController {
             result.message(),
             ChatMessageType.SYSTEM);
 
-    messagingTemplate.convertAndSendToUser(
-        message.getUsername(),
-        "/queue/system",
+    messagingTemplate.convertAndSend(
+        "/topic/chat/"
+            + message.getLobbyCode()
+            + "/"
+            + result.team()
+            + "/operative",
         systemMessage);
 
     persistenceService.saveSnapShot(message.getLobbyCode());
