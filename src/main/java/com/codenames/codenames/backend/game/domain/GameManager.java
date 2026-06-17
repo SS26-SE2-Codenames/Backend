@@ -313,6 +313,27 @@ public class GameManager {
   }
 
   /**
+   * Applies the penalty for an expose-cheat attempt.
+   *
+   * <p>If the exposure is correct, the current turn state is advanced. If it is wrong, the calling
+   * team pafeat(game-manager): add expose cheat penalty handlingsses their turn.
+   *
+   * @param callingTeam the team trying to expose the opponent's cheat
+   * @return true if the opposing team has used their cheat, false otherwise
+   */
+  public boolean exposeCheatAndApplyPenalty(Team callingTeam) {
+    boolean correct = exposeCheat(callingTeam);
+
+    if (correct) {
+      advanceTurn();
+    } else {
+      passTurn(callingTeam);
+    }
+
+    return correct;
+  }
+
+  /**
    * Helper method to check if the current team calling a method is allowed to do so.
    *
    * @param team the team of who is calling the method
