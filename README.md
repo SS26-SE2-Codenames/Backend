@@ -21,3 +21,7 @@ docker build -t backend-local .
 
 The backend will be available at:
 http://localhost:8080
+
+## Supported Endpoints
+
+For currently used API endpoints (HTTP and Websocket) see our Documentation repository. There you can find a complete network protocol.
