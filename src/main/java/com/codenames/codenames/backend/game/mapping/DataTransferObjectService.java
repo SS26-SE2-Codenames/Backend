@@ -48,6 +48,7 @@ public class DataTransferObjectService {
       log.info("A Game is over. Winner is {}.", gameManager.getWinner());
     }
     int remainingGuesses = gameManager.getRemainingGuesses();
+
     if (gameManager.getCurrentClue() == null) {
       return new GameStateDto(
           gameManager.getWinner(),
@@ -55,16 +56,22 @@ public class DataTransferObjectService {
           currentPhase,
           null,
           remainingGuesses,
-          cardDataTransferObject);
+          cardDataTransferObject,
+          gameManager.isRedTeamCheatUsed(),
+          gameManager.isBlueTeamCheatUsed());
     }
+
     String word = gameManager.getCurrentClue().word();
     int guessAmount = gameManager.getCurrentClue().guessAmount();
+
     return new GameStateDto(
         gameManager.getWinner(),
         currentTurn,
         currentPhase,
         new ClueDto(word, guessAmount),
         remainingGuesses,
-        cardDataTransferObject);
+        cardDataTransferObject,
+        gameManager.isRedTeamCheatUsed(),
+        gameManager.isBlueTeamCheatUsed());
   }
 }

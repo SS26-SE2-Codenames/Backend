@@ -1,11 +1,16 @@
 package com.codenames.codenames.backend.game.api;
 
+import com.codenames.codenames.backend.chat.api.dto.ChatDto;
+import com.codenames.codenames.backend.chat.api.dto.ChatMessageType;
 import com.codenames.codenames.backend.database.persistence.PersistenceService;
+import com.codenames.codenames.backend.game.api.dto.CheatCardMessage;
 import com.codenames.codenames.backend.game.api.dto.ClueMessage;
 import com.codenames.codenames.backend.game.api.dto.PassTurnMessage;
 import com.codenames.codenames.backend.game.api.dto.RevealCardMessage;
 import com.codenames.codenames.backend.game.api.dto.StartGameMessage;
+import com.codenames.codenames.backend.game.application.CheatService;
 import com.codenames.codenames.backend.game.application.GameService;
+import com.codenames.codenames.backend.game.domain.CheatResult;
 import com.codenames.codenames.backend.game.domain.Clue;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -21,6 +26,7 @@ import org.springframework.stereotype.Controller;
 public class GameSocketController {
 
   private final GameService gameService;
+  private final CheatService cheatService;
 
   private final SimpMessagingTemplate messagingTemplate;
   private final PersistenceService persistenceService;
@@ -33,15 +39,53 @@ public class GameSocketController {
    * @param gameService service responsible for gameplay logic
    * @param messagingTemplate template used for broadcasting websocket messages
    * @param persistenceService service used to persist current backend state
+   * @param cheatService service responsible for cheat handling
    */
   public GameSocketController(
       GameService gameService,
       SimpMessagingTemplate messagingTemplate,
-      PersistenceService persistenceService) {
+      PersistenceService persistenceService,
+      CheatService cheatService) {
 
     this.gameService = gameService;
     this.messagingTemplate = messagingTemplate;
     this.persistenceService = persistenceService;
+    this.cheatService = cheatService;
+  }
+
+  /**
+   * Handles a cheat request and sends the result only to the requesting player.
+   *
+   * @param message the cheat request containing lobby, username and selected cards
+   */
+  @MessageMapping("/cheat")
+  public void useCheat(CheatCardMessage message) {
+
+    CheatResult result =
+        cheatService.useCheat(
+            message.getLobbyCode(),
+            message.getUsername(),
+            message.getPositions());
+
+    if (result == null) {
+      return;
+    }
+
+    ChatDto systemMessage =
+        new ChatDto(
+            "System",
+            result.message(),
+            ChatMessageType.SYSTEM);
+
+    messagingTemplate.convertAndSend(
+        "/topic/chat/"
+            + message.getLobbyCode()
+            + "/"
+            + result.team()
+            + "/operative",
+        systemMessage);
+
+    persistenceService.saveSnapShot(message.getLobbyCode());
   }
 
   /**

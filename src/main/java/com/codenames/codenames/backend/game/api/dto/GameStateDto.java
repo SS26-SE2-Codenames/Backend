@@ -19,4 +19,7 @@ public record GameStateDto(
     Role currentPhase,
     ClueDto currentClue,
     int remainingGuesses,
-    List<CardDto> cardList) {}
+    List<CardDto> cardList,
+    boolean redTeamCheatUsed,
+    boolean blueTeamCheatUsed) {
+}

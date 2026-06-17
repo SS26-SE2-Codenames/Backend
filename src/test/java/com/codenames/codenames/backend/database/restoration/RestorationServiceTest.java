@@ -57,7 +57,15 @@ class RestorationServiceTest {
 
     cardDtoList = List.of(new CardDto("TEST", null, false));
     gameStateDto =
-        new GameStateDto(redTeam, redTeam, spymaster, new ClueDto("Test", 1), 2, cardDtoList);
+        new GameStateDto(
+            redTeam,
+            redTeam,
+            spymaster,
+            new ClueDto("Test", 1),
+            2,
+            cardDtoList,
+            false,
+            false);
 
     when(transactionManager.getTransaction(any())).thenReturn(transactionStatus);
 
