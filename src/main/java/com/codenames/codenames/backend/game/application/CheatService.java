@@ -43,4 +43,22 @@ public class CheatService {
 
     return gameService.useCheat(lobbyCode, positions, team);
   }
+
+  /**
+   * Performs an expose-cheat attempt for a player and applies the matching penalty.
+   *
+   * @param lobbyCode the lobby code
+   * @param username the requesting username
+   * @return true if the opposing team has used their cheat, false otherwise
+   */
+  public boolean exposeCheat(String lobbyCode, String username) {
+    Team team = lobbyService.getPlayerTeam(username, lobbyCode);
+    Role role = lobbyService.getPlayerRole(username, lobbyCode);
+
+    if (team == null || role != Role.OPERATIVE) {
+      return false;
+    }
+
+    return gameService.exposeCheatAndApplyPenalty(lobbyCode, team);
+  }
 }
