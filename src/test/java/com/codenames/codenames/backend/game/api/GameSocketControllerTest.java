@@ -161,4 +161,21 @@ class GameSocketControllerTest {
         .convertAndSendToUser(anyString(), anyString(), any(Object.class));
     verify(persistenceService, never()).saveSnapShot(LOBBY_CODE);
   }
+
+  @Test
+  void exposeCheatShouldPersistAndBroadcastUpdatedState() {
+    CheatCardMessage message = new CheatCardMessage();
+    message.setLobbyCode(LOBBY_CODE);
+    message.setUsername("Max");
+    message.setPositions(List.of());
+
+    when(gameService.getCurrentGameState(LOBBY_CODE))
+        .thenReturn(createGameStateDto());
+
+    controller.exposeCheat(message);
+
+    verify(cheatService).exposeCheat(LOBBY_CODE, "Max");
+    verify(persistenceService).saveSnapShot(LOBBY_CODE);
+    verify(messagingTemplate).convertAndSend(anyString(), any(Object.class));
+  }
 }

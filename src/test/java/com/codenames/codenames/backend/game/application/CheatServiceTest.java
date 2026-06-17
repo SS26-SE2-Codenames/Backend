@@ -1,7 +1,9 @@
 package com.codenames.codenames.backend.game.application;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -71,5 +73,39 @@ class CheatServiceTest {
 
     assertNull(result);
     verify(gameService, never()).useCheat(LOBBY_CODE, positions, Team.RED);
+  }
+
+  @Test
+  void exposeCheatShouldApplyPenaltyForOperative() {
+    when(lobbyService.getPlayerTeam(USERNAME, LOBBY_CODE)).thenReturn(Team.RED);
+    when(lobbyService.getPlayerRole(USERNAME, LOBBY_CODE)).thenReturn(Role.OPERATIVE);
+    when(gameService.exposeCheatAndApplyPenalty(LOBBY_CODE, Team.RED)).thenReturn(true);
+
+    boolean result = cheatService.exposeCheat(LOBBY_CODE, USERNAME);
+
+    assertTrue(result);
+    verify(gameService).exposeCheatAndApplyPenalty(LOBBY_CODE, Team.RED);
+  }
+
+  @Test
+  void exposeCheatShouldReturnFalseWhenTeamIsMissing() {
+    when(lobbyService.getPlayerTeam(USERNAME, LOBBY_CODE)).thenReturn(null);
+    when(lobbyService.getPlayerRole(USERNAME, LOBBY_CODE)).thenReturn(Role.OPERATIVE);
+
+    boolean result = cheatService.exposeCheat(LOBBY_CODE, USERNAME);
+
+    assertFalse(result);
+    verify(gameService, never()).exposeCheatAndApplyPenalty(LOBBY_CODE, Team.RED);
+  }
+
+  @Test
+  void exposeCheatShouldReturnFalseWhenPlayerIsNotOperative() {
+    when(lobbyService.getPlayerTeam(USERNAME, LOBBY_CODE)).thenReturn(Team.RED);
+    when(lobbyService.getPlayerRole(USERNAME, LOBBY_CODE)).thenReturn(Role.SPYMASTER);
+
+    boolean result = cheatService.exposeCheat(LOBBY_CODE, USERNAME);
+
+    assertFalse(result);
+    verify(gameService, never()).exposeCheatAndApplyPenalty(LOBBY_CODE, Team.RED);
   }
 }

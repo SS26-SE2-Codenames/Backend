@@ -1,6 +1,7 @@
 package com.codenames.codenames.backend.game.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -463,5 +464,61 @@ class GameManagerTest {
     CheatResult result = gameManager.useCheat(List.of(-1, 99), redTeam);
 
     assertNull(result);
+  }
+
+  @Test
+  void exposeCheatReturnsTrueWhenOpponentUsedCheat() {
+    GameStateDto state =
+        new GameStateDto(
+            null,
+            Team.RED,
+            Role.OPERATIVE,
+            null,
+            1,
+            List.of(new CardDto("Dog", Color.RED, false)),
+            false,
+            true);
+    GameManager restored = new GameManager(state, mockClueValidationService);
+
+    assertTrue(restored.exposeCheat(Team.RED));
+  }
+
+  @Test
+  void exposeCheatReturnsFalseWhenOpponentDidNotUseCheat() {
+    helperMethodAdvanceTurns(gameManager, 1);
+
+    assertFalse(gameManager.exposeCheat(Team.RED));
+  }
+
+  @Test
+  void exposeCheatAndApplyPenaltyAdvancesTurnWhenCorrect() {
+    GameStateDto state =
+        new GameStateDto(
+            null,
+            Team.RED,
+            Role.OPERATIVE,
+            null,
+            1,
+            List.of(new CardDto("Dog", Color.RED, false)),
+            false,
+            true);
+    GameManager restored = new GameManager(state, mockClueValidationService);
+
+    boolean result = restored.exposeCheatAndApplyPenalty(Team.RED);
+
+    assertTrue(result);
+    assertEquals(Team.RED, restored.getCurrentTurn());
+    assertEquals(Role.SPYMASTER, restored.getCurrentPhase());
+  }
+
+  @Test
+  void exposeCheatAndApplyPenaltyPassesTurnWhenWrong() {
+    helperMethodAdvanceTurns(gameManager, 1);
+
+    boolean result = gameManager.exposeCheatAndApplyPenalty(Team.RED);
+
+    assertFalse(result);
+    assertEquals(Team.BLUE, gameManager.getCurrentTurn());
+    assertEquals(Role.SPYMASTER, gameManager.getCurrentPhase());
   }
 }
