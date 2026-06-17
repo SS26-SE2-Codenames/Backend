@@ -53,6 +53,7 @@ public class PersistenceMapper {
       playerEntity.setIsHost(players.get(i).isHost());
       playerEntity.setTeam(players.get(i).team().name());
       playerEntity.setRole(players.get(i).role().name());
+      playerEntity.setUuid(players.get(i).uuid());
       playerList.add(playerEntity);
     }
     return playerList;

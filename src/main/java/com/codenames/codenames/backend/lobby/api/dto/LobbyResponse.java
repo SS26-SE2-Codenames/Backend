@@ -11,5 +11,6 @@ public record LobbyResponse(
         String message,
         String lobbyCode,
         List<PlayerDto> playerList,
-        boolean isStarted
+        boolean isStarted,
+        String uuid
 ) {}
