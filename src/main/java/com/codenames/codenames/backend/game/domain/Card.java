@@ -1,0 +1,38 @@
+package com.codenames.codenames.backend.game.domain;
+
+import lombok.Getter;
+import lombok.ToString;
+
+/** Represents a single card on a board. */
+@Getter
+@ToString
+public class Card {
+  private final String word;
+  private final Color color;
+  private boolean isGuessed;
+
+  /**
+   * Constructs a new card with the word and color assigned.
+   *
+   * @param word the word displayed on the card
+   * @param color the color of the card
+   * @throws IllegalArgumentException if word is null or empty, or if color is null
+   */
+  public Card(String word, Color color) {
+    if (word == null || word.isEmpty()) {
+      throw new IllegalArgumentException("word cannot be null or empty");
+    }
+    if (color == null) {
+      throw new IllegalArgumentException("color cannot be null");
+    }
+
+    this.word = word;
+    this.color = color;
+    this.isGuessed = false;
+  }
+
+  /** Sets isGuessed to true. */
+  public void setIsGuessedTrue() {
+    this.isGuessed = true;
+  }
+}
