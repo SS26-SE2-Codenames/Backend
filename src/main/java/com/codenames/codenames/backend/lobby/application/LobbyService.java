@@ -292,14 +292,14 @@ public class LobbyService {
    * Retrieves a specific player from a lobby.
    *
    * @param lobbyCode the lobby code
-   * @param uuid the UUID of the player
+   * @param username the username of the player
    * @return the Player object, or null if not found
    */
-  public Player getPlayer(String lobbyCode, String uuid) {
+  public Player getPlayer(String lobbyCode, String username) {
     Lobby lobby = lobbyList.get(lobbyCode);
     if (lobby != null) {
       return lobby.getPlayerList().stream()
-              .filter(p -> p.uuid().equals(uuid))
+              .filter(p -> p.username().equals(username))
               .findFirst()
               .orElse(null);
     }
