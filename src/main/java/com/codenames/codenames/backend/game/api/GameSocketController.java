@@ -89,6 +89,25 @@ public class GameSocketController {
   }
 
   /**
+   * Handles an expose-cheat request and broadcasts the updated game state.
+   *
+   * @param message the expose-cheat request containing lobby and username
+   */
+  @MessageMapping("/expose-cheat")
+  public void exposeCheat(CheatCardMessage message) {
+
+    cheatService.exposeCheat(
+        message.getLobbyCode(),
+        message.getUsername());
+
+    persistenceService.saveSnapShot(message.getLobbyCode());
+
+    messagingTemplate.convertAndSend(
+        GAME_TOPIC_PREFIX + message.getLobbyCode(),
+        gameService.getCurrentGameState(message.getLobbyCode()));
+  }
+
+  /**
    * Sends the current game state to subscribed players.
    *
    * @param message contains the lobby code
