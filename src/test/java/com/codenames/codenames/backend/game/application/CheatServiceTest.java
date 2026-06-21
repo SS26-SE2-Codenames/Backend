@@ -41,7 +41,7 @@ class CheatServiceTest {
   @Test
   void useCheatShouldReturnResultForOperative() {
     List<Integer> positions = List.of(0, 1);
-    CheatResult expected = new CheatResult("Die Karte \"Dog\" ist richtig.", Team.RED);
+    CheatResult expected = new CheatResult("The card \"Dog\" belongs to your team.", Team.RED);
 
     when(lobbyService.getPlayerTeam(PLAYER_UUID, LOBBY_CODE)).thenReturn(Team.RED);
     when(lobbyService.getPlayerRole(PLAYER_UUID, LOBBY_CODE)).thenReturn(Role.OPERATIVE);

@@ -423,11 +423,11 @@ public class GameManager {
     }
 
     if (correctCards.isEmpty()) {
-      return new CheatResult("Keine der ausgewählten Karten ist richtig.", team);
+      return new CheatResult("None of the selected cards belongs to your team.", team);
     }
 
     Card correctCard = correctCards.get(0);
 
-    return new CheatResult("Die Karte \"" + correctCard.getWord() + "\" ist richtig.", team);
+    return new CheatResult("The card \"" + correctCard.getWord() + "\" belongs to your team.", team);
   }
 }

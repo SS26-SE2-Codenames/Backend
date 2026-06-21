@@ -425,7 +425,7 @@ class GameManagerTest {
 
     CheatResult result = gameManager.useCheat(List.of(0, 1, 2), redTeam);
 
-    assertEquals("Die Karte \"Cat\" ist richtig.", result.message());
+    assertEquals("The card \"Cat\" belongs to your team.", result.message());
     assertTrue(gameManager.isRedTeamCheatUsed());
   }
 
@@ -440,7 +440,7 @@ class GameManagerTest {
 
     CheatResult result = gameManager.useCheat(List.of(0, 1), redTeam);
 
-    assertEquals("Keine der ausgewählten Karten ist richtig.", result.message());
+    assertEquals("None of the selected cards belongs to your team.", result.message());
     assertTrue(gameManager.isRedTeamCheatUsed());
   }
 
@@ -453,7 +453,7 @@ class GameManagerTest {
     CheatResult firstResult = gameManager.useCheat(List.of(0), redTeam);
     CheatResult secondResult = gameManager.useCheat(List.of(0), redTeam);
 
-    assertEquals("Die Karte \"Dog\" ist richtig.", firstResult.message());
+    assertEquals("The card \"Dog\" belongs to your team.", firstResult.message());
     assertNull(secondResult);
   }
 

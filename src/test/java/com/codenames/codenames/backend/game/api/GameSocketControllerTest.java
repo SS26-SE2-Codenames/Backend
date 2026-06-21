@@ -130,7 +130,7 @@ class GameSocketControllerTest {
     message.setUsername("Max");
     message.setPositions(List.of(0, 1));
 
-    CheatResult result = new CheatResult("Die Karte \"Dog\" ist richtig.", Team.RED);
+    CheatResult result = new CheatResult("The card \"Dog\" belongs to your team.", Team.RED);
 
     when(cheatService.useCheat(LOBBY_CODE, "Max", List.of(0, 1))).thenReturn(result);
 
