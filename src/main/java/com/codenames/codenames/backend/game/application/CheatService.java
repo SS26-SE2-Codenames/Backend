@@ -36,15 +36,8 @@ public class CheatService {
    * @return the cheat result or null if the request is invalid
    */
   public CheatResult useCheat(String lobbyCode, String username, List<Integer> positions) {
-    Player player = lobbyService.getPlayer(lobbyCode, username);
-    if (player == null) {
-      return null;
-    }
-
-    Team team = lobbyService.getPlayerTeam(player.uuid(), lobbyCode);
-    Role role = lobbyService.getPlayerRole(player.uuid(), lobbyCode);
-
-    if (team == null || role != Role.OPERATIVE) {
+    Team team = getOperativeTeam(lobbyCode, username);
+    if (team == null) {
       return null;
     }
 
@@ -59,6 +52,16 @@ public class CheatService {
    * @return the expose-cheat result or null if the request is invalid
    */
   public ExposeCheatResult exposeCheat(String lobbyCode, String username) {
+    Team team = getOperativeTeam(lobbyCode, username);
+    if (team == null) {
+      return null;
+    }
+
+    boolean correct = gameService.exposeCheatAndApplyPenalty(lobbyCode, team);
+    return new ExposeCheatResult(correct, team);
+  }
+
+  private Team getOperativeTeam(String lobbyCode, String username) {
     Player player = lobbyService.getPlayer(lobbyCode, username);
     if (player == null) {
       return null;
@@ -67,11 +70,6 @@ public class CheatService {
     Team team = lobbyService.getPlayerTeam(player.uuid(), lobbyCode);
     Role role = lobbyService.getPlayerRole(player.uuid(), lobbyCode);
 
-    if (team == null || role != Role.OPERATIVE) {
-      return null;
-    }
-
-    boolean correct = gameService.exposeCheatAndApplyPenalty(lobbyCode, team);
-    return new ExposeCheatResult(correct, team);
+    return role == Role.OPERATIVE ? team : null;
   }
 }
