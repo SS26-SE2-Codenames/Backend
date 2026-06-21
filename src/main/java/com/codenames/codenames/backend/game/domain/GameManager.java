@@ -74,8 +74,7 @@ public class GameManager {
    * @param state bundled recovery state
    * @param clueValidationService clue validation service
    */
-  public GameManager(
-      GameStateDto state, ClueValidationService clueValidationService) {
+  public GameManager(GameStateDto state, ClueValidationService clueValidationService) {
     if (state.cardList() == null || state.cardList().isEmpty()) {
       throw new IllegalArgumentException("cards cannot be null or empty");
     }
@@ -364,16 +363,12 @@ public class GameManager {
    * @return true if the position is valid
    */
   private boolean isValidPosition(Integer position) {
-    return position != null
-        && position >= 0
-        && position < board.getCardList().size();
+    return position != null && position >= 0 && position < board.getCardList().size();
   }
 
   /**
-   * Performs the cheat action for the current team.
-   * The team may use the cheat only once per game.
-   * If at least one selected card belongs to the team,
-   * one correct card is returned.
+   * Performs the cheat action for the current team. The team may use the cheat only once per game.
+   * If at least one selected card belongs to the team, one correct card is returned.
    *
    * @param positions selected card positions
    * @param team the team requesting the cheat
@@ -428,6 +423,7 @@ public class GameManager {
 
     Card correctCard = correctCards.get(0);
 
-    return new CheatResult("The card \"" + correctCard.getWord() + "\" belongs to your team.", team);
+    return new CheatResult(
+        "The card \"" + correctCard.getWord() + "\" belongs to your team.", team);
   }
 }
