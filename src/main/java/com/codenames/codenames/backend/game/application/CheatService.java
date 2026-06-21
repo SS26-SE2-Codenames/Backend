@@ -3,6 +3,7 @@ package com.codenames.codenames.backend.game.application;
 import com.codenames.codenames.backend.game.domain.CheatResult;
 import com.codenames.codenames.backend.game.domain.ExposeCheatResult;
 import com.codenames.codenames.backend.lobby.application.LobbyService;
+import com.codenames.codenames.backend.lobby.domain.Player;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.List;
@@ -35,8 +36,13 @@ public class CheatService {
    * @return the cheat result or null if the request is invalid
    */
   public CheatResult useCheat(String lobbyCode, String username, List<Integer> positions) {
-    Team team = lobbyService.getPlayerTeam(username, lobbyCode);
-    Role role = lobbyService.getPlayerRole(username, lobbyCode);
+    Player player = lobbyService.getPlayer(lobbyCode, username);
+    if (player == null) {
+      return null;
+    }
+
+    Team team = lobbyService.getPlayerTeam(player.uuid(), lobbyCode);
+    Role role = lobbyService.getPlayerRole(player.uuid(), lobbyCode);
 
     if (team == null || role != Role.OPERATIVE) {
       return null;
@@ -53,8 +59,13 @@ public class CheatService {
    * @return the expose-cheat result or null if the request is invalid
    */
   public ExposeCheatResult exposeCheat(String lobbyCode, String username) {
-    Team team = lobbyService.getPlayerTeam(username, lobbyCode);
-    Role role = lobbyService.getPlayerRole(username, lobbyCode);
+    Player player = lobbyService.getPlayer(lobbyCode, username);
+    if (player == null) {
+      return null;
+    }
+
+    Team team = lobbyService.getPlayerTeam(player.uuid(), lobbyCode);
+    Role role = lobbyService.getPlayerRole(player.uuid(), lobbyCode);
 
     if (team == null || role != Role.OPERATIVE) {
       return null;
