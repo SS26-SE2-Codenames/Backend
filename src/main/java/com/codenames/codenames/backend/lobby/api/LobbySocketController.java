@@ -86,8 +86,9 @@ public class LobbySocketController {
       return;
     }
 
+    log.info("{}: WebSocket join — registering session {} with user '{}' (UUID {})",
+        message.getCode(), sessionId, message.getName(), message.getUuid());
     sessionRegistry.register(sessionId, message.getName(), message.getCode());
-
 
     sendPlayerUpdate(message.getCode());
     sendGameStateUpdate(message.getCode());

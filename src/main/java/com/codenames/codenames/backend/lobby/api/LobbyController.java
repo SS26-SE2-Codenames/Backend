@@ -6,6 +6,7 @@ import com.codenames.codenames.backend.lobby.application.LobbyService;
 import com.codenames.codenames.backend.lobby.domain.Player;
 import java.util.List;
 import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * <p>Provides endpoints for creating, joining, and leaving lobbies. Delegates business logic to
  * {@link LobbyService}.
  */
+@Slf4j
 @RestController
 @RequestMapping("/lobby")
 public class LobbyController {
@@ -57,6 +59,7 @@ public class LobbyController {
 
       String hostUuid = host.uuid();
 
+      log.info("{}: sending host UUID {} to frontend in createLobby response", lobbyCode, hostUuid);
       return ResponseEntity.ok(
               new LobbyResponse(
                       "Successfully created Lobby.", lobbyCode, players, false, hostUuid));
@@ -76,9 +79,11 @@ public class LobbyController {
           @PathVariable String lobbyCode,
           @RequestParam(required = false) String uuid) {
 
+    log.info("{}: joinLobby request — username='{}', uuidProvided={}", lobbyCode, username, uuid != null && !uuid.isBlank());
     Player joinedPlayer = service.joinLobby(username, lobbyCode, uuid);
 
     if (joinedPlayer != null) {
+      log.info("{}: sending player UUID {} to frontend in joinLobby response", lobbyCode, joinedPlayer.uuid());
       return ResponseEntity.ok(
               new LobbyResponse(
                       "Joined Lobby successfully.",

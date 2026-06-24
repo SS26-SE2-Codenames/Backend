@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Represents a game lobby containing a limited number of playerList.
@@ -16,6 +17,7 @@ import lombok.Getter;
  * <p>Supports adding and removing playerList while enforcing constraints such as maximum player
  * count and unique usernames.
  */
+@Slf4j
 @Getter
 public class Lobby {
 
@@ -78,24 +80,29 @@ public class Lobby {
 
   public Player addPlayer(String username, boolean isHost, String requestedUuid) {
     if (requestedUuid != null) {
+      log.info("{}: reconnect attempted with UUID {}", lobbyCode, requestedUuid);
       Optional<Player> existingPlayerOpt = playerList.stream()
                   .filter(p -> p.uuid().equals(requestedUuid))
                   .findFirst();
 
       if (existingPlayerOpt.isPresent()) {
+        log.info("{}: player '{}' reconnected with existing UUID {}", lobbyCode, username, requestedUuid);
         return existingPlayerOpt.get();
       } else {
+        log.warn("{}: reconnect failed — UUID {} not found in lobby", lobbyCode, requestedUuid);
         return null;
       }
     }
 
     if (playerList.size() >= MAX_PLAYERS) {
+      log.warn("{}: cannot add player '{}' — lobby full ({}/{})", lobbyCode, username, playerList.size(), MAX_PLAYERS);
       return null;
     }
 
     String newUuid = randomUUID().toString();
     Player newPlayer = new Player(username, isHost, newUuid);
     playerList.add(newPlayer);
+    log.info("{}: generated UUID {} for new player '{}' (host={}, total players={})", lobbyCode, newUuid, username, isHost, playerList.size());
 
     return newPlayer;
   }

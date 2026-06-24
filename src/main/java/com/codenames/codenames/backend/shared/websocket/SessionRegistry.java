@@ -2,6 +2,7 @@ package com.codenames.codenames.backend.shared.websocket;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
  *
  * <p>This implementation is thread-safe.
  */
+@Slf4j
 @Component
 public class SessionRegistry {
   private final Map<String, String> sessionToLobby = new ConcurrentHashMap<>();
@@ -27,6 +29,7 @@ public class SessionRegistry {
   public void register(String sessionId, String uuid, String lobbyCode) {
     sessionToLobby.put(sessionId, lobbyCode);
     sessionToUser.put(sessionId, uuid);
+    log.info("{}: stored session {} → UUID {} in session registry", lobbyCode, sessionId, uuid);
   }
 
   /**
