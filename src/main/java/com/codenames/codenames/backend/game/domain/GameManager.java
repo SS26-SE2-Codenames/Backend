@@ -74,8 +74,7 @@ public class GameManager {
    * @param state bundled recovery state
    * @param clueValidationService clue validation service
    */
-  public GameManager(
-      GameStateDto state, ClueValidationService clueValidationService) {
+  public GameManager(GameStateDto state, ClueValidationService clueValidationService) {
     if (state.cardList() == null || state.cardList().isEmpty()) {
       throw new IllegalArgumentException("cards cannot be null or empty");
     }
@@ -299,6 +298,53 @@ public class GameManager {
   }
 
   /**
+   * Checks whether the opposing team has already used their cheat.
+   *
+   * @param callingTeam the team trying to expose the opponent's cheat
+   * @return true if the opposing team has used their cheat, false otherwise
+   */
+  public boolean exposeCheat(Team callingTeam) {
+    if (callingTeam == Team.RED) {
+      return blueTeamCheatUsed;
+    }
+
+    return redTeamCheatUsed;
+  }
+
+  /**
+   * Applies the penalty for an expose-cheat attempt.
+   *
+   * <p>If the exposure is correct, the opposing team's next turn is skipped. If it is wrong, the
+   * calling team passes their turn.
+   *
+   * @param callingTeam the team trying to expose the opponent's cheat
+   * @return true if the opposing team has used their cheat, false otherwise
+   */
+  public boolean exposeCheatAndApplyPenalty(Team callingTeam) {
+    boolean correct = exposeCheat(callingTeam);
+
+    if (correct) {
+      skipOpponentTurn(callingTeam);
+    } else {
+      passTurn(callingTeam);
+    }
+
+    return correct;
+  }
+
+  /**
+   * Skips the opposing team's full next turn after a correct expose-cheat attempt.
+   *
+   * @param callingTeam the team that correctly exposed the opponent's cheat
+   */
+  private void skipOpponentTurn(Team callingTeam) {
+    checkCorrectTurn(callingTeam, Role.OPERATIVE);
+    advanceTurn();
+    advanceTurn();
+    advanceTurn();
+  }
+
+  /**
    * Helper method to check if the current team calling a method is allowed to do so.
    *
    * @param team the team of who is calling the method
@@ -317,16 +363,12 @@ public class GameManager {
    * @return true if the position is valid
    */
   private boolean isValidPosition(Integer position) {
-    return position != null
-        && position >= 0
-        && position < board.getCardList().size();
+    return position != null && position >= 0 && position < board.getCardList().size();
   }
 
   /**
-   * Performs the cheat action for the current team.
-   * The team may use the cheat only once per game.
-   * If at least one selected card belongs to the team,
-   * one correct card is returned.
+   * Performs the cheat action for the current team. The team may use the cheat only once per game.
+   * If at least one selected card belongs to the team, one correct card is returned.
    *
    * @param positions selected card positions
    * @param team the team requesting the cheat
@@ -376,11 +418,12 @@ public class GameManager {
     }
 
     if (correctCards.isEmpty()) {
-      return new CheatResult("Keine der ausgewählten Karten ist richtig.", team);
+      return new CheatResult("None of the selected cards belongs to your team.", team);
     }
 
     Card correctCard = correctCards.get(0);
 
-    return new CheatResult("Die Karte \"" + correctCard.getWord() + "\" ist richtig.", team);
+    return new CheatResult(
+        "The card \"" + correctCard.getWord() + "\" belongs to your team.", team);
   }
 }

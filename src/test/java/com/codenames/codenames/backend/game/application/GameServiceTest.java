@@ -163,7 +163,7 @@ class GameServiceTest {
   @Test
   void testUseCheat() {
     List<Integer> positions = List.of(0, 1);
-    CheatResult expected = new CheatResult("Die Karte \"Dog\" ist richtig.", Team.RED);
+    CheatResult expected = new CheatResult("The card \"Dog\" belongs to your team.", Team.RED);
 
     when(mockGameManager.useCheat(positions, redTeam)).thenReturn(expected);
 
@@ -172,5 +172,15 @@ class GameServiceTest {
 
     assertEquals(expected, result);
     verify(mockGameManager, times(1)).useCheat(positions, redTeam);
+  }
+
+  @Test
+  void exposeCheatAndApplyPenaltyShouldDelegateToGameManager() {
+    when(mockGameManager.exposeCheatAndApplyPenalty(redTeam)).thenReturn(true);
+
+    boolean result = gameService.exposeCheatAndApplyPenalty(lobbyCode, redTeam);
+
+    assertTrue(result);
+    verify(mockGameManager, times(1)).exposeCheatAndApplyPenalty(redTeam);
   }
 }
