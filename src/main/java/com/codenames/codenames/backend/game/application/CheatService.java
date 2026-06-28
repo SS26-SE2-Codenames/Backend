@@ -1,7 +1,9 @@
 package com.codenames.codenames.backend.game.application;
 
 import com.codenames.codenames.backend.game.domain.CheatResult;
+import com.codenames.codenames.backend.game.domain.ExposeCheatResult;
 import com.codenames.codenames.backend.lobby.application.LobbyService;
+import com.codenames.codenames.backend.lobby.domain.Player;
 import com.codenames.codenames.backend.lobby.domain.Role;
 import com.codenames.codenames.backend.lobby.domain.Team;
 import java.util.List;
@@ -34,13 +36,40 @@ public class CheatService {
    * @return the cheat result or null if the request is invalid
    */
   public CheatResult useCheat(String lobbyCode, String username, List<Integer> positions) {
-    Team team = lobbyService.getPlayerTeam(username, lobbyCode);
-    Role role = lobbyService.getPlayerRole(username, lobbyCode);
-
-    if (team == null || role != Role.OPERATIVE) {
+    Team team = getOperativeTeam(lobbyCode, username);
+    if (team == null) {
       return null;
     }
 
     return gameService.useCheat(lobbyCode, positions, team);
+  }
+
+  /**
+   * Performs an expose-cheat attempt for a player and applies the matching penalty.
+   *
+   * @param lobbyCode the lobby code
+   * @param username the requesting username
+   * @return the expose-cheat result or null if the request is invalid
+   */
+  public ExposeCheatResult exposeCheat(String lobbyCode, String username) {
+    Team team = getOperativeTeam(lobbyCode, username);
+    if (team == null) {
+      return null;
+    }
+
+    boolean correct = gameService.exposeCheatAndApplyPenalty(lobbyCode, team);
+    return new ExposeCheatResult(correct, team);
+  }
+
+  private Team getOperativeTeam(String lobbyCode, String username) {
+    Player player = lobbyService.getPlayer(lobbyCode, username);
+    if (player == null) {
+      return null;
+    }
+
+    Team team = lobbyService.getPlayerTeam(player.uuid(), lobbyCode);
+    Role role = lobbyService.getPlayerRole(player.uuid(), lobbyCode);
+
+    return role == Role.OPERATIVE ? team : null;
   }
 }
